@@ -4,4 +4,4 @@ import MemServer from '../../index.js';
 
 MemServer.start();
 
-window.$.getJSON('/photos');
+// window.$.getJSON('/photos').

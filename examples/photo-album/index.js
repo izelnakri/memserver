@@ -1,6 +1,4 @@
-require('@std/esm');
-
-import MemServer from '../../index.js';
+const MemServer = require('../../index.js');
 
 MemServer.start();
 

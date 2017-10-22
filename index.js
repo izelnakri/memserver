@@ -1,4 +1,7 @@
-require('@std/esm');
+#! /usr/bin/env node
+require('babel-register')({
+  presets: ['env']
+});
 
 const ENVIRONMENT_IS_NODE = typeof global === 'object';
 const ENVIRONMENT_IS_BROWSER = !ENVIRONMENT_IS_NODE;
@@ -19,9 +22,9 @@ global.self = window.self;
 
 require('pretender');
 
-import MemServer from './lib/mem-server.js';
+const MemServer = require('./lib/mem-server.js').default;
 
-export default MemServer;
+module.exports = MemServer;
 
 // scenario starts
 // configurations

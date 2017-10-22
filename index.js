@@ -24,21 +24,9 @@ import MemServer from './lib/mem-server.js';
 export default MemServer;
 
 // scenario starts
-
 // configurations
-
 // register routes
 
-// let PHOTOS = {
-//   '10': {
-//     id: 10,
-//     src: 'http://media.giphy.com/media/UdqUo8xvEcvgA/giphy.gif'
-//   },
-//   '42': {
-//     id: 42,
-//     src: 'http://media0.giphy.com/media/Ko2pyD26RdYRi/giphy.gif'
-//   }
-// };
 
 // let server = new window.Pretender(function(){
 //   this.get('/photos', (request) => {
@@ -79,23 +67,6 @@ export default MemServer;
 //
 // window.$.getJSON('/photos/10');
 // window.$.getJSON('/lol');
-
-// setTimeout(() => console.log('done'), 10000);
-
-
-// export function start() {
-//
-//   // parse all the models
-//
-//
-//   // inject all the fixture data to memory
-//
-//   // parse and inject pretender routes
-//
-//   // NOTE: do we need shutdown?
-//
-//   // returns db and routes
-// }
 
 
 // NOTE: namespace addition, this.timing, this.logging, this.passthrough, this.loadFixtures(?)

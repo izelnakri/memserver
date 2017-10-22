@@ -1,10 +1,7 @@
-export default function() {
+export default function(Models) {
   // this.namespace = '';
 
   this.get('/photos', () => {
-    return {
-      authors: [
-      ]
-    };
+    return { photos: Models.Photo.findAll() };
   });
 }

@@ -1,5 +1,5 @@
-import { Model } from 'memserver';
+import Model from '../../../../lib/mem-server/model';
 
-export default Model.extend({
+export default Object.assign(Model, {
 
 });

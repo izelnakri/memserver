@@ -7,5 +7,16 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@std/esm": "^0.12.1",
+    "core-object": "^3.1.5",
+    "ember-inflector": "^2.0.1"
+  },
+  "@std/esm": {
+    "esm": "all"
+  },
+  "devDependencies": {
+    "pryjs": "^1.0.3"
+  }
 }

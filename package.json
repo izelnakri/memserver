@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "in-memory database/ORM and http mock server you can run in-browser and node environments. Built for large frontend teams, fast tests and rapid prototyping",
   "main": "index.js",
-  "license": "MIT",
+  "license": "ISC",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,13 +12,14 @@
     "url": "https://github.com/izelnakri/memserver.git"
   },
   "author": "",
-  "license": "ISC",
   "dependencies": {
     "@std/esm": "^0.12.1",
     "chalk": "^2.2.0",
-    "ember": "^1.0.3",
+    "core-object": "^3.1.5",
+    "ember-cli-string-utils": "^1.1.0",
     "ember-inflector": "^2.0.1",
     "fake-xml-http-request": "^1.6.0",
+    "i": "^0.3.6",
     "jsdom": "^11.3.0",
     "pretender": "^1.6.0",
     "route-recognizer": "^0.3.3"
@@ -26,5 +27,8 @@
   "devDependencies": {
     "jquery": "^3.2.1",
     "pryjs": "^1.0.3"
+  },
+  "@std/esm": {
+    "esm": "all"
   }
 }

@@ -3,6 +3,7 @@
 
 const ENVIRONMENT_IS_NODE = typeof global === 'object';
 const ENVIRONMENT_IS_BROWSER = !ENVIRONMENT_IS_NODE;
+const chalk = require('chalk');
 
 const JSDOM = require('jsdom').JSDOM;
 const dom = new JSDOM(`<p>Hello</p>`, { url: 'http://localhost' });
@@ -12,12 +13,22 @@ global.document = window.document;
 
 window.FakeXMLHttpRequest = require('fake-xml-http-request');
 window.RouteRecognizer = require('route-recognizer');
-window.$ = require("jquery");
+window.$ = require('jquery');
 
 window.self = window;
 global.self = window.self;
 
 require('pretender');
+
+// register models
+
+// register fixtures
+
+// scenario starts
+
+// configurations
+
+// register routes
 
 let PHOTOS = {
   '10': {
@@ -39,27 +50,36 @@ let server = new window.Pretender(function(){
   this.get('/photos/:id', (request) => {
     return [200, {'Content-Type': 'application/json'}, JSON.stringify(PHOTOS[request.params.id])];
   });
+
+  this.get('/lol', this.passthrough);
 });
 
 server.handledRequest = function(verb, path, request) {
-  console.log('[PRETENDER - HANDLED REQUEST]', verb, path);
+  console.log(chalk.cyan('MemServer'), chalk.green('[HANDLED]'), verb, path, colorStatusCode(request.status));
+  console.log(JSON.parse(request.responseText));
+}
+
+server.passthroughRequest = function(verb, path, request) {
+  console.log(chalk.cyan('MemServer'), chalk.yellow('[PASSTHROUGH]'), verb, path);
 }
 
 server.unhandledRequest = function(verb, path, request) {
-  console.log('[PRETENDER - UNHANDLED REQUEST]', verb, path);
+  console.log(chalk.cyan('MemServer'), chalk.red('[UNHANDLED REQUEST]', verb, path));
   console.log('REQUEST:');
   console.log(request);
 }
 
-window.$.getJSON('/photos/10', (a) => {
-  console.log(a);
-}).done(function() {
-  console.log('second success');
-}).fail(function() {
-  console.log('error');
-});
+function colorStatusCode(statusCode) {
+  if (statusCode === 200 || statusCode === 201) {
+    return chalk.green(statusCode);
+  }
 
-// axiso.get('/photos/12')
+  return chalk.red(statusCode);
+}
+
+
+window.$.getJSON('/photos/10');
+window.$.getJSON('/lol');
 
 // setTimeout(() => console.log('done'), 10000);
 

@@ -2,3 +2,4 @@
 - fixtures
 - serialization embedding
 - factories
+- also add UNIQUE constraint to primaryKeys

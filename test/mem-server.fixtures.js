@@ -5,8 +5,7 @@ const rimraf = require('rimraf');
 describe('MemServer fixture constraint feature', function() {
   beforeEach(function() {
     const modelFileContent = `import Model from '${process.cwd()}/lib/mem-server/model';
-
-    export default Model({});`;
+                              export default Model({});`;
 
     fs.mkdirSync(`./memserver`);
     fs.mkdirSync(`./memserver/models`);
@@ -30,7 +29,7 @@ describe('MemServer fixture constraint feature', function() {
 
   it('should throw error if any of the fixtures missing id or uuid', function() {
     this.timeout(5000);
-    
+
     fs.mkdirSync(`./memserver/fixtures`);
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photos.js`, `export default [
       {

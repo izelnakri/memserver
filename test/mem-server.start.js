@@ -8,8 +8,7 @@ describe('MemServer start/stop functionality', function() {
     this.timeout(5000);
 
     const modelFileContent = `import Model from '${process.cwd()}/lib/mem-server/model';
-
-    export default Model({});`;
+                              export default Model({});`;
 
     fs.mkdirSync(`./memserver`);
     fs.mkdirSync(`./memserver/models`);

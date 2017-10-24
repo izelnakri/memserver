@@ -1,5 +1,9 @@
 - create a cli
-- fixtures
 - serialization embedding
-- factories
 - also add UNIQUE constraint to primaryKeys
+- derived schema attribute for $Model:
+  schema: {
+    inserted_at: {
+      type: '', notNull: true, unique: true, validate: {}
+    }
+  }

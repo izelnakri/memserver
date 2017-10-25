@@ -4,9 +4,6 @@ const rimraf = require('rimraf');
 
 describe('MemServer.Model Interface', function() {
   before(function() {
-    const modelFileContent = `import Model from '${process.cwd()}/lib/mem-server/model';
-                              export default Model({});`;
-
     fs.mkdirSync(`./memserver`);
     fs.mkdirSync(`./memserver/models`);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
@@ -35,7 +32,11 @@ describe('MemServer.Model Interface', function() {
         }
       });
     `);
-    fs.writeFileSync(`${process.cwd()}/memserver/models/user.js`, modelFileContent);
+    fs.writeFileSync(`${process.cwd()}/memserver/models/user.js`, `
+      import Model from '${process.cwd()}/lib/mem-server/model';
+
+      export default Model({});
+    `);
     fs.writeFileSync(`${process.cwd()}/memserver/server.js`, 'export default function(Models) {}');
     fs.mkdirSync(`./memserver/fixtures`);
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photos.js`, `export default [
@@ -139,9 +140,6 @@ describe('MemServer.Model Interface', function() {
       const initialPhotoDefaultAttributes = Photo.defaultAttributes;
       const initialPhotoCommentDefaultAttributes = PhotoComment.defaultAttributes;
 
-      console.log(Photo);
-      console.log(PhotoComment);
-
       assert.deepEqual(Object.keys(initialPhotoDefaultAttributes), ['is_public', 'name']);
       assert.equal(initialPhotoDefaultAttributes.is_public, true);
       assert.ok(initialPhotoDefaultAttributes.name.toString().includes('name.title();'));
@@ -152,9 +150,6 @@ describe('MemServer.Model Interface', function() {
       assert.deepEqual(User.defaultAttributes, {});
 
       MemServer.start();
-
-      console.log(Photo);
-      console.log(PhotoComment);
 
       assert.equal(Photo.defaultAttributes, initialPhotoDefaultAttributes);
       assert.deepEqual(PhotoComment.defaultAttributes, initialPhotoCommentDefaultAttributes);
@@ -174,6 +169,19 @@ describe('MemServer.Model Interface', function() {
       assert.deepEqual(Photo.attributes, ['is_public', 'name', 'id', 'href']);
       assert.deepEqual(PhotoComment.attributes, ['inserted_at', 'is_important', 'uuid', 'content', 'photo_id', 'user_id']);
       assert.deepEqual(User.attributes, []);
+    });
+
+    it('counts the models correctly with $Model.count()', function() {
+      const MemServer = require('../index.js');
+      const { Photo, PhotoComment, User } = MemServer.Models;
+
+      assert.equal(Photo.count(), 0);
+      assert.equal(PhotoComment.count(), 0);
+
+      MemServer.start();
+
+      assert.equal(Photo.count(), 3);
+      assert.equal(PhotoComment.count(), 4);
     });
   });
 });

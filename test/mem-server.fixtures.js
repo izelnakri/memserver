@@ -156,7 +156,7 @@ describe('MemServer fixture constraint feature', function() {
 
     assert.throws(() => MemServer.start(), (err) => {
       return (err instanceof Error) &&
-        /MemServer Photo model primaryKeyType is 'id'. Instead you've tried to enter id: 2 with string type/.test(err);
+        /MemServer Photo model primaryKey type is 'id'. Instead you've tried to enter id: 2 with string type/.test(err);
     });
 
     assert.deepEqual(MemServer.Pretender, {});
@@ -226,7 +226,7 @@ describe('MemServer fixture constraint feature', function() {
 
     assert.throws(() => MemServer.start(), (err) => {
       return (err instanceof Error) &&
-        /MemServer PhotoComment model primaryKeyType is 'uuid'. Instead you've tried to enter uuid: 12 with number type/.test(err);
+        /MemServer PhotoComment model primaryKey type is 'uuid'. Instead you've tried to enter uuid: 12 with number type/.test(err);
     });
 
     assert.deepEqual(MemServer.Pretender, {});

@@ -183,14 +183,13 @@ describe('MemServer.Model Interface', function() {
       assert.equal(Photo.count(), 3);
       assert.equal(PhotoComment.count(), 4);
     });
+
+    // TODO: it('can have custom queries for a Model', function() {
+    //
+    // });
   });
 });
 
-  // describe('update factory interface');
-  // describe('destroy factory interface');
-
-  // describe('serialization interface');
-
-  // describe('complex operations') // multiple edit updates at once
-  // describe('custom query interface') // adding new queries etc
-// });
+// describe('update factory interface');
+// describe('delete factory interface');
+// describe('serialization interface');

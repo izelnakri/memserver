@@ -189,7 +189,3 @@ describe('MemServer.Model Interface', function() {
     // });
   });
 });
-
-// describe('update factory interface');
-// describe('delete factory interface');
-// describe('serialization interface');

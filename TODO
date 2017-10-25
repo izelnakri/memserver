@@ -1,6 +1,5 @@
 - create a cli
 - serialization embedding
-- also add UNIQUE constraint to primaryKeys
 - derived schema attribute for $Model:
   schema: {
     inserted_at: {

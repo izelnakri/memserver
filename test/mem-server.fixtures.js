@@ -235,3 +235,5 @@ describe('MemServer fixture constraint feature', function() {
     assert.deepEqual(PhotoComment.findAll(), []);
   });
 });
+
+// TODO: throw if there are duplicates of the same id or uuid

@@ -96,6 +96,59 @@ describe('MemServer.Model Update Interface', function() {
   });
 
   describe('$Model.update() interface', function() {
+    it('can update models', function() {
+      this.timeout(5000);
 
+      const MemServer = require('../index.js');
+      const { Photo, PhotoComment } = MemServer.Models;
+
+      MemServer.start()
+
+      Photo.update({ id: 1, name: 'Ski trip', href: 'ski-trip.jpeg', is_public: false });
+      Photo.update({ id: 2, href: 'family-photo-2.jpeg', is_public: false });
+      PhotoComment.update({ uuid: '374c7f4a-85d6-429a-bf2a-0719525f5f29', content: 'Cool' });
+
+      assert.deepEqual(Photo.find(1), {
+        id: 1, name: 'Ski trip', href: 'ski-trip.jpeg', is_public: false
+      });
+      assert.deepEqual(Photo.find(2), {
+        id: 2, name: 'Family photo', href: 'family-photo-2.jpeg', is_public: false
+      });
+      assert.deepEqual(PhotoComment.findBy({ uuid: '374c7f4a-85d6-429a-bf2a-0719525f5f29' }), {
+        uuid: '374c7f4a-85d6-429a-bf2a-0719525f5f29', content: 'Cool', photo_id: 2, user_id: 1
+      });
+    });
+
+    it('throws error when updating a nonexistent model', function() {
+      const MemServer = require('../index.js');
+      const { Photo, PhotoComment } = MemServer.Models;
+
+      MemServer.start()
+
+      assert.throws(() => Photo.update({ id: 99, href: 'family-photo-2.jpeg' }), (err) => {
+        return (err instanceof Error) &&
+          /\[MemServer\] Photo\.update\(record\) failed because Photo with id: 99 does not exist/.test(err);
+      });
+      assert.throws(() => PhotoComment.update({ uuid: '374c7f4a-85d6-429a-bf2a-0719525f5666', content: 'Nice' }), (err) => {
+        return (err instanceof Error) &&
+        /\[MemServer\] PhotoComment\.update\(record\) failed because PhotoComment with uuid: 374c7f4a-85d6-429a-bf2a-0719525f5666 does not exist/.test(err);
+      });
+    });
+
+    it('throws error when a model get updated with an unknown $Model.attribute', function() {
+      const MemServer = require('../index.js');
+      const { Photo, PhotoComment } = MemServer.Models;
+
+      MemServer.start()
+
+      assert.throws(() => Photo.update({ id: 1, name: 'ME', is_verified: false }), (err) => {
+        return (err instanceof Error) &&
+          /\[MemServer\] Photo\.update id: 1 fails, Photo model does not have is_verified attribute to update/.test(err);
+      });
+      assert.throws(() => PhotoComment.update({ uuid: '374c7f4a-85d6-429a-bf2a-0719525f5f29', location: 'Amsterdam' }), (err) => {
+        return (err instanceof Error) &&
+        /\[MemServer\] PhotoComment\.update uuid: 374c7f4a-85d6-429a-bf2a-0719525f5f29 fails, PhotoComment model does not have location attribute to update/.test(err);
+      });
+    });
   });
 });

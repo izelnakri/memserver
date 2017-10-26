@@ -1,13 +1,13 @@
-// TODO: $Model.insert() with new attributes append the new attributes to $Model.attributes
 const assert = require('assert');
 const fs = require('fs');
 const rimraf = require('rimraf');
+const moment = require('moment');
 
 const modelFileContent = `import Model from '${process.cwd()}/lib/mem-server/model';
                           export default Model({});`;
 
 describe('MemServer.Model Insert Interface', function() {
-  before(function() {
+  before(function(done) {
     fs.mkdirSync(`./memserver`);
     fs.mkdirSync(`./memserver/models`);
     fs.writeFileSync(`${process.cwd()}/memserver/models/user.js`, modelFileContent);
@@ -59,10 +59,12 @@ describe('MemServer.Model Insert Interface', function() {
         user_id: 1
       }
     ];`);
+    done();
   });
 
   beforeEach(function() {
     Object.keys(require.cache).forEach((key) => delete require.cache[key]);
+
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
       import Model from '${process.cwd()}/lib/mem-server/model';
 
@@ -110,7 +112,7 @@ describe('MemServer.Model Insert Interface', function() {
       const MemServer = require('../index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
-      MemServer.start()
+      MemServer.start();
 
       assert.deepEqual(Photo.findAll().map((photo) => photo.id), [1, 2, 3]);
 
@@ -174,7 +176,7 @@ describe('MemServer.Model Insert Interface', function() {
       const MemServer = require('../index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
-      MemServer.start()
+      MemServer.start();
 
       Photo.insert();
       Photo.insert();
@@ -234,7 +236,7 @@ describe('MemServer.Model Insert Interface', function() {
       const MemServer = require('../index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
-      MemServer.start()
+      MemServer.start();
 
       Photo.insert({ id: 99, href: '/izel.html', is_public: false });
       Photo.insert({ name: 'Baby photo', href: '/baby.jpg' });
@@ -307,7 +309,7 @@ describe('MemServer.Model Insert Interface', function() {
       const MemServer = require('../index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
-      MemServer.start()
+      MemServer.start();
 
       assert.throws(() => Photo.insert({ id: 1 }), (err) => {
         return (err instanceof Error) &&
@@ -323,7 +325,7 @@ describe('MemServer.Model Insert Interface', function() {
       const MemServer = require('../index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
-      MemServer.start()
+      MemServer.start();
 
       assert.throws(() => Photo.insert({ id: '99' }), (err) => {
         return (err instanceof Error) &&
@@ -334,5 +336,64 @@ describe('MemServer.Model Insert Interface', function() {
           /MemServer PhotoComment model primaryKey type is 'uuid'. Instead you've tried to enter uuid: 1 with number type/.test(err);
       });
     });
+  });
+
+  it('can add new values to $Model.attributes when new attributes are discovered', function() {
+    this.timeout(5000);
+
+    const MemServer = require('../index.js');
+    const { Photo, PhotoComment } = MemServer.Models;
+
+    MemServer.start();
+
+    Photo.insert({ published_at: moment('2017-10-10').toJSON(), description: 'Some description' });
+    Photo.insert({ location: 'Istanbul', is_public: false });
+    PhotoComment.insert({ updated_at: moment('2017-01-10').toJSON(), like_count: 22 });
+    PhotoComment.insert({ reply_id: 1 });
+
+    assert.deepEqual(Photo.attributes, [
+      'is_public', 'name', 'id', 'href', 'published_at', 'description', 'location'
+    ]);
+    assert.deepEqual(PhotoComment.attributes, [
+      'inserted_at', 'is_important', 'uuid', 'content', 'photo_id', 'user_id', 'updated_at',
+      'like_count', 'reply_id'
+    ]);
+    assert.deepEqual(Photo.findAll(), [
+      {
+        id: 1,
+        name: 'Ski trip',
+        href: 'ski-trip.jpeg',
+        is_public: false
+      },
+      {
+        id: 2,
+        name: 'Family photo',
+        href: 'family-photo.jpeg',
+        is_public: true
+      },
+      {
+        id: 3,
+        name: 'Selfie',
+        href: 'selfie.jpeg',
+        is_public: false
+      },
+      {
+        id: 4,
+        href: undefined,
+        is_public: true,
+        published_at: '2017-10-09T22:00:00.000Z',
+        description: 'Some description',
+        name: 'Some default name'
+      },
+      {
+        id: 5,
+        href: undefined,
+        is_public: false,
+        location: 'Istanbul',
+        published_at: undefined,
+        name: 'Some default name',
+        description: undefined
+      }
+    ]);
   });
 });

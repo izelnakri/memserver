@@ -4,6 +4,8 @@ const rimraf = require('rimraf');
 
 describe('MemServer.Model Interface', function() {
   before(function() {
+    Object.keys(require.cache).forEach((key) => delete require.cache[key]);
+
     fs.mkdirSync(`./memserver`);
     fs.mkdirSync(`./memserver/models`);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
@@ -65,7 +67,6 @@ describe('MemServer.Model Interface', function() {
         is_public: false
       }
     ];`);
-
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photo-comments.js`, `export default [
       {
         uuid: '499ec646-493f-4eea-b92e-e383d94182f4',
@@ -94,12 +95,14 @@ describe('MemServer.Model Interface', function() {
     ];`);
   });
 
-  beforeEach(function() {
+  beforeEach(function(done) {
     Object.keys(require.cache).forEach((key) => delete require.cache[key]);
+    done();
   });
 
-  afterEach(function() {
+  afterEach(function(done) {
     Object.keys(require.cache).forEach((key) => delete require.cache[key]);
+    done();
   });
 
   after(function(done) {
@@ -141,6 +144,8 @@ describe('MemServer.Model Interface', function() {
     });
 
     it('reads the defaultAttributes correctly', function() {
+      Object.keys(require.cache).forEach((key) => delete require.cache[key]);
+
       const MemServer = require('../index.js');
       const { Photo, PhotoComment, User } = MemServer.Models;
       const initialPhotoDefaultAttributes = Photo.defaultAttributes;
@@ -191,6 +196,8 @@ describe('MemServer.Model Interface', function() {
     });
 
     it('can have custom queries for a Model', function() {
+      Object.keys(require.cache).forEach((key) => delete require.cache[key]);
+
       const MemServer = require('../index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
@@ -198,7 +205,7 @@ describe('MemServer.Model Interface', function() {
 
       const photo = Photo.find(1);
 
-      assert.deepEqual(PhotoComment.forPhoto(photo), PhotoComent.findAll({ photo_id: photo.id }));
+      assert.deepEqual(PhotoComment.forPhoto(photo), PhotoComment.findAll({ photo_id: photo.id }));
       assert.deepEqual(Photo.publicPhotos(), Photo.findAll({ is_public: true }));
     });
   });

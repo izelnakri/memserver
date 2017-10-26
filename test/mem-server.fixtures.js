@@ -30,7 +30,10 @@ describe('MemServer fixture constraint feature', function() {
   it('should throw error if any of the fixtures missing id or uuid', function() {
     this.timeout(5000);
 
-    fs.mkdirSync(`./memserver/fixtures`);
+    if (!fs.existsSync('./memserver/fixtures')) {
+      fs.mkdirSync('./memserver/fixtures');
+    }
+
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photos.js`, `export default [
       {
         id: 1,
@@ -117,7 +120,6 @@ describe('MemServer fixture constraint feature', function() {
         is_public: false
       }
     ];`);
-
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photo-comments.js`, `export default [
       {
         uuid: '499ec646-493f-4eea-b92e-e383d94182f4',
@@ -167,7 +169,7 @@ describe('MemServer fixture constraint feature', function() {
 
   it('should throw error if any of the uuid fixtures have an incorrect type', function() {
     this.timeout(5000);
-    
+
     fs.mkdirSync(`./memserver/fixtures`);
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photos.js`, `export default [
       {
@@ -189,7 +191,6 @@ describe('MemServer fixture constraint feature', function() {
         is_public: false
       }
     ];`);
-
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photo-comments.js`, `export default [
       {
         uuid: '499ec646-493f-4eea-b92e-e383d94182f4',
@@ -268,7 +269,7 @@ describe('MemServer fixture constraint feature', function() {
     });
   });
 
-  it('should throw error if there are dusplicate uuid fixtures', function() {
+  it('should throw error if there are duplicate uuid fixtures', function() {
     fs.mkdirSync(`./memserver/fixtures`);
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photo-comments.js`, `export default [
       {

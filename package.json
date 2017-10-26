@@ -5,7 +5,7 @@
   "main": "index.js",
   "license": "ISC",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --retries 3"
   },
   "repository": {
     "type": "git",

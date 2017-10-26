@@ -42,6 +42,8 @@ describe('MemServer start/stop functionality', function() {
   });
 
   it('can be started with fixtures', function() {
+    this.timeout(5000);
+    
     fs.mkdirSync(`./memserver/fixtures`);
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photos.js`, `export default [
       {

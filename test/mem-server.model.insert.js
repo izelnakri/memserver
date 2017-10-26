@@ -1,3 +1,4 @@
+// TODO: $Model.insert() with new attributes append the new attributes to $Model.attributes
 const assert = require('assert');
 const fs = require('fs');
 const rimraf = require('rimraf');
@@ -86,6 +87,10 @@ describe('MemServer.Model Insert Interface', function() {
         }
       });
     `);
+  });
+
+  afterEach(function() {
+    Object.keys(require.cache).forEach((key) => delete require.cache[key]);
   });
 
   after(function(done) {

@@ -166,6 +166,8 @@ describe('MemServer fixture constraint feature', function() {
   });
 
   it('should throw error if any of the uuid fixtures have an incorrect type', function() {
+    this.timeout(5000);
+    
     fs.mkdirSync(`./memserver/fixtures`);
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photos.js`, `export default [
       {

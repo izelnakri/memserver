@@ -16,6 +16,9 @@ describe('MemServer.Model Interface', function() {
           name() {
             return faker.name.title();
           }
+        },
+        publicPhotos() {
+          return this.findAll({ is_public: true });
         }
       });
     `);
@@ -29,6 +32,9 @@ describe('MemServer.Model Interface', function() {
             return moment().toJSON();
           },
           is_important: true
+        },
+        forPhoto(photo) {
+          return this.findAll({ photo_id: photo.id });
         }
       });
     `);
@@ -184,8 +190,16 @@ describe('MemServer.Model Interface', function() {
       assert.equal(PhotoComment.count(), 4);
     });
 
-    // TODO: it('can have custom queries for a Model', function() {
-    //
-    // });
+    it('can have custom queries for a Model', function() {
+      const MemServer = require('../index.js');
+      const { Photo, PhotoComment } = MemServer.Models;
+
+      MemServer.start();
+
+      const photo = Photo.find(1);
+
+      assert.deepEqual(PhotoComment.forPhoto(photo), PhotoComent.findAll({ photo_id: photo.id }));
+      assert.deepEqual(Photo.publicPhotos(), Photo.findAll({ is_public: true }));
+    });
   });
 });

@@ -109,6 +109,7 @@ describe('MemServer.Model Interface', function() {
     if (fs.existsSync(`${process.cwd()}/memserver`)) {
       rimraf.sync(`${process.cwd()}/memserver`);
     }
+    
     done();
   });
 

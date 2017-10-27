@@ -87,7 +87,8 @@ describe('MemServer', function() {
         assert.equal(model.modelName, modelName);
         assert.deepEqual(Object.keys(MemServer.Models[modelName]), [
           'modelName', 'primaryKey', 'defaultAttributes', 'attributes', 'count', 'find', 'findBy',
-          'findAll', 'insert', 'update', 'delete', 'serialize'
+          'findAll', 'insert', 'update', 'delete', 'embed', 'embedReferences', 'serializer',
+          'serialize', 'getRelationship'
         ]);
       });
     });

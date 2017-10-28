@@ -26,10 +26,6 @@ const MemServer = require('./lib/mem-server.js').default;
 
 module.exports = MemServer;
 
-// scenario starts
-// configurations
-// register routes
-
 
 // let server = new window.Pretender(function(){
 //   this.get('/photos', (request) => {
@@ -59,18 +55,5 @@ module.exports = MemServer;
 //   console.log(request);
 // }
 
-// function colorStatusCode(statusCode) {
-//   if (statusCode === 200 || statusCode === 201) {
-//     return chalk.green(statusCode);
-//   }
-//
-//   return chalk.red(statusCode);
-// }
-//
-//
 // window.$.getJSON('/photos/10');
 // window.$.getJSON('/lol');
-
-
-// NOTE: namespace addition, this.timing, this.logging, this.passthrough, this.loadFixtures(?)
-// this.pretender

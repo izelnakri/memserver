@@ -81,7 +81,7 @@ describe('MemServer fixture constraint feature', function() {
     const MemServer = require('../index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
-    assert.deepEqual(MemServer.Pretender, {});
+    assert.deepEqual(MemServer.Server, {});
     assert.deepEqual(MemServer.DB, {});
 
     assert.deepEqual(Photo.findAll(), []);
@@ -92,7 +92,7 @@ describe('MemServer fixture constraint feature', function() {
         /\[MemServer\] DATABASE ERROR\: At least one of your PhotoComment fixtures missing a primary key\. Please make sure all your PhotoComment fixtures have either id or uuid primaryKey/.test(err);
     });
 
-    assert.deepEqual(MemServer.Pretender, {});
+    assert.deepEqual(MemServer.Server, {});
     assert.deepEqual(MemServer.DB, {});
     assert.deepEqual(Photo.findAll(), []);
     assert.deepEqual(PhotoComment.findAll(), []);
@@ -150,7 +150,7 @@ describe('MemServer fixture constraint feature', function() {
     const MemServer = require('../index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
-    assert.deepEqual(MemServer.Pretender, {});
+    assert.deepEqual(MemServer.Server, {});
     assert.deepEqual(MemServer.DB, {});
 
     assert.deepEqual(Photo.findAll(), []);
@@ -161,7 +161,7 @@ describe('MemServer fixture constraint feature', function() {
         /\[MemServer\] Photo model primaryKey type is 'id'. Instead you've tried to enter id: 2 with string type/.test(err);
     });
 
-    assert.deepEqual(MemServer.Pretender, {});
+    assert.deepEqual(MemServer.Server, {});
     assert.deepEqual(MemServer.DB, {});
     assert.deepEqual(Photo.findAll(), []);
     assert.deepEqual(PhotoComment.findAll(), []);
@@ -221,7 +221,7 @@ describe('MemServer fixture constraint feature', function() {
     const MemServer = require('../index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
-    assert.deepEqual(MemServer.Pretender, {});
+    assert.deepEqual(MemServer.Server, {});
     assert.deepEqual(MemServer.DB, {});
 
     assert.deepEqual(Photo.findAll(), []);
@@ -232,7 +232,7 @@ describe('MemServer fixture constraint feature', function() {
         /\[MemServer\] PhotoComment model primaryKey type is 'uuid'. Instead you've tried to enter uuid: 12 with number type/.test(err);
     });
 
-    assert.deepEqual(MemServer.Pretender, {});
+    assert.deepEqual(MemServer.Server, {});
     assert.deepEqual(MemServer.DB, {});
     assert.deepEqual(Photo.findAll(), []);
     assert.deepEqual(PhotoComment.findAll(), []);

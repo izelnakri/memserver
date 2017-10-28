@@ -32,11 +32,11 @@ describe('MemServer start/stop functionality', function() {
     
     const MemServer = require('../index.js');
 
-    assert.deepEqual(MemServer.Pretender, {});
+    assert.deepEqual(MemServer.Server, {});
 
     MemServer.start();
 
-    assert.deepEqual(Object.keys(MemServer.Pretender), [
+    assert.deepEqual(Object.keys(MemServer.Server), [
       'hosts', 'handlers', 'handledRequests', 'passthroughRequests', 'unhandledRequests',
       'requestReferences', 'forcePassthrough', 'disableUnhandled', '_nativeXMLHttpRequest',
       'running', 'handledRequest', 'passthroughRequest', 'unhandledRequest'
@@ -98,7 +98,7 @@ describe('MemServer start/stop functionality', function() {
     const MemServer = require('../index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
-    assert.deepEqual(MemServer.Pretender, {});
+    assert.deepEqual(MemServer.Server, {});
     assert.deepEqual(MemServer.DB, {});
 
     assert.deepEqual(Photo.findAll(), []);
@@ -106,7 +106,7 @@ describe('MemServer start/stop functionality', function() {
 
     MemServer.start();
 
-    assert.deepEqual(Object.keys(MemServer.Pretender), [
+    assert.deepEqual(Object.keys(MemServer.Server), [
       'hosts', 'handlers', 'handledRequests', 'passthroughRequests', 'unhandledRequests',
       'requestReferences', 'forcePassthrough', 'disableUnhandled', '_nativeXMLHttpRequest',
       'running', 'handledRequest', 'passthroughRequest', 'unhandledRequest'
@@ -133,20 +133,20 @@ describe('MemServer start/stop functionality', function() {
 
     const MemServer = require('../index.js');
 
-    assert.deepEqual(MemServer.Pretender, {});
+    assert.deepEqual(MemServer.Server, {});
 
     MemServer.start();
 
-    assert.deepEqual(Object.keys(MemServer.Pretender), [
+    assert.deepEqual(Object.keys(MemServer.Server), [
       'hosts', 'handlers', 'handledRequests', 'passthroughRequests', 'unhandledRequests',
       'requestReferences', 'forcePassthrough', 'disableUnhandled', '_nativeXMLHttpRequest',
       'running', 'handledRequest', 'passthroughRequest', 'unhandledRequest'
     ]);
 
-    MemServer.Pretender.shutdown = sinon.spy();
+    MemServer.Server.shutdown = sinon.spy();
     MemServer.shutdown();
 
-    assert.ok(MemServer.Pretender.shutdown.calledOnce, 'MemServer.shutdown() calls shutdown on Pretender instance');
+    assert.ok(MemServer.Server.shutdown.calledOnce, 'MemServer.shutdown() calls shutdown on Pretender instance');
   });
 
   it('can be shut down and started again with restarted state', () => {
@@ -202,11 +202,11 @@ describe('MemServer start/stop functionality', function() {
     const MemServer = require('../index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
-    assert.deepEqual(MemServer.Pretender, {});
+    assert.deepEqual(MemServer.Server, {});
 
     MemServer.start();
 
-    assert.deepEqual(Object.keys(MemServer.Pretender), [
+    assert.deepEqual(Object.keys(MemServer.Server), [
       'hosts', 'handlers', 'handledRequests', 'passthroughRequests', 'unhandledRequests',
       'requestReferences', 'forcePassthrough', 'disableUnhandled', '_nativeXMLHttpRequest',
       'running', 'handledRequest', 'passthroughRequest', 'unhandledRequest'

@@ -53,8 +53,8 @@ describe('MemServer', function() {
       const MemServer = require('../index.js');
 
       assert.deepEqual(MemServer.DB, {});
-      assert.deepEqual(MemServer.Pretender, {});
-      assert.deepEqual(Object.keys(MemServer), ['DB', 'Pretender', 'Models', 'start', 'shutdown']);
+      assert.deepEqual(MemServer.Server, {});
+      assert.deepEqual(Object.keys(MemServer), ['DB', 'Server', 'Models', 'start', 'shutdown']);
       assert.deepEqual(MemServer.Models, {});
     });
 
@@ -78,8 +78,8 @@ describe('MemServer', function() {
       const models = Object.keys(MemServer.Models);
 
       assert.deepEqual(MemServer.DB, {});
-      assert.deepEqual(MemServer.Pretender, {});
-      assert.deepEqual(Object.keys(MemServer), ['DB', 'Pretender', 'Models', 'start', 'shutdown']);
+      assert.deepEqual(MemServer.Server, {});
+      assert.deepEqual(Object.keys(MemServer), ['DB', 'Server', 'Models', 'start', 'shutdown']);
       assert.deepEqual(models, ['PhotoComment', 'Photo', 'User']);
       models.forEach((modelName) => {
         const model = MemServer.Models[modelName];

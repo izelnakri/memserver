@@ -21,6 +21,7 @@ window.$ = require('jquery');
 global.self = window.self;
 
 require('pretender');
+require('./lib/mem-server/pretender-hacks.js');
 
 const MemServer = require('./lib/mem-server.js').default;
 

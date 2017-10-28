@@ -18,7 +18,7 @@ describe('MemServer.Response Interface', function() {
         this.get('/photos', () => {
           const photos = Photo.findAll();
 
-          return [200, {'Content-Type': 'application/json'}, JSON.stringify({ photos: Photo.serializer(photos) })]
+          return { photos: Photo.serializer(photos) };
         });
       }`);
     fs.mkdirSync(`./memserver/fixtures`);

@@ -135,7 +135,7 @@ describe('MemServer.Model Delete Interface', function() {
 
       assert.throws(() => Photo.delete({ id: 1 }), (err) => {
         return (err instanceof Error) &&
-          /\[MemServer] Photo has no records in the database to delete\. Photo\.delete\(\{ id: 1 \}\) failed/.test(err);
+          /\[MemServer\] Photo has no records in the database to delete\. Photo\.delete\(\{ id: 1 \}\) failed/.test(err);
       });
       assert.throws(() => PhotoComment.delete({ uuid: '374c7f4a-85d6-429a-bf2a-0719525f5111' }), (err) => {
         return (err instanceof Error) &&

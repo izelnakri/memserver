@@ -19,12 +19,12 @@ describe('MemServer Utils Unit tests', function() {
   it('exports primaryKeyTypeSafetyCheck correctly', function() {
     assert.throws(() => primaryKeyTypeSafetyCheck('id', '22', 'Photo'), (err) => {
       return (err instanceof Error) &&
-      /MemServer Photo model primaryKey type is 'id'. Instead you've tried to enter id: 22 with string type/.test(err);
+      /\[MemServer\] Photo model primaryKey type is 'id'. Instead you've tried to enter id: 22 with string type/.test(err);
     });
     assert.doesNotThrow(() => primaryKeyTypeSafetyCheck('id', 22, 'Photo'), Error);
     assert.throws(() => primaryKeyTypeSafetyCheck('uuid', 22, 'PhotoComment'), (err) => {
       return (err instanceof Error) &&
-      /MemServer PhotoComment model primaryKey type is 'uuid'. Instead you've tried to enter uuid: 22 with number type/.test(err);
+      /\[MemServer\] PhotoComment model primaryKey type is 'uuid'. Instead you've tried to enter uuid: 22 with number type/.test(err);
     });
     assert.doesNotThrow(() => primaryKeyTypeSafetyCheck('uuid', '166a435d-ad3d-4662-9f6f-04373280a38b', 'PhotoComment'), Error);
   });

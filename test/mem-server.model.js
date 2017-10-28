@@ -145,6 +145,39 @@ describe('MemServer.Model Interface', function() {
     });
 
     it('reads the defaultAttributes correctly', function() {
+      fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
+        import faker from 'faker';
+        import Model from '${process.cwd()}/lib/mem-server/model';
+
+        export default Model({
+          defaultAttributes: {
+            is_public: true,
+            name() {
+              return faker.name.title();
+            }
+          },
+          publicPhotos() {
+            return this.findAll({ is_public: true });
+          }
+        });
+      `);
+      fs.writeFileSync(`${process.cwd()}/memserver/models/photo-comment.js`, `
+        import moment from 'moment';
+        import Model from '${process.cwd()}/lib/mem-server/model';
+
+        export default Model({
+          defaultAttributes: {
+            inserted_at() {
+              return moment().toJSON();
+            },
+            is_important: true
+          },
+          forPhoto(photo) {
+            return this.findAll({ photo_id: photo.id });
+          }
+        });
+      `);
+
       Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 
       const MemServer = require('../index.js');

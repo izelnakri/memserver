@@ -89,7 +89,7 @@ describe('MemServer fixture constraint feature', function() {
 
     assert.throws(() => MemServer.start(), (err) => {
       return (err instanceof Error) &&
-        /MemServer DATABASE ERROR\: At least one of your PhotoComment fixtures missing a primary key\. Please make sure all your PhotoComment fixtures have either id or uuid primaryKey/.test(err);
+        /\[MemServer\] DATABASE ERROR\: At least one of your PhotoComment fixtures missing a primary key\. Please make sure all your PhotoComment fixtures have either id or uuid primaryKey/.test(err);
     });
 
     assert.deepEqual(MemServer.Pretender, {});
@@ -158,7 +158,7 @@ describe('MemServer fixture constraint feature', function() {
 
     assert.throws(() => MemServer.start(), (err) => {
       return (err instanceof Error) &&
-        /MemServer Photo model primaryKey type is 'id'. Instead you've tried to enter id: 2 with string type/.test(err);
+        /\[MemServer\] Photo model primaryKey type is 'id'. Instead you've tried to enter id: 2 with string type/.test(err);
     });
 
     assert.deepEqual(MemServer.Pretender, {});
@@ -229,7 +229,7 @@ describe('MemServer fixture constraint feature', function() {
 
     assert.throws(() => MemServer.start(), (err) => {
       return (err instanceof Error) &&
-        /MemServer PhotoComment model primaryKey type is 'uuid'. Instead you've tried to enter uuid: 12 with number type/.test(err);
+        /\[MemServer\] PhotoComment model primaryKey type is 'uuid'. Instead you've tried to enter uuid: 12 with number type/.test(err);
     });
 
     assert.deepEqual(MemServer.Pretender, {});
@@ -265,7 +265,7 @@ describe('MemServer fixture constraint feature', function() {
 
     assert.throws(() => MemServer.start(), (err) => {
       return (err instanceof Error) &&
-        /MemServer DATABASE ERROR: Duplication in Photo fixtures with id: 2/.test(err);
+        /\[MemServer\] DATABASE ERROR: Duplication in Photo fixtures with id: 2/.test(err);
     });
   });
 
@@ -302,7 +302,7 @@ describe('MemServer fixture constraint feature', function() {
 
     assert.throws(() => MemServer.start(), (err) => {
       return (err instanceof Error) &&
-        /MemServer DATABASE ERROR: Duplication in PhotoComment fixtures with uuid: 499ec646-493f-4eea-b92e-e383d94182f4/.test(err);
+        /\[MemServer\] DATABASE ERROR: Duplication in PhotoComment fixtures with uuid: 499ec646-493f-4eea-b92e-e383d94182f4/.test(err);
     });
   });
 });

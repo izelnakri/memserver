@@ -87,11 +87,11 @@ describe('MemServer.Model Query Interface', function() {
     array.forEach((param) => {
       assert.throws(() => Photo.find(param), (err) => {
         return (err instanceof Error) &&
-          /MemServer Photo.find\(id\) cannot be called without a valid id/.test(err);
+          /\[MemServer\] Photo.find\(id\) cannot be called without a valid id/.test(err);
       });
       assert.throws(() => PhotoComment.find(param), (err) => {
         return (err instanceof Error) &&
-          /MemServer PhotoComment.find\(id\) cannot be called without a valid id/.test(err);
+          /\[MemServer\] PhotoComment.find\(id\) cannot be called without a valid id/.test(err);
       });
     });
   });
@@ -134,7 +134,7 @@ describe('MemServer.Model Query Interface', function() {
 
     assert.throws(() => Photo.findBy(), (err) => {
       return (err instanceof Error) &&
-        /MemServer Photo.findBy\(id\) cannot be called without a parameter/.test(err);
+        /\[MemServer\] Photo.findBy\(id\) cannot be called without a parameter/.test(err);
     });
   });
 

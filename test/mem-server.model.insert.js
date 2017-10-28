@@ -329,11 +329,11 @@ describe('MemServer.Model Insert Interface', function() {
 
       assert.throws(() => Photo.insert({ id: '99' }), (err) => {
         return (err instanceof Error) &&
-          /MemServer Photo model primaryKey type is 'id'. Instead you've tried to enter id: 99 with string type/.test(err);
+          /\[MemServer\] Photo model primaryKey type is 'id'. Instead you've tried to enter id: 99 with string type/.test(err);
       });
       assert.throws(() => PhotoComment.insert({ uuid: 1 }), (err) => {
         return (err instanceof Error) &&
-          /MemServer PhotoComment model primaryKey type is 'uuid'. Instead you've tried to enter uuid: 1 with number type/.test(err);
+          /\[MemServer\] PhotoComment model primaryKey type is 'uuid'. Instead you've tried to enter uuid: 1 with number type/.test(err);
       });
     });
   });

@@ -10,14 +10,22 @@ describe('MemServer.Model Relationships Interface', function() {
     fs.mkdirSync(`./memserver/models`);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
       import Model from '${process.cwd()}/lib/mem-server/model';
+      import PhotoComment from '${process.cwd()}/memserver/models/photo-comment.js';
 
       export default Model({
+        embedReferences: {
+          comments: PhotoComment
+        }
       });
     `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo-comment.js`, `
       import Model from '${process.cwd()}/lib/mem-server/model';
+      import User from '${process.cwd()}/memserver/models/user.js';
 
       export default Model({
+        embedReferences: {
+          author: User
+        }
       });
     `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/user.js`, `
@@ -111,70 +119,209 @@ describe('MemServer.Model Relationships Interface', function() {
     done();
   });
 
-  // it('can register relationship embeds before runtime', function() {
-  //   const MemServer = require('../index.js');
-  //   const { Photo, PhotoComment } = MemServer.Models;
-  //
-  //   MemServer.start();
-  //
-  //
-  // });
+  describe('$Model.getRelationship method', function() {
+    it('works for hasOne/belongsTo relationships both sides', function() {
+      const MemServer = require('../index.js');
+      const { Photo, Activity } = MemServer.Models;
 
-  // it('can register relationships embeds during runtime', function() {
-  //
-  // });
+      MemServer.start();
 
-  it('works for hasOne/belongsTo relationships both sides', function() {
-    const MemServer = require('../index.js');
-    const { Photo, Activity } = MemServer.Models;
+      const activity = Photo.getRelationship(Photo.find(1), 'activity');
 
-    MemServer.start();
+      assert.deepEqual(activity, { id: 1, user_id: 1, photo_id: 1 });
+      assert.deepEqual(Photo.getRelationship(Photo.find(2), 'activity'), null);
+      assert.deepEqual(Activity.getRelationship(activity, 'photo'), Photo.find(1));
+      assert.deepEqual(Activity.getRelationship(Activity.find(2), 'photo'), null);
+    });
 
-    const activity = Photo.getRelationship(Photo.find(1), 'activity');
+    it('works for hasMany/belongsTo relationships both sides', function() {
+      const photoCommentCode = fs.readFileSync(`${process.cwd()}/memserver/models/photo-comment.js`);
+      const commentFixtures = fs.readFileSync(`${process.cwd()}/memserver/fixtures/photo-comments.js`);
 
-    assert.deepEqual(activity, [{ id: 1, user_id: 1, photo_id: 1 }]);
-    assert.deepEqual(Photo.getRelationship(Photo.find(2), 'activity'), null);
-    assert.deepEqual(Activity.getRelationship(activity, 'photo'), [
-      { id: 1, name: 'Ski trip', href: 'ski-trip.jpeg', is_public: false }
-    ]);
-    assert.deepEqual(Activity.getRelationship(Activity.find(2), 'photo'), null);
+      fs.writeFileSync(`${process.cwd()}/memserver/models/comment.js`, photoCommentCode);
+      fs.writeFileSync(`${process.cwd()}/memserver/fixtures/comments.js`, commentFixtures);
+
+      const MemServer = require('../index.js');
+      const { Photo, Comment } = MemServer.Models;
+
+      MemServer.start();
+
+      const firstPhotoComments = Photo.getRelationship(Photo.find(1), 'comments');
+      const secondPhotoComments = Photo.getRelationship(Photo.find(2), 'comments');
+      const thirdPhotoComments = Photo.getRelationship(Photo.find(3), 'comments');
+
+      assert.deepEqual(firstPhotoComments, [
+        {
+          uuid: '499ec646-493f-4eea-b92e-e383d94182f4', content: 'What a nice photo!', photo_id: 1,
+          user_id: 1
+        },
+        {
+          uuid: '77653ad3-47e4-4ec2-b49f-57ea36a627e7', content: 'I agree', photo_id: 1,
+          user_id: 2
+        },
+        {
+          uuid: 'd351963d-e725-4092-a37c-1ca1823b57d3', content: 'I was kidding', photo_id: 1,
+          user_id: 1
+        }
+      ]);
+      assert.deepEqual(secondPhotoComments, [
+        {
+          uuid: '374c7f4a-85d6-429a-bf2a-0719525f5f29', content: 'Interesting indeed', photo_id: 2,
+          user_id: 1
+        }
+      ]);
+      assert.deepEqual(thirdPhotoComments, []);
+      assert.throws(() => Comment.getRelationship(firstPhotoComments, 'photo'), (err) => {
+        return (err instanceof Error) &&
+          /\[MemServer\] Comment\.getRelationship expects model input to be an object not an array/.test(err);
+      });
+      assert.deepEqual(Comment.getRelationship(firstPhotoComments[0], 'photo'), {
+        id: 1,
+        name: 'Ski trip',
+        href: 'ski-trip.jpeg',
+        is_public: false
+      });
+      assert.deepEqual(Comment.getRelationship(secondPhotoComments[0], 'photo'), {
+        id: 2,
+        name: 'Family photo',
+        href: 'family-photo.jpeg',
+        is_public: true
+      });
+
+      fs.unlinkSync(`${process.cwd()}/memserver/models/comment.js`);
+      fs.unlinkSync(`${process.cwd()}/memserver/fixtures/comments.js`);
+    });
+
+    it('works for custom named hasOne/belongsTo and relationships both side', function() {
+      const MemServer = require('../index.js');
+      const { Photo, Activity } = MemServer.Models;
+
+      MemServer.start();
+
+      const activity = Photo.getRelationship(Photo.find(1), 'userActivity', Activity);
+
+      assert.deepEqual(activity, { id: 1, user_id: 1, photo_id: 1 });
+      assert.deepEqual(Photo.getRelationship(Photo.find(2), 'userActivity', Activity), null);
+      assert.deepEqual(Activity.getRelationship(activity, 'userPhoto', Photo), Photo.find(1));
+      assert.deepEqual(Activity.getRelationship(Activity.find(2), 'userPhoto', Photo), null);
+    });
+
+    it('works for custom named hasMany/belongsTo relationships both side', function() {
+      const MemServer = require('../index.js');
+      const { Photo, PhotoComment } = MemServer.Models;
+
+      MemServer.start();
+
+      const firstPhotoComments = Photo.getRelationship(Photo.find(1), 'comments', PhotoComment);
+      const secondPhotoComments = Photo.getRelationship(Photo.find(2), 'comments', PhotoComment);
+      const thirdPhotoComments = Photo.getRelationship(Photo.find(3), 'comments', PhotoComment);
+
+      assert.deepEqual(firstPhotoComments, [
+        {
+          uuid: '499ec646-493f-4eea-b92e-e383d94182f4', content: 'What a nice photo!', photo_id: 1,
+          user_id: 1
+        },
+        {
+          uuid: '77653ad3-47e4-4ec2-b49f-57ea36a627e7', content: 'I agree', photo_id: 1,
+          user_id: 2
+        },
+        {
+          uuid: 'd351963d-e725-4092-a37c-1ca1823b57d3', content: 'I was kidding', photo_id: 1,
+          user_id: 1
+        }
+      ]);
+      assert.deepEqual(secondPhotoComments, [
+        {
+          uuid: '374c7f4a-85d6-429a-bf2a-0719525f5f29', content: 'Interesting indeed', photo_id: 2,
+          user_id: 1
+        }
+      ]);
+      assert.deepEqual(thirdPhotoComments, []);
+      assert.throws(() => PhotoComment.getRelationship(firstPhotoComments, 'photo'), (err) => {
+        return (err instanceof Error) &&
+          /\[MemServer\] PhotoComment\.getRelationship expects model input to be an object not an array/.test(err);
+      });
+      assert.deepEqual(PhotoComment.getRelationship(firstPhotoComments[0], 'photo'), {
+        id: 1,
+        name: 'Ski trip',
+        href: 'ski-trip.jpeg',
+        is_public: false
+      });
+      assert.deepEqual(PhotoComment.getRelationship(secondPhotoComments[0], 'photo'), {
+        id: 2,
+        name: 'Family photo',
+        href: 'family-photo.jpeg',
+        is_public: true
+      });
+    });
+
+    it('throws an error when relationship reference is invalid', function() {
+      const MemServer = require('../index.js');
+      const { Photo, PhotoComment } = MemServer.Models;
+
+      MemServer.start();
+
+      assert.throws(() => Photo.getRelationship(Photo.find(1), 'comments'), (err) => {
+        return (err instanceof Error) &&
+          /\[MemServer\] comments relationship could not be found on Photo model\. Please put the comments Model object as the third parameter to Photo\.getRelationship function/.test(err);
+      });
+      assert.throws(() => Photo.getRelationship(Photo.find(2), 'userActivity'), (err) => {
+        return (err instanceof Error) &&
+        /\[MemServer\] userActivity relationship could not be found on Photo model\. Please put the userActivity Model object as the third parameter to Photo\.getRelationship function/.test(err);
+      });
+    });
   });
 
-  // it('works for hasMany/belongsTo relationships both side', function() {
-  //   const MemServer = require('../index.js');
-  //   const { Photo, PhotoComment } = MemServer.Models;
-  //
-  //   MemServer.start();
-  //
-  //   const firstPhotoComments = Photo.getRelationship(Photo.find(1), 'comments');
-  //   const secondPhotoComments = Photo.getRelationship(Photo.find(2), 'comments');
-  //   const thirdPhotoComments = Photo.getRelationship(Photo.find(3), 'comments');
-  //
-  //   assert.deepEqual(firstPhotoComments, [
-  //
-  //   ]);
-  //   assert.deepEqual(secondPhotoComments, [
-  //
-  //   ]);
-  //   assert.deepEqual(thirdPhotoComments, [
-  //
-  //   ]);
-  //   assert.deepEqual(PhotoComment.getRelationship(firstPhotoComments, 'photo'), [
-  //
-  //   ]);
-  //   assert.deepEqual(PhotoComment.getRelationship(secondPhotoComments, 'photo'), [
-  //
-  //   ]);
-  //   assert.deepEqual(PhotoComment.getRelationship(thirdPhotoComments, 'photo'), [
-  //
-  //   ]);
-  // });
-  //
-  // it('works for custom named hasOne/belongsTo and hasMany/belongsTo relationships both side', function() {
-  //
-  // });
-  //
-  // it('throws an error when relationship reference is invalid', function() {
-  //     // NOTE: setup userActivity <-> Photo relationship
-  // });
+  describe('$Model relationship embedding', function() {
+    it('can register relationship embeds before runtime', function() {
+      const MemServer = require('../index.js');
+      const { Photo, PhotoComment, User } = MemServer.Models;
+
+      MemServer.start();
+
+      assert.deepEqual(Photo.embedReferences, { comments: PhotoComment });
+      assert.deepEqual(PhotoComment.embedReferences, { author: User });
+    });
+
+    it('can register relationships embeds during runtime', function() {
+      const MemServer = require('../index.js');
+      const { Activity, Photo, PhotoComment, User } = MemServer.Models;
+
+      MemServer.start();
+
+      Photo.embed({ userActivity: Activity });
+      User.embed({ activities: Activity });
+
+      assert.deepEqual(Photo.embedReferences, { comments: PhotoComment, userActivity: Activity });
+      assert.deepEqual(User.embedReferences, { activities: Activity });
+    });
+
+    it('throws error when runtime $Model.embed() doesnt receive an object parameter', function() {
+      const MemServer = require('../index.js');
+      const { Activity, User } = MemServer.Models;
+
+      MemServer.start();
+
+      assert.throws(() => User.embed(), (err) => {
+        return (err instanceof Error) &&
+        /\[MemServer\] User\.embed\(relationshipObject\) requires an object as a parameter: { relationshipKey: \$RelationshipModel }/.test(err);
+      });
+      assert.throws(() => User.embed(Activity), (err) => {
+        return (err instanceof Error) &&
+        /\[MemServer\] User\.embed\(relationshipObject\) requires an object as a parameter: { relationshipKey: \$RelationshipModel }/.test(err);
+      });
+    });
+
+    it('throws error when runtime $Model.embed(relationship) called with a Model that doesnt exist', function() {
+      const MemServer = require('../index.js');
+      const { Activity, User } = MemServer.Models;
+
+      MemServer.start();
+
+      assert.throws(() => User.embed({ activities: undefined }), (err) => {
+        return (err instanceof Error) &&
+          /\[MemServer\] User\.embed\(\) fails: activities Model reference is not a valid\. Please put a valid \$ModelName to User\.embed\(\)/.test(err);
+      });
+    });
+  });
 });

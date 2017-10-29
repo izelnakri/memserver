@@ -40,21 +40,3 @@ module.exports = MemServer;
 //
 //   this.get('/lol', this.passthrough);
 // });
-//
-// server.handledRequest = function(verb, path, request) {
-//   console.log(chalk.cyan('MemServer'), chalk.green('[HANDLED]'), verb, path, colorStatusCode(request.status));
-//   console.log(JSON.parse(request.responseText));
-// }
-//
-// server.passthroughRequest = function(verb, path, request) {
-//   console.log(chalk.cyan('MemServer'), chalk.yellow('[PASSTHROUGH]'), verb, path);
-// }
-//
-// server.unhandledRequest = function(verb, path, request) {
-//   console.log(chalk.cyan('MemServer'), chalk.red('[UNHANDLED REQUEST]', verb, path));
-//   console.log('REQUEST:');
-//   console.log(request);
-// }
-
-// window.$.getJSON('/photos/10');
-// window.$.getJSON('/lol');

@@ -22,7 +22,8 @@
     "i": "^0.3.6",
     "jsdom": "^11.3.0",
     "pretender": "^1.6.0",
-    "route-recognizer": "^0.3.3"
+    "route-recognizer": "^0.3.3",
+    "qs": "^6.5.1"
   },
   "devDependencies": {
     "faker": "^4.1.0",

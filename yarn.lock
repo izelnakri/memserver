@@ -1239,7 +1239,7 @@ pygmentize-bundled@^2.3.0:
     bl "~0.4.1"
     through2 "~0.2.1"
 
-qs@~6.5.1:
+qs@^6.5.1, qs@~6.5.1:
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.1.tgz#349cdf6eef89ec45c12d7d5eb3fc0c870343a6d8"
 

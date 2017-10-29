@@ -1,5 +1,4 @@
 - create a cli
-- serialization embedding
 - derived schema attribute for $Model:
   schema: {
     inserted_at: {

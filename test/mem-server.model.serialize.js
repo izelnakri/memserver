@@ -108,7 +108,7 @@ describe('MemServer.Model Serialize Interface', function() {
     const photos = Photo.findAll({ is_public: false });
     const photoComments = PhotoComment.findAll({ photo_id: 1 });
 
-    assert.deepEqual(Photo.serialize(photos), [
+    assert.deepEqual(Photo.serializer(photos), [
       {
         id: 1,
         name: 'Ski trip',
@@ -122,7 +122,7 @@ describe('MemServer.Model Serialize Interface', function() {
         is_public: false
       }
     ]);
-    assert.deepEqual(PhotoComment.serialize(photoComments), [
+    assert.deepEqual(PhotoComment.serializer(photoComments), [
       {
         uuid: '499ec646-493f-4eea-b92e-e383d94182f4',
         content: 'What a nice photo!',
@@ -155,12 +155,16 @@ describe('MemServer.Model Serialize Interface', function() {
     const notFoundComment = PhotoComment.findBy({ uuid: '374c7f4a-85d6-429a-bf2a-0719525f5111' });
     const notFoundComments = Photo.findAll({ content: 'Aint easy' });
 
-    assert.equal(Photo.serialize(notFoundPhoto), undefined);
-    assert.deepEqual(Photo.serialize({}), {});
-    assert.deepEqual(Photo.serialize(notFoundPhotos), []);
-    assert.equal(PhotoComment.serialize(notFoundComment), undefined);
-    assert.deepEqual(PhotoComment.serialize({}), {});
-    assert.deepEqual(PhotoComment.serialize(notFoundComments), []);
+    assert.equal(Photo.serializer(notFoundPhoto), undefined);
+    assert.deepEqual(Photo.serializer({}), {
+      id: null, href: null, is_public: null, name: null
+    });
+    assert.deepEqual(Photo.serializer(notFoundPhotos), []);
+    assert.equal(PhotoComment.serializer(notFoundComment), undefined);
+    assert.deepEqual(PhotoComment.serializer({}), {
+      uuid: null, content: null, photo_id: null, user_id: null
+    });
+    assert.deepEqual(PhotoComment.serializer(notFoundComments), []);
   });
 
   it('can serialize embeded records recursively', function() {

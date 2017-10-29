@@ -7,6 +7,8 @@ const AJAX_AUTHORIZATION_HEADERS = {
   'Content-Type': 'application/json', 'Authorization': `Token ${AUTHENTICATION_TOKEN}`
 };
 
+process.setMaxListeners(0);
+
 describe('MemServer.Server functionality', function() {
   before(function() {
     fs.mkdirSync(`./memserver`);
@@ -17,9 +19,9 @@ describe('MemServer.Server functionality', function() {
       export default Model({
         findFromHeaderToken(headers) {
           const authorizationHeader = headers.Authorization;
-          const token = authorizationHeader ? authorizationHeader.slice(6) : null;
+          const token = authorizationHeader ? authorizationHeader.slice(6) : false;
 
-          return this.findBy({ authentication_token: token });
+          return this.findBy({ authentication_token: token }) || false;
         }
       });
     `);
@@ -136,7 +138,7 @@ describe('MemServer.Server functionality', function() {
     it('POST /resources work with shortcut', async function() {
       this.timeout(5000);
 
-      const MemServer = require('../index.js');
+      const MemServer = require('../../index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -157,7 +159,7 @@ describe('MemServer.Server functionality', function() {
     });
 
     it('GET /resources works with shortcut', async function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../../index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -174,7 +176,7 @@ describe('MemServer.Server functionality', function() {
     });
 
     it('GET /resources/:id works with shortcut', async function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../../index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -188,7 +190,7 @@ describe('MemServer.Server functionality', function() {
     });
 
     it('PUT /resources/:id works with shortcut', async function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../../index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -208,18 +210,15 @@ describe('MemServer.Server functionality', function() {
     });
 
     it('DELETE /resources/:id works with shortcut', async function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../../index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
-      window.$.ajaxSetup({ headers: { 'Content-Type': 'application/json' } });
 
       assert.equal(Photo.count(), 3);
 
       await window.$.ajax({
-        type: 'DELETE',
-        url: '/photos/1',
-        headers: { 'Content-Type': 'application/json' }
+        type: 'DELETE', url: '/photos/1', headers: { 'Content-Type': 'application/json' }
       }, (data, textStatus, jqXHR) => {
         assert.equal(jqXHR.status, 204);
         assert.deepEqual(data, {});
@@ -237,7 +236,6 @@ describe('MemServer.Server functionality', function() {
         export default function({ User, Photo }) {
           this.post('/photos', ({ headers }) => {
             const user = User.findFromHeaderToken(headers);
-            console.log('user is', user);
 
             if (!user) {
               return Response(401, { error: 'Unauthorized' });
@@ -286,8 +284,6 @@ describe('MemServer.Server functionality', function() {
 
           this.delete('/photos/:id', ({ headers, params }) => {
             const user = User.findFromHeaderToken(headers);
-            console.log('called');
-            console.log(user);
 
             if (user && Photo.findBy({ id: params.id, user_id: user.id })) {
               return Photo.delete({ id: params.id });
@@ -300,15 +296,16 @@ describe('MemServer.Server functionality', function() {
     it('POST /resources work with custom headers and responses', async function() {
       this.timeout(5000);
 
-      const MemServer = require('../index.js');
+      const MemServer = require('../../index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
-      window.$.ajaxSetup({ headers: { 'Content-Type': 'application/json' } });
 
       assert.equal(Photo.count(), 3);
 
-      await window.$.post('/photos').catch((jqXHR) => {
+      await window.$.ajax({
+        type: 'POST', url: '/photos', headers: { 'Content-Type': 'application/json' }
+      }).catch((jqXHR) => {
         assert.equal(jqXHR.status, 401);
         assert.deepEqual(jqXHR.responseJSON, { error: 'Unauthorized' });
       });
@@ -324,7 +321,7 @@ describe('MemServer.Server functionality', function() {
     });
 
     it('GET /resources works with custom headers and responses', async function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../../index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -345,7 +342,7 @@ describe('MemServer.Server functionality', function() {
     });
 
     it('GET /resources/:id works with custom headers and responses', async function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../../index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -366,7 +363,7 @@ describe('MemServer.Server functionality', function() {
     });
 
     it('PUT /resources/:id works with custom headers and responses', async function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../../index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -390,7 +387,7 @@ describe('MemServer.Server functionality', function() {
     });
 
     it('DELETE /resources/:id works with custom headers and responses', async function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../../index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -415,94 +412,206 @@ describe('MemServer.Server functionality', function() {
     });
   });
 
-  // describe('server can process custom queryParams and responses', function() {
-  //   fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
-  //     import Response from '';
-  //
-  //     export default function(Models) {
-  //       this.post('/photos', ({ headers, queryParams }) => {
-  //         const user = User.findFromToken(request);
-  //
-  //         if (!user && queryParams.is_admin) {
-  //           return Response(401, { error: 'Unauthorized' });
-  //         }
-  //
-  //         const photo = Photo.insert({ user_id: user.id });
-  //
-  //         return Photo.serialize(photo);
-  //       });
-  //
-  //       this.get('/photos'), ({ headers, queryParams }) => {
-  //         const user = User.findFromToken(request);
-  //
-  //         if (!user) {
-  //           return Response(404, { error: 'Not found' });
-  //         }
-  //
-  //         const photos = Photo.findAll(Object.assign({ user_id: user.id }, queryParams));
-  //
-  //         if (!photos) { // NOTE: change here maybe
-  //           return Response(404, { error: 'Not found' });
-  //         }
-  //
-  //         return Photo.serialize(photos);
-  //       });
-  //
-  //       this.get('/photos/:id', ({ params, headers, queryParams }) => {
-  //         const user = User.findFromToken(request);
-  //
-  //         if (!user) {
-  //           return Response(401, { error: 'Unauthorized' });
-  //         } else if (queryParams.nonce === '123123123') {
-  //           const photo = Photo.findBy({ id: params.id, user_id: user.id });
-  //
-  //           return photo ? Photo.serialize(photo) : Response(404, { error: 'Not found'})
-  //         }
-  //       });
-  //
-  //       this.put('/photos/:id', ({ params, headers, queryParams }) => {
-  //         const user = User.findFromToken(request);
-  //         const validRequest = user && queryParams.nonce === '123123123' &&
-  //           Photo.findBy({ id: params.id, user_id: user.id });
-  //
-  //         if (validRequest) {
-  //           return Photo.update(request.params);
-  //         }
-  //       });
-  //
-  //       this.delete('/photos/:id', ({ params, headers }) => {
-  //         const user = User.findFromToken(request);
-  //
-  //         if (!(queryParams.nonce === '123123123') {
-  //           return Response(500, { error: 'Invalid nonce to delete a photo' });
-  //         } else if (user && Photo.findBy({ id: params.id, user_id: user.id })) {
-  //           return Photo.delete(request.params); // NOTE: what to do with this response
-  //         }
-  //       });
-  //     }
-  //   `);
+  describe('server can process custom queryParams and responses', function() {
+    before(function(){
+      fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
+        import Response from '../lib/mem-server/response';
 
-    //   it('POST /resources work with custom headers, queryParams and responses', function() {
-    //
-    //   });
-    //
-    //   it('GET /resources works with custom headers, queryParams and responses', function() {
-    //
-    //   });
-    //
-    //   it('GET /resources/:id works with custom headers, queryParams and responses', function() {
-    //
-    //   });
-    //
-    //   it('PUT /resources/:id works with custom headers, queryParams and responses', function() {
-    //
-    //   });
-    //
-    //   it('DELETE /resources/:id works with custom headers, queryParams and responses', function() {
-    //
-    //   });
-  // });
+        export default function({ User, Photo }) {
+          this.post('/photos', ({ headers, params, queryParams }) => {
+            const user = User.findFromHeaderToken(headers);
+
+            if (!user || !queryParams.is_admin) {
+              return Response(401, { error: 'Unauthorized' });
+            }
+
+            const photo = Photo.insert(Object.assign({}, params.photo, { user_id: user.id }));
+
+            return { photo: Photo.serializer(photo) };
+          });
+
+          this.get('/photos', ({ headers, queryParams }) => {
+            const user = User.findFromHeaderToken(headers);
+
+            if (!user) {
+              return Response(404, { error: 'Not found' });
+            }
+
+            const photos = Photo.findAll(Object.assign({}, { user_id: user.id }, queryParams));
+
+            if (!photos || photos.length === 0) {
+              return Response(404, { error: 'Not found' });
+            }
+
+            return { photos: Photo.serializer(photos) };
+          });
+
+          this.get('/photos/:id', ({ headers, params, queryParams }) => {
+            const user = User.findFromHeaderToken(headers);
+
+            if (!user) {
+              return Response(401, { error: 'Unauthorized' });
+            } else if (queryParams.nonce === 123123123) {
+              const photo = Photo.findBy({ id: params.id, user_id: user.id });
+
+              return photo ? { photo: Photo.serializer(photo) } : Response(404, { error: 'Not found' });
+            }
+
+            return Response(404, { error: 'Not found' });
+          });
+
+          this.put('/photos/:id', ({ headers, params, queryParams }) => {
+            const user = User.findFromHeaderToken(headers);
+            const validRequest = user && queryParams.nonce === 123123123 &&
+              Photo.findBy({ id: params.id, user_id: user.id });
+
+            if (validRequest) {
+              return { photo: Photo.serializer(Photo.update(params.photo)) };
+            }
+
+            return Response(500, { error: 'Unexpected error occured' });
+          });
+
+          this.delete('/photos/:id', ({ headers, params, queryParams }) => {
+            const user = User.findFromHeaderToken(headers);
+
+            if (!(queryParams.nonce === 123123123)) {
+              return Response(500, { error: 'Invalid nonce to delete a photo' });
+            } else if (!user && !Photo.findBy({ id: params.id, user_id: user.id })) {
+              return Response(404, { error: 'Not found' });
+            }
+
+            Photo.delete({ id: params.id }); // NOTE: what to do with this response
+          });
+        }
+      `);
+    });
+
+    it('POST /resources work with custom headers, queryParams and responses', async function() {
+      const MemServer = require('../../index.js');
+      const { Photo } = MemServer.Models;
+
+      MemServer.start();
+
+      assert.equal(Photo.count(), 3);
+
+      await window.$.ajax({
+        type: 'POST', url: '/photos', headers: { 'Content-Type': 'application/json' }
+      }).catch((jqXHR) => {
+        assert.equal(jqXHR.status, 401);
+        assert.deepEqual(jqXHR.responseJSON, { error: 'Unauthorized' });
+      });
+
+      await window.$.ajax({
+        type: 'POST', url: '/photos', headers: AJAX_AUTHORIZATION_HEADERS
+      }).catch((jqXHR) => {
+        assert.equal(jqXHR.status, 401);
+        assert.deepEqual(jqXHR.responseJSON, { error: 'Unauthorized' });
+      });
+
+      await window.$.ajax({
+        type: 'POST', url: '/photos?is_admin=true', headers: AJAX_AUTHORIZATION_HEADERS
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 201);
+        assert.deepEqual(data, { photo: Photo.serializer(Photo.find(4)) });
+        assert.equal(Photo.count(), 4);
+      });
+    });
+
+    it('GET /resources works with custom headers, queryParams and responses', async function() {
+      const MemServer = require('../../index.js');
+      const { Photo } = MemServer.Models;
+
+      MemServer.start();
+
+      await window.$.ajax({
+        type: 'GET', url: '/photos', headers: { 'Content-Type': 'application/json' }
+      }).catch((jqXHR) => {
+        assert.equal(jqXHR.status, 404);
+        assert.deepEqual(jqXHR.responseJSON, { error: 'Not found' });
+      });
+
+      await window.$.ajax({
+        type: 'GET', url: '/photos?is_public=false', headers: AJAX_AUTHORIZATION_HEADERS
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 200);
+        assert.deepEqual(data, { photos: Photo.serializer(Photo.findAll({ is_public: false })) });
+      });
+
+      await window.$.ajax({
+        type: 'GET', url: '/photos?href=family-photo.jpeg', headers: AJAX_AUTHORIZATION_HEADERS
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 200);
+        assert.deepEqual(data, { photos: Photo.serializer(Photo.findAll({ href: 'family-photo.jpeg' })) });
+      });
+    });
+
+    it('GET /resources/:id works with custom headers, queryParams and responses', async function() {
+      const MemServer = require('../../index.js');
+      const { Photo } = MemServer.Models;
+
+      MemServer.start();
+
+      await window.$.ajax({
+        type: 'GET', url: '/photos/1', headers: AJAX_AUTHORIZATION_HEADERS
+      }).catch((jqXHR) => {
+        assert.equal(jqXHR.status, 404);
+        assert.deepEqual(jqXHR.responseJSON, { error: 'Not found' });
+      });
+
+      await window.$.ajax({
+        type: 'GET', url: '/photos/1?nonce=123123123', headers: AJAX_AUTHORIZATION_HEADERS
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 200);
+        assert.deepEqual(data, { photo: Photo.serializer(Photo.find(1)) });
+      });
+    });
+
+    it('PUT /resources/:id works with custom headers, queryParams and responses', async function() {
+      const MemServer = require('../../index.js');
+      const { Photo } = MemServer.Models;
+
+      MemServer.start();
+
+      await window.$.ajax({
+        type: 'PUT', url: '/photos/1', headers: AJAX_AUTHORIZATION_HEADERS,
+        data: JSON.stringify({ photo: { id: 1, name: 'Life' } })
+      }).catch((jqXHR) => {
+        assert.equal(jqXHR.status, 500);
+        assert.deepEqual(jqXHR.responseJSON, { error: 'Unexpected error occured' });
+      });
+
+      await window.$.ajax({
+        type: 'PUT', url: '/photos/1?nonce=123123123', headers: AJAX_AUTHORIZATION_HEADERS,
+        data: JSON.stringify({ photo: { id: 1, name: 'Life' } })
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 200);
+        assert.deepEqual(data, { photo: Photo.serializer(Photo.find(1)) });
+      });
+    });
+
+    it('DELETE /resources/:id works with custom headers, queryParams and responses', async function() {
+      const MemServer = require('../../index.js');
+      const { Photo } = MemServer.Models;
+
+      MemServer.start();
+
+      await window.$.ajax({
+        type: 'DELETE', url: '/photos/1', headers: AJAX_AUTHORIZATION_HEADERS
+      }).catch((jqXHR) => {
+        assert.equal(jqXHR.status, 500);
+        assert.deepEqual(jqXHR.responseJSON, { error: 'Invalid nonce to delete a photo' });
+      });
+
+      await window.$.ajax({
+        type: 'DELETE', url: '/photos/1?nonce=123123123', headers: AJAX_AUTHORIZATION_HEADERS
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 204);
+      });
+    });
+  });
 
   // TODO: passthrough works
   // TODO: by default returning undefined should return Response(500) ?
+  // TODO: test that passthrough works, timing options work, coalasceFindRequestWorks, do the one throw()
 });

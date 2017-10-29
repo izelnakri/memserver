@@ -5,7 +5,7 @@
   "main": "index.js",
   "license": "ISC",
   "scripts": {
-    "test": "mocha --retries 3"
+    "test": "sh run-tests.sh"
   },
   "repository": {
     "type": "git",

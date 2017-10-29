@@ -1,4 +1,3 @@
-// TODO: test Response first
 const assert = require('assert');
 const fs = require('fs');
 const rimraf = require('rimraf');
@@ -120,122 +119,115 @@ describe('MemServer.Server functionality', function() {
     done();
   });
 
-  // describe('route shortcuts work', function() {
-  //   before(function() {
-  //     fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
-  //       export default function(Models) {
-  //         this.post('/photos');
-  //         this.get('/photos');
-  //         this.get('/photos/:id');
-  //         this.put('/photos/:id');
-  //         this.delete('/photos/:id');
-  //
-  //       }
-  //     `);
-  //   });
-    // NOTE: add this.resource and this.passthrough here
+  describe('route shortcuts work', function() {
+    before(function() {
+      fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
+        export default function(Models) {
+          this.post('/photos');
+          this.get('/photos');
+          this.get('/photos/:id');
+          this.put('/photos/:id');
+          this.delete('/photos/:id');
 
-    // it('POST /resources work with shortcut', function(done) {
-    //   const MemServer = require('../index.js');
-    //   const { Photo } = MemServer.Models;
-    //
-    //   MemServer.start();
-    //   window.$.ajaxSetup({ headers: { 'Content-Type': 'application/json' } });
-    //
-    //   assert.equal(Photo.count(), 3);
-    //
-    //   window.$.ajax({
-    //     type: 'POST', url: '/photos', headers: { 'Content-Type': 'application/json' }
-    //   }, (data, textStatus, jqXHR) => {
-    //     assert.equal(jqXHR.status, 201);
-    //     assert.deepEqual(data, { is_public: true, name: 'Some default name', id: 4, user_id: 1 });
-    //     assert.equal(Photo.count(), 4);
-    //
-    //     done();
-    //   });
-    // });
+        }
+      `);
+    }); // TODO: add this.resource and this.passthrough here
 
-  //   it('GET /resources works with shortcut', function(done) {
-  //     const MemServer = require('../index.js');
-  //     const { Photo } = MemServer.Models;
-  //
-  //     MemServer.start();
-  //     window.$.ajaxSetup({ headers: { 'Content-Type': 'application/json' } });
-  //
-  //     assert.equal(Photo.count(), 3);
-  //
-  //     window.$.getJSON('/photos', (data, textStatus, jqXHR) => {
-  //       assert.equal(jqXHR.status, 200);
-  //       assert.deepEqual(data, { photos: Photo.serializer(Photo.findAll()) });
-  //       assert.equal(Photo.count(), 3);
-  //
-  //       done();
-  //     });
-  //   });
-  //
-  //   it('GET /resources/:id works with shortcut', function(done) {
-  //     const MemServer = require('../index.js');
-  //     const { Photo } = MemServer.Models;
-  //
-  //     MemServer.start();
-  //     window.$.ajaxSetup({ headers: { 'Content-Type': 'application/json' } });
-  //
-  //     window.$.getJSON('/photos/1', (data, textStatus, jqXHR) => {
-  //       assert.equal(jqXHR.status, 200);
-  //       assert.deepEqual(data, { photos: Photo.serializer(Photo.find(1)) });
-  //
-  //       done();
-  //     });
-  //   });
-  //
-  //   it('PUT /resources/:id works with shortcut', function(done) {
-  //     const MemServer = require('../index.js');
-  //     const { Photo } = MemServer.Models;
-  //
-  //     MemServer.start();
-  //     window.$.ajaxSetup({ headers: { 'Content-Type': 'application/json' } });
-  //
-  //     assert.equal(Photo.find(1).name, 'Ski trip')
-  //
-  //     window.$.ajax({
-  //       type: 'PUT',
-  //       url: '/photos/1',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       data: { photo: { id: 1, title: 'New custom title'} }
-  //     }, (data, textStatus, jqXHR) => {
-  //       const photo = Photo.find(1);
-  //
-  //       assert.equal(jqXHR.status, 200);
-  //       assert.deepEqual(data, { photo: Photo.serializer(photo) });
-  //       assert.equal(photo.name, 'New custom title');
-  //
-  //       done();
-  //     });
-  //   });
-  //
-  //   it('DELETE /resources/:id works with shortcut', function(done) {
-  //     const MemServer = require('../index.js');
-  //     const { Photo } = MemServer.Models;
-  //
-  //     MemServer.start();
-  //     window.$.ajaxSetup({ headers: { 'Content-Type': 'application/json' } });
-  //
-  //     assert.equal(Photo.count(), 3);
-  //
-  //     window.$.ajax({
-  //       type: 'DELETE',
-  //       url: '/photos/1',
-  //       headers: { 'Content-Type': 'application/json' }
-  //     }, (data, textStatus, jqXHR) => {
-  //       assert.equal(jqXHR.status, 204);
-  //       assert.deepEqual(data, {});
-  //       assert.equal(Photo.count(), 2);
-  //       assert.equal(PHoto.find(1), undefined);
-  //
-  //       done();
-  //     });
-  //   });
-  // });
+    it('POST /resources work with shortcut', async function() {
+      this.timeout(5000);
+
+      const MemServer = require('../index.js');
+      const { Photo } = MemServer.Models;
+
+      MemServer.start();
+
+      assert.equal(Photo.count(), 3);
+
+      await window.$.ajax({
+        type: 'POST', url: '/photos', headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify({ photo: { name: 'Izel Nakri' }})
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 201);
+        assert.deepEqual(data, { photo: Photo.serializer(Photo.find(4)) });
+        assert.equal(Photo.count(), 4);
+        assert.deepEqual(Photo.find(4), {
+          id: 4, name: 'Izel Nakri', is_public: true, href: null, user_id: null
+        })
+      });
+    });
+
+    it('GET /resources works with shortcut', async function() {
+      const MemServer = require('../index.js');
+      const { Photo } = MemServer.Models;
+
+      MemServer.start();
+
+      assert.equal(Photo.count(), 3);
+
+      await window.$.ajax({
+        type: 'GET', url: '/photos', headers: { 'Content-Type': 'application/json' }
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 200);
+        assert.deepEqual(data, { photos: Photo.serializer(Photo.findAll()) });
+        assert.equal(Photo.count(), 3);
+      });
+    });
+
+    it('GET /resources/:id works with shortcut', async function() {
+      const MemServer = require('../index.js');
+      const { Photo } = MemServer.Models;
+
+      MemServer.start();
+
+      await window.$.ajax({
+        type: 'GET', url: '/photos/1', headers: { 'Content-Type': 'application/json' }
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 200);
+        assert.deepEqual(data, { photo: Photo.serializer(Photo.find(1)) });
+      });
+    });
+
+    it('PUT /resources/:id works with shortcut', async function() {
+      const MemServer = require('../index.js');
+      const { Photo } = MemServer.Models;
+
+      MemServer.start();
+
+      assert.equal(Photo.find(1).name, 'Ski trip')
+
+      await window.$.ajax({
+        type: 'PUT', url: '/photos/1', headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify({ photo: { id: 1, name: 'New custom title'} })
+      }, (data, textStatus, jqXHR) => {
+        const photo = Photo.find(1);
+
+        assert.equal(jqXHR.status, 200);
+        assert.deepEqual(data, { photo: Photo.serializer(photo) });
+        assert.equal(photo.name, 'New custom title');
+      });
+    });
+
+    it('DELETE /resources/:id works with shortcut', async function() {
+      const MemServer = require('../index.js');
+      const { Photo } = MemServer.Models;
+
+      MemServer.start();
+      window.$.ajaxSetup({ headers: { 'Content-Type': 'application/json' } });
+
+      assert.equal(Photo.count(), 3);
+
+      await window.$.ajax({
+        type: 'DELETE',
+        url: '/photos/1',
+        headers: { 'Content-Type': 'application/json' }
+      }, (data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 204);
+        assert.deepEqual(data, {});
+        assert.equal(Photo.count(), 2);
+        assert.equal(PHoto.find(1), undefined);
+      });
+    });
+  });
 
   describe('server can process custom headers and responses', function() {
     before(function() {
@@ -326,7 +318,7 @@ describe('MemServer.Server functionality', function() {
       }).then((data, textStatus, jqXHR) => {
         assert.equal(jqXHR.status, 201);
         assert.deepEqual(data, {
-          photo: { is_public: true, name: 'Some default name', id: 4, user_id: 1 }
+          photo: { is_public: true, name: 'Some default name', id: 4, user_id: 1, href: null }
         });
       });
     });
@@ -512,5 +504,5 @@ describe('MemServer.Server functionality', function() {
   // });
 
   // TODO: passthrough works
-  // NOTE: by default returning undefined should return Response(500) ?
+  // TODO: by default returning undefined should return Response(500) ?
 });

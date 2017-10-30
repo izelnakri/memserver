@@ -22,10 +22,12 @@
     "i": "^0.3.6",
     "jsdom": "^11.3.0",
     "pretender": "^1.6.0",
-    "route-recognizer": "^0.3.3",
-    "qs": "^6.5.1"
+    "qs": "^6.5.1",
+    "route-recognizer": "^0.3.3"
   },
   "devDependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
     "faker": "^4.1.0",
     "jquery": "^3.2.1",
     "mkdirp": "^0.5.1",

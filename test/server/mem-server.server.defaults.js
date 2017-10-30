@@ -2,22 +2,12 @@ const assert = require('assert');
 const fs = require('fs');
 const rimraf = require('rimraf');
 
+process.setMaxListeners(0);
+
 describe('MemServer.Server shortcut functionality', function() {
   before(function() {
     fs.mkdirSync(`./memserver`);
     fs.mkdirSync(`./memserver/models`);
-    fs.writeFileSync(`${process.cwd()}/memserver/models/user.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
-
-      export default Model({
-        findFromHeaderToken(headers) {
-          const authorizationHeader = headers.Authorization;
-          const token = authorizationHeader ? authorizationHeader.slice(6) : false;
-
-          return this.findBy({ authentication_token: token }) || false;
-        }
-      });
-    `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
       import Model from '${process.cwd()}/lib/mem-server/model';
 
@@ -43,14 +33,6 @@ describe('MemServer.Server shortcut functionality', function() {
       });
     `);
     fs.mkdirSync(`./memserver/fixtures`);
-    fs.writeFileSync(`${process.cwd()}/memserver/fixtures/users.js`, `export default [
-      {
-        id: 1,
-        email: 'contact@izelnakri.com',
-        username: 'izelnakri',
-        authentication_token: '${AUTHENTICATION_TOKEN}'
-      }
-    ];`);
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photos.js`, `export default [
       {
         id: 1,
@@ -123,7 +105,6 @@ describe('MemServer.Server shortcut functionality', function() {
           this.get('/photos/:id');
           this.put('/photos/:id');
           this.delete('/photos/:id');
-
         }
       `);
     });
@@ -221,51 +202,116 @@ describe('MemServer.Server shortcut functionality', function() {
     });
   });
 
-  // TODO: after this point
-  it('throws an helpful error message when shortcuts model is not found', function() {
+  it('throws an helpful error message when shortcuts model is not found', async function() {
+    this.timeout(5000);
 
+    fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
+      export default function(Models) {
+        this.post('/photos');
+        this.get('/photos');
+        this.get('/photos/:id');
+        this.put('/photos/:id');
+        this.delete('/photos/:id');
+
+        this.get('/houses');
+      }
+    `);
+
+    Object.keys(require.cache).forEach((key) => delete require.cache[key]);
+
+    const MemServer = require('../../index.js');
+
+    assert.throws(() => MemServer.start(), (err) => {
+      return (err instanceof Error) &&
+        /\[MemServer\] GET \/houses route handler cannot be generated automatically\: House is not a valid MemServer\.Model, please check that your route name matches the model reference or create a custom handler function/.test(err);
+    });
   });
 
-  describe('this.resource() shortcut creates all the resource routes', function() {
+  describe('Server route handlers default responses', function() {
     before(function() {
       fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
         export default function(Models) {
-          this.resources('/photo-comments');
-
-          this.get('/photos');
+          this.post('/photos', () => {});
+          this.get('/photos', () => {});
+          this.get('/photos/:id', () => {});
+          this.put('/photos/:id', () => {});
+          this.delete('/photos/:id', () => {});
         }
       `);
     });
 
-    it('this.resource() generates POST /resources route with shortcut logic', function() {
+    it('POST /resources works correctly with undefined handler response', async function() {
+      const MemServer = require('../../index.js');
+      const { Photo } = MemServer.Models;
 
+      MemServer.start();
+
+      assert.equal(Photo.count(), 3);
+
+      await window.$.ajax({
+        type: 'POST', url: '/photos', headers: { 'Content-Type': 'application/json' }
+      }).catch((jqXHR) => {
+        assert.equal(jqXHR.status, 500);
+        assert.deepEqual(jqXHR.responseJSON, { error: '[MemServer] POST /photos route handler did not return anything to respond to the request!' });
+        assert.equal(Photo.count(), 3);
+      });
     });
 
-    it('this.resource() generates GET /resources route with shortcut logic', function() {
+    it('GET /resources works correctly with undefined handler response', async function() {
+      const MemServer = require('../../index.js');
+      const { Photo } = MemServer.Models;
 
+      MemServer.start();
+
+      await window.$.ajax({
+        type: 'GET', url: '/photos', headers: { 'Content-Type': 'application/json' }
+      }).catch((jqXHR) => {
+        assert.equal(jqXHR.status, 500);
+        assert.deepEqual(jqXHR.responseJSON, { error: '[MemServer] GET /photos route handler did not return anything to respond to the request!' });
+      });
     });
 
-    it('this.resource() generates GET /resources/:id route with shortcut logic', function() {
+    it('GET /resources/:id works correctly with undefined handler response', async function() {
+      const MemServer = require('../../index.js');
+      const { Photo } = MemServer.Models;
 
+      MemServer.start();
+
+      await window.$.ajax({
+        type: 'GET', url: '/photos/1', headers: { 'Content-Type': 'application/json' }
+      }).catch((jqXHR) => {
+        assert.equal(jqXHR.status, 500);
+        assert.deepEqual(jqXHR.responseJSON, { error: '[MemServer] GET /photos/1 route handler did not return anything to respond to the request!' });
+      });
     });
 
-    it('this.resource() generates PUT /resources/:id route with shortcut logic', function() {
+    it('PUT /resources/:id works correctly with undefined handler response', async function() {
+      const MemServer = require('../../index.js');
+      const { Photo } = MemServer.Models;
 
+      MemServer.start();
+
+      await window.$.ajax({
+        type: 'PUT', url: '/photos/1', headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify({ photo: { id: 1, name: 'New Name' }})
+      }).catch((jqXHR) => {
+        assert.equal(jqXHR.status, 500);
+        assert.deepEqual(jqXHR.responseJSON, { error: '[MemServer] PUT /photos/1 route handler did not return anything to respond to the request!' });
+      });
     });
 
-    it('this.resource() generates DELETE /resources/:id route with shortcut logic', function() {
+    it('DELETE /resources/:id works correctly with undefined handler response', async function() {
+      const MemServer = require('../../index.js');
+      const { Photo } = MemServer.Models;
 
+      MemServer.start();
+
+      await window.$.ajax({
+        type: 'DELETE', url: '/photos/1', headers: { 'Content-Type': 'application/json' }
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 204);
+        assert.deepEqual(jqXHR.responseJSON, {});
+      });
     });
   });
-
-  describe('this.passthrough shortcut works', function() {
-    // for external urls, for relative paths, general this.passthrough works
-  });
-
-  describe('Server route handlers default responses', function() {
-    // TODO: by default returning undefined should return Response(500) ?
-
-  });
-
-  // TODO: throws an error when MemServer tries to intercept an undeclared route
 });

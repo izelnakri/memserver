@@ -512,7 +512,6 @@ describe('MemServer.Server general functionality', function() {
         export default function({ Photo }) {
           this.get('/photos', ({ queryParams }) => {
             const photos = Photo.find(queryParams.ids || []);
-            console.log('photos are', photos);
 
             if (!photos || photos.length === 0) {
               return Response(404, { error: 'Not found' });

@@ -29,7 +29,7 @@ describe('MemServer start/stop functionality', function() {
 
   it('can be started without fixtures', function() {
     this.timeout(5000);
-    
+
     const MemServer = require('../index.js');
 
     assert.deepEqual(MemServer.Server, {});
@@ -39,7 +39,7 @@ describe('MemServer start/stop functionality', function() {
     assert.deepEqual(Object.keys(MemServer.Server), [
       'hosts', 'handlers', 'handledRequests', 'passthroughRequests', 'unhandledRequests',
       'requestReferences', 'forcePassthrough', 'disableUnhandled', '_nativeXMLHttpRequest',
-      'running', 'handledRequest', 'passthroughRequest', 'unhandledRequest'
+      'running', 'handledRequest', 'passthroughRequest', 'unhandledRequest', 'passthrough'
     ]);
   });
 
@@ -109,7 +109,7 @@ describe('MemServer start/stop functionality', function() {
     assert.deepEqual(Object.keys(MemServer.Server), [
       'hosts', 'handlers', 'handledRequests', 'passthroughRequests', 'unhandledRequests',
       'requestReferences', 'forcePassthrough', 'disableUnhandled', '_nativeXMLHttpRequest',
-      'running', 'handledRequest', 'passthroughRequest', 'unhandledRequest'
+      'running', 'handledRequest', 'passthroughRequest', 'unhandledRequest', 'passthrough'
     ]);
     assert.deepEqual(MemServer.DB, {
       Photo: Photo.findAll(), PhotoComment: PhotoComment.findAll(), User: []
@@ -140,7 +140,7 @@ describe('MemServer start/stop functionality', function() {
     assert.deepEqual(Object.keys(MemServer.Server), [
       'hosts', 'handlers', 'handledRequests', 'passthroughRequests', 'unhandledRequests',
       'requestReferences', 'forcePassthrough', 'disableUnhandled', '_nativeXMLHttpRequest',
-      'running', 'handledRequest', 'passthroughRequest', 'unhandledRequest'
+      'running', 'handledRequest', 'passthroughRequest', 'unhandledRequest', 'passthrough'
     ]);
 
     MemServer.Server.shutdown = sinon.spy();
@@ -209,7 +209,7 @@ describe('MemServer start/stop functionality', function() {
     assert.deepEqual(Object.keys(MemServer.Server), [
       'hosts', 'handlers', 'handledRequests', 'passthroughRequests', 'unhandledRequests',
       'requestReferences', 'forcePassthrough', 'disableUnhandled', '_nativeXMLHttpRequest',
-      'running', 'handledRequest', 'passthroughRequest', 'unhandledRequest'
+      'running', 'handledRequest', 'passthroughRequest', 'unhandledRequest', 'passthrough'
     ]);
 
     const initialPhotos = Photo.findAll();

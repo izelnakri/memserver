@@ -1,8 +1,9 @@
 - create a cli
-- test that passthrough works, timing options work, coalasceFindRequestWorks, do the one throw()
+- memserver command shows options + loader + memserver browserify [dist] creates memserver.dist.js
 - derived schema attribute for $Model:
   schema: {
     inserted_at: {
       type: '', notNull: true, unique: true, validate: {}
     }
   }
+- non/json responses?

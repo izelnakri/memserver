@@ -17,7 +17,6 @@ window.FakeXMLHttpRequest = require('fake-xml-http-request');
 window.RouteRecognizer = require('route-recognizer');
 window.$ = require('jquery');
 
-// window.self = window; // NOTE: maybe removing this is dangerous
 global.self = window.self;
 
 require('pretender');
@@ -27,16 +26,4 @@ const MemServer = require('./lib/mem-server.js').default;
 
 module.exports = MemServer;
 
-
-// let server = new window.Pretender(function(){
-//   this.get('/photos', (request) => {
-//     var all =  JSON.stringify(Object.keys(PHOTOS).map((k) => PHOTOS[k]));
-//     return [200, {'Content-Type': 'application/json'}, all];
-//   });
-//
-//   this.get('/photos/:id', (request) => {
-//     return [200, {'Content-Type': 'application/json'}, JSON.stringify(PHOTOS[request.params.id])];
-//   });
-//
-//   this.get('/lol', this.passthrough);
-// });
+// this.get('/lol', this.passthrough);

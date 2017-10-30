@@ -9,7 +9,7 @@ const AJAX_AUTHORIZATION_HEADERS = {
 
 process.setMaxListeners(0);
 
-describe('MemServer.Server functionality', function() {
+describe('MemServer.Server general functionality', function() {
   before(function() {
     fs.mkdirSync(`./memserver`);
     fs.mkdirSync(`./memserver/models`);
@@ -119,113 +119,6 @@ describe('MemServer.Server functionality', function() {
     }
 
     done();
-  });
-
-  describe('route shortcuts work', function() {
-    before(function() {
-      fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
-        export default function(Models) {
-          this.post('/photos');
-          this.get('/photos');
-          this.get('/photos/:id');
-          this.put('/photos/:id');
-          this.delete('/photos/:id');
-
-        }
-      `);
-    }); // TODO: add this.resource and this.passthrough here
-
-    it('POST /resources work with shortcut', async function() {
-      this.timeout(5000);
-
-      const MemServer = require('../../index.js');
-      const { Photo } = MemServer.Models;
-
-      MemServer.start();
-
-      assert.equal(Photo.count(), 3);
-
-      await window.$.ajax({
-        type: 'POST', url: '/photos', headers: { 'Content-Type': 'application/json' },
-        data: JSON.stringify({ photo: { name: 'Izel Nakri' }})
-      }).then((data, textStatus, jqXHR) => {
-        assert.equal(jqXHR.status, 201);
-        assert.deepEqual(data, { photo: Photo.serializer(Photo.find(4)) });
-        assert.equal(Photo.count(), 4);
-        assert.deepEqual(Photo.find(4), {
-          id: 4, name: 'Izel Nakri', is_public: true, href: null, user_id: null
-        })
-      });
-    });
-
-    it('GET /resources works with shortcut', async function() {
-      const MemServer = require('../../index.js');
-      const { Photo } = MemServer.Models;
-
-      MemServer.start();
-
-      assert.equal(Photo.count(), 3);
-
-      await window.$.ajax({
-        type: 'GET', url: '/photos', headers: { 'Content-Type': 'application/json' }
-      }).then((data, textStatus, jqXHR) => {
-        assert.equal(jqXHR.status, 200);
-        assert.deepEqual(data, { photos: Photo.serializer(Photo.findAll()) });
-        assert.equal(Photo.count(), 3);
-      });
-    });
-
-    it('GET /resources/:id works with shortcut', async function() {
-      const MemServer = require('../../index.js');
-      const { Photo } = MemServer.Models;
-
-      MemServer.start();
-
-      await window.$.ajax({
-        type: 'GET', url: '/photos/1', headers: { 'Content-Type': 'application/json' }
-      }).then((data, textStatus, jqXHR) => {
-        assert.equal(jqXHR.status, 200);
-        assert.deepEqual(data, { photo: Photo.serializer(Photo.find(1)) });
-      });
-    });
-
-    it('PUT /resources/:id works with shortcut', async function() {
-      const MemServer = require('../../index.js');
-      const { Photo } = MemServer.Models;
-
-      MemServer.start();
-
-      assert.equal(Photo.find(1).name, 'Ski trip')
-
-      await window.$.ajax({
-        type: 'PUT', url: '/photos/1', headers: { 'Content-Type': 'application/json' },
-        data: JSON.stringify({ photo: { id: 1, name: 'New custom title'} })
-      }, (data, textStatus, jqXHR) => {
-        const photo = Photo.find(1);
-
-        assert.equal(jqXHR.status, 200);
-        assert.deepEqual(data, { photo: Photo.serializer(photo) });
-        assert.equal(photo.name, 'New custom title');
-      });
-    });
-
-    it('DELETE /resources/:id works with shortcut', async function() {
-      const MemServer = require('../../index.js');
-      const { Photo } = MemServer.Models;
-
-      MemServer.start();
-
-      assert.equal(Photo.count(), 3);
-
-      await window.$.ajax({
-        type: 'DELETE', url: '/photos/1', headers: { 'Content-Type': 'application/json' }
-      }, (data, textStatus, jqXHR) => {
-        assert.equal(jqXHR.status, 204);
-        assert.deepEqual(data, {});
-        assert.equal(Photo.count(), 2);
-        assert.equal(PHoto.find(1), undefined);
-      });
-    });
   });
 
   describe('server can process custom headers and responses', function() {
@@ -611,7 +504,52 @@ describe('MemServer.Server functionality', function() {
     });
   });
 
-  // TODO: passthrough works
-  // TODO: by default returning undefined should return Response(500) ?
-  // TODO: test that passthrough works, timing options work, coalasceFindRequestWorks, do the one throw()
+  describe('coalasceFindRequests feature', function() {
+    before(function() {
+      fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
+        import Response from '../lib/mem-server/response';
+
+        export default function({ Photo }) {
+          this.get('/photos', ({ queryParams }) => {
+            const photos = Photo.find(queryParams.ids || []);
+            console.log('photos are', photos);
+
+            if (!photos || photos.length === 0) {
+              return Response(404, { error: 'Not found' });
+            }
+
+            return { photos: Photo.serializer(photos) };
+          });
+        }
+      `);
+    });
+
+    it('works for coalasceFindRequests routes', async function() {
+      const MemServer = require('../../index.js');
+      const { Photo } = MemServer.Models;
+
+      MemServer.start();
+
+      await window.$.ajax({
+        type: 'GET', url: '/photos', headers: { 'Content-Type': 'application/json' }
+      }).catch((jqXHR) => {
+        assert.equal(jqXHR.status, 404);
+        assert.deepEqual(jqXHR.responseJSON, { error: 'Not found' });
+      });
+
+      await window.$.ajax({
+        type: 'GET', url: '/photos?ids[]=1&ids[]=2', headers: { 'Content-Type': 'application/json' }
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 200);
+        assert.deepEqual(jqXHR.responseJSON, { photos: Photo.serializer(Photo.find([1, 2])) });
+      });
+
+      await window.$.ajax({
+        type: 'GET', url: '/photos?ids[]=2&ids[]=3', headers: { 'Content-Type': 'application/json' }
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 200);
+        assert.deepEqual(jqXHR.responseJSON, { photos: Photo.serializer(Photo.find([2, 3])) });
+      });
+    });
+  });
 });

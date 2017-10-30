@@ -504,7 +504,7 @@ describe('MemServer.Server general functionality', function() {
     });
   });
 
-  describe('coalasceFindRequests feature', function() {
+  describe('some edge cases', function() {
     before(function() {
       fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
         import Response from '../lib/mem-server/response';
@@ -519,6 +519,10 @@ describe('MemServer.Server general functionality', function() {
 
             return { photos: Photo.serializer(photos) };
           });
+
+          this.get('http://izelnakri.com', () => {
+            return Response(200, { result: 'external urls work!!' })
+          })
         }
       `);
     });
@@ -550,5 +554,19 @@ describe('MemServer.Server general functionality', function() {
         assert.deepEqual(jqXHR.responseJSON, { photos: Photo.serializer(Photo.find([2, 3])) });
       });
     });
+
+    it('works for external links', async function() {
+      const MemServer = require('../../index.js');
+
+      MemServer.start();
+
+      await window.$.ajax({
+        type: 'GET', url: 'http://izelnakri.com', headers: { 'Content-Type': 'application/json' }
+      }).catch((jqXHR) => {
+        assert.equal(jqXHR.status, 200);
+        assert.deepEqual(jqXHR.responseJSON, { result: 'external urls work!!' });
+      });
+    });
   });
+
 });

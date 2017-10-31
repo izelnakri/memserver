@@ -1,4 +1,3 @@
-// TODO: timing works, urlPrefix works, namespacing works
 const assert = require('assert');
 const fs = require('fs');
 const rimraf = require('rimraf');
@@ -118,6 +117,7 @@ describe('MemServer.Server shortcut functionality', function() {
     const { Photo } = MemServer.Models;
 
     MemServer.start({ namespace: 'api/v1' });
+    window.$ = require('jquery');
 
     await window.$.ajax({
       type: 'GET', url: '/api/v1/photos', headers: { 'Content-Type': 'application/json' }
@@ -152,6 +152,7 @@ describe('MemServer.Server shortcut functionality', function() {
     const { Photo } = MemServer.Models;
 
     MemServer.start({ namespace: 'api/v1' });
+    window.$ = require('jquery');
 
     await window.$.ajax({
       type: 'GET', url: '/api/photos', headers: { 'Content-Type': 'application/json' }
@@ -185,6 +186,7 @@ describe('MemServer.Server shortcut functionality', function() {
     const { Photo } = MemServer.Models;
 
     MemServer.start({ urlPrefix: 'http://twitter.com' });
+    window.$ = require('jquery');
 
     await window.$.ajax({
       type: 'GET', url: 'http://twitter.com/api/photos', headers: { 'Content-Type': 'application/json' }
@@ -196,7 +198,7 @@ describe('MemServer.Server shortcut functionality', function() {
 
   it('server this.urlPrefix() configuration can overwrite existing urlPrefix config', async function() {
     this.timeout(5000);
-    
+
     fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
       import Response from '../lib/response';
 
@@ -221,6 +223,7 @@ describe('MemServer.Server shortcut functionality', function() {
     const { Photo } = MemServer.Models;
 
     MemServer.start({ urlPrefix: 'http://twitter.com' });
+    window.$ = require('jquery');
 
     await window.$.ajax({
       type: 'GET', url: 'http://facebook.com/api/photos',

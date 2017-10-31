@@ -71,6 +71,7 @@ describe('MemServer.Response Interface', function() {
     const Response = require('../lib/response.js').default;
 
     MemServer.start();
+    window.$ = require('jquery');
 
     const { Server } = MemServer;
     const { Photo, User } = MemServer.Models;
@@ -98,6 +99,7 @@ describe('MemServer.Response Interface', function() {
     const Response = require('../lib/response.js').default;
 
     MemServer.start();
+    window.$ = require('jquery');
 
     const { Server } = MemServer;
     const { Photo, User } = MemServer.Models;
@@ -117,6 +119,7 @@ describe('MemServer.Response Interface', function() {
     const Response = require('../lib/response.js').default;
 
     MemServer.start();
+    window.$ = require('jquery');
 
     const { Server } = MemServer;
     const { Photo, User } = MemServer.Models;

@@ -95,6 +95,7 @@ describe('MemServer.Server general functionality', function() {
 
     MemServer.start();
     MemServer.Server.unhandledRequest = sinon.spy();
+    window.$ = require('jquery');
 
     window.$.ajax({
       type: 'GET', url: '/izelnakri', headers: { 'Content-Type': 'application/json' }
@@ -107,6 +108,7 @@ describe('MemServer.Server general functionality', function() {
     const MemServer = require('../../lib/index.js');
 
     MemServer.start();
+    window.$ = require('jquery');
 
     await window.$.ajax({
       type: 'GET', url: 'http://localhost:4000/films', headers: { 'Content-Type': 'application/json' }
@@ -120,6 +122,7 @@ describe('MemServer.Server general functionality', function() {
     const MemServer = require('../../lib/index.js');
 
     MemServer.start();
+    window.$ = require('jquery');
 
     await window.$.ajax({
       type: 'GET', url: 'http://localhost:4000/movies/too-big-to-fail',
@@ -164,8 +167,8 @@ describe('MemServer.Server general functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
-
       MemServer.Server.unhandledRequest = sinon.spy();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'GET', url: '/photos', headers: { 'Content-Type': 'application/json' }

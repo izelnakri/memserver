@@ -78,6 +78,7 @@ describe('MemServer.Server shortcut functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       assert.equal(Photo.count(), 3);
 
@@ -99,6 +100,7 @@ describe('MemServer.Server shortcut functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       assert.equal(Photo.count(), 3);
 
@@ -116,6 +118,7 @@ describe('MemServer.Server shortcut functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'GET', url: '/photos/1', headers: { 'Content-Type': 'application/json' }
@@ -130,6 +133,7 @@ describe('MemServer.Server shortcut functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       assert.equal(Photo.find(1).name, 'Ski trip')
 
@@ -150,6 +154,7 @@ describe('MemServer.Server shortcut functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       assert.equal(Photo.count(), 3);
 
@@ -207,6 +212,7 @@ describe('MemServer.Server shortcut functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       assert.equal(Photo.count(), 3);
 
@@ -224,6 +230,7 @@ describe('MemServer.Server shortcut functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'GET', url: '/photos', headers: { 'Content-Type': 'application/json' }
@@ -238,6 +245,7 @@ describe('MemServer.Server shortcut functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'GET', url: '/photos/1', headers: { 'Content-Type': 'application/json' }
@@ -252,6 +260,7 @@ describe('MemServer.Server shortcut functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'PUT', url: '/photos/1', headers: { 'Content-Type': 'application/json' },
@@ -267,6 +276,7 @@ describe('MemServer.Server shortcut functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'DELETE', url: '/photos/1', headers: { 'Content-Type': 'application/json' }

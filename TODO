@@ -1,4 +1,4 @@
-- create a cli
+- add initializer.js
 - memserver command shows options + loader + memserver browserify [dist] creates memserver.dist.js
 - derived schema attribute for $Model:
   schema: {
@@ -6,4 +6,4 @@
       type: '', notNull: true, unique: true, validate: {}
     }
   }
-- non/json responses?
+- non-json request/responses? - just kidding... or do I?!?

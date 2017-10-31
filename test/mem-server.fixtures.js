@@ -147,6 +147,8 @@ describe('MemServer fixture constraint feature', function() {
       }
     ];`);
 
+    Object.keys(require.cache).forEach((key) => delete require.cache[key]);
+
     const MemServer = require('../lib/index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
@@ -158,7 +160,7 @@ describe('MemServer fixture constraint feature', function() {
 
     assert.throws(() => MemServer.start(), (err) => {
       return (err instanceof Error) &&
-        /\[MemServer\] Photo model primaryKey type is 'id'. Instead you've tried to enter id: 2 with string type/.test(err);
+        /\[MemServer\] Photo model primaryKey type is 'id'\. Instead you've tried to enter id\: 2 with string type/.test(err);
     });
 
     assert.deepEqual(MemServer.Server, {});
@@ -261,6 +263,7 @@ describe('MemServer fixture constraint feature', function() {
       }
     ];`);
 
+    Object.keys(require.cache).forEach((key) => delete require.cache[key]);
     const MemServer = require('../lib/index.js');
 
     assert.throws(() => MemServer.start(), (err) => {

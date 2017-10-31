@@ -17,19 +17,15 @@
   },
   "author": "",
   "dependencies": {
-    "@std/esm": "^0.12.5",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
-    "browserify": "^14.5.0",
     "chalk": "^2.3.0",
     "ember-cli-string-utils": "^1.1.0",
-    "ember-inflector": "^2.0.1",
     "fake-xml-http-request": "^1.6.0",
     "i": "^0.3.6",
     "jsdom": "^11.3.0",
     "pretender": "^1.6.0",
     "qs": "^6.5.1",
-    "rollup-plugin-node-globals": "^1.1.0",
     "route-recognizer": "^0.3.3"
   },
   "devDependencies": {
@@ -44,10 +40,8 @@
     "rimraf": "^2.6.2",
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-globals": "^1.1.0",
     "rollup-plugin-node-resolve": "^3.0.0",
     "sinon": "^4.0.1"
-  },
-  "@std/esm": {
-    "esm": "all"
   }
 }

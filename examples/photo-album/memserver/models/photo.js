@@ -1,5 +1,5 @@
-import Model from '../../../../lib/mem-server/model';
+import Model from '../../../../lib/model';
 
 export default Model({
-  
+
 });

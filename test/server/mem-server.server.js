@@ -193,6 +193,7 @@ describe('MemServer.Server general functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       assert.equal(Photo.count(), 3);
 
@@ -218,6 +219,7 @@ describe('MemServer.Server general functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'GET', url: '/photos', headers: { 'Content-Type': 'application/json' }
@@ -239,6 +241,7 @@ describe('MemServer.Server general functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'GET', url: '/photos/1', headers: { 'Content-Type': 'application/json' }
@@ -260,6 +263,7 @@ describe('MemServer.Server general functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'PUT', url: '/photos/1', headers: { 'Content-Type': 'application/json' },
@@ -284,6 +288,7 @@ describe('MemServer.Server general functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       assert.ok(Photo.find(1), 'User id: 1 exists');
 
@@ -385,6 +390,7 @@ describe('MemServer.Server general functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       assert.equal(Photo.count(), 3);
 
@@ -416,6 +422,7 @@ describe('MemServer.Server general functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'GET', url: '/photos', headers: { 'Content-Type': 'application/json' }
@@ -444,6 +451,7 @@ describe('MemServer.Server general functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'GET', url: '/photos/1', headers: AJAX_AUTHORIZATION_HEADERS
@@ -465,6 +473,7 @@ describe('MemServer.Server general functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'PUT', url: '/photos/1', headers: AJAX_AUTHORIZATION_HEADERS,
@@ -488,6 +497,7 @@ describe('MemServer.Server general functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'DELETE', url: '/photos/1', headers: AJAX_AUTHORIZATION_HEADERS
@@ -532,6 +542,7 @@ describe('MemServer.Server general functionality', function() {
       const { Photo } = MemServer.Models;
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'GET', url: '/photos', headers: { 'Content-Type': 'application/json' }
@@ -559,6 +570,7 @@ describe('MemServer.Server general functionality', function() {
       const MemServer = require('../../lib/index.js');
 
       MemServer.start();
+      window.$ = require('jquery');
 
       await window.$.ajax({
         type: 'GET', url: 'http://izelnakri.com', headers: { 'Content-Type': 'application/json' }

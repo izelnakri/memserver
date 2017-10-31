@@ -104,10 +104,10 @@ export default Model({
 }
 
 function openConsole() {
-  const MemServer = require('memserver');
+  const MemServer = require('./lib/index.js');
   const repl = require('repl');
 
-  console.log(chalk.cyan('[MemServer CLI]'), 'Starting MemServer node.js console - Remember to MemServer.init() ;)');
+  console.log(chalk.cyan('[MemServer CLI]'), 'Starting MemServer node.js console - Remember to MemServer.start() ;)');
   repl.start('> ');
 }
 

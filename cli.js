@@ -56,8 +56,7 @@ function generateInitialFolderStructure() {
   }
 
   if (!fs.existsSync(`${memServerDirectory}/server.js`)) {
-    fs.writeFileSync(`${memServerDirectory}/server.js`, `
-    export default function(Models) {
+    fs.writeFileSync(`${memServerDirectory}/server.js`, `export default function(Models) {
     }`);
     console.log(chalk.cyan('[MemServer CLI] /memserver folder created'));
   }
@@ -88,22 +87,21 @@ function generateModelFiles() {
 
   createFixtureAndModelFoldersIfNeeded(memServerDirectory);
 
-  const modelFileName = dasherize(singularize(process.argv[3]));
-  const fixtureFileName = dasherize(pluralize(process.argv[3]));
+  const modelFileName = dasherize(singularize(process.argv[4]));
+  const fixtureFileName = dasherize(pluralize(process.argv[4]));
 
-  if (!fs.existsSync(`${memServerDirectory}/${modelFileName}.js`)) {
-    fs.writeFileSync(`${memServerDirectory}/${modelFileName}.js`, `import Model from 'memserver/model';
-    export default Model({
+  if (!fs.existsSync(`${memServerDirectory}/models/${modelFileName}.js`)) {
+    fs.writeFileSync(`${memServerDirectory}/models/${modelFileName}.js`, `import Model from 'memserver/model';
+export default Model({
 
-    });`);
-    console.log(chalk.cyan(`[MemServer CLI] /memserver/models/${modelFileName}.js folder created`));
+});`);
+    console.log(chalk.cyan(`[MemServer CLI] /memserver/models/${modelFileName}.js created`));
   }
 
-  if (!fs.existsSync(`${memServerDirectory}/${fixtureFileName}.js`)) {
-    fs.writeFileSync(`${memServerDirectory}/${fixtureFileName}.js`, `export default[
-
-    ];`);
-    console.log(chalk.cyan(`[MemServer CLI] /memserver/fixtures/${fixtureFileName}.js folder created`));
+  if (!fs.existsSync(`${memServerDirectory}/fixtures/${fixtureFileName}.js`)) {
+    fs.writeFileSync(`${memServerDirectory}/fixtures/${fixtureFileName}.js`, `export default [
+];`);
+    console.log(chalk.cyan(`[MemServer CLI] /memserver/fixtures/${fixtureFileName}.js created`));
   }
 }
 

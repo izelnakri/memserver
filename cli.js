@@ -48,9 +48,12 @@ memserver browserify ${chalk.yellow('[outputFile]')}     # Builds an ES5 javascr
 }
 
 function generateInitialFolderStructure() {
-  const memServerDirectory = getMemServerDirectory();
+  let memServerDirectory = getMemServerDirectory();
 
-  !memServerDirectory ? fs.mkdirSync('./memserver') : null;
+  if (!memServerDirectory) {
+    memServerDirectory = './memserver';
+    fs.mkdirSync(memServerDirectory);
+  }
 
   if (!fs.existsSync(`${memServerDirectory}/server.js`)) {
     fs.writeFileSync(`${memServerDirectory}/server.js`, `

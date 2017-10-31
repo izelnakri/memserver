@@ -5,7 +5,11 @@
   "main": "index.js",
   "license": "ISC",
   "scripts": {
-    "test": "sh run-tests.sh"
+    "test": "sh run-tests.sh",
+    "bin": "node ./lib/mem-server/cli.js"
+  },
+  "bin": {
+    "memserver": "node ./lib/mem-server/cli.js"
   },
   "repository": {
     "type": "git",

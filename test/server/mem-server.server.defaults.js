@@ -9,7 +9,7 @@ describe('MemServer.Server shortcut functionality', function() {
     fs.mkdirSync(`./memserver`);
     fs.mkdirSync(`./memserver/models`);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
         defaultAttributes: {
@@ -74,7 +74,7 @@ describe('MemServer.Server shortcut functionality', function() {
     it('POST /resources work with shortcut', async function() {
       this.timeout(5000);
 
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -95,7 +95,7 @@ describe('MemServer.Server shortcut functionality', function() {
     });
 
     it('GET /resources works with shortcut', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -112,7 +112,7 @@ describe('MemServer.Server shortcut functionality', function() {
     });
 
     it('GET /resources/:id works with shortcut', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -126,7 +126,7 @@ describe('MemServer.Server shortcut functionality', function() {
     });
 
     it('PUT /resources/:id works with shortcut', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -146,7 +146,7 @@ describe('MemServer.Server shortcut functionality', function() {
     });
 
     it('DELETE /resources/:id works with shortcut', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -181,7 +181,7 @@ describe('MemServer.Server shortcut functionality', function() {
 
     Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 
-    const MemServer = require('../../index.js');
+    const MemServer = require('../../lib/index.js');
 
     assert.throws(() => MemServer.start(), (err) => {
       return (err instanceof Error) &&
@@ -203,7 +203,7 @@ describe('MemServer.Server shortcut functionality', function() {
     });
 
     it('POST /resources works correctly with undefined handler response', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -220,7 +220,7 @@ describe('MemServer.Server shortcut functionality', function() {
     });
 
     it('GET /resources works correctly with undefined handler response', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -234,7 +234,7 @@ describe('MemServer.Server shortcut functionality', function() {
     });
 
     it('GET /resources/:id works correctly with undefined handler response', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -248,7 +248,7 @@ describe('MemServer.Server shortcut functionality', function() {
     });
 
     it('PUT /resources/:id works correctly with undefined handler response', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -263,7 +263,7 @@ describe('MemServer.Server shortcut functionality', function() {
     });
 
     it('DELETE /resources/:id works correctly with undefined handler response', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();

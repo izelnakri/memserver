@@ -9,7 +9,7 @@ describe('MemServer.Model Relationships Interface', function() {
     fs.mkdirSync(`./memserver`);
     fs.mkdirSync(`./memserver/models`);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
       import PhotoComment from '${process.cwd()}/memserver/models/photo-comment.js';
 
       export default Model({
@@ -19,7 +19,7 @@ describe('MemServer.Model Relationships Interface', function() {
       });
     `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo-comment.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
       import User from '${process.cwd()}/memserver/models/user.js';
 
       export default Model({
@@ -29,12 +29,12 @@ describe('MemServer.Model Relationships Interface', function() {
       });
     `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/user.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({});
     `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/activity.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
       });
@@ -121,7 +121,7 @@ describe('MemServer.Model Relationships Interface', function() {
 
   describe('$Model.getRelationship method', function() {
     it('works for hasOne/belongsTo relationships both sides', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, Activity } = MemServer.Models;
 
       MemServer.start();
@@ -141,7 +141,7 @@ describe('MemServer.Model Relationships Interface', function() {
       fs.writeFileSync(`${process.cwd()}/memserver/models/comment.js`, photoCommentCode);
       fs.writeFileSync(`${process.cwd()}/memserver/fixtures/comments.js`, commentFixtures);
 
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, Comment } = MemServer.Models;
 
       MemServer.start();
@@ -193,7 +193,7 @@ describe('MemServer.Model Relationships Interface', function() {
     });
 
     it('works for custom named hasOne/belongsTo and relationships both side', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, Activity } = MemServer.Models;
 
       MemServer.start();
@@ -207,7 +207,7 @@ describe('MemServer.Model Relationships Interface', function() {
     });
 
     it('works for custom named hasMany/belongsTo relationships both side', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start();
@@ -256,7 +256,7 @@ describe('MemServer.Model Relationships Interface', function() {
     });
 
     it('throws an error when relationship reference is invalid', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start();
@@ -274,7 +274,7 @@ describe('MemServer.Model Relationships Interface', function() {
 
   describe('$Model relationship embedding', function() {
     it('can register relationship embeds before runtime', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment, User } = MemServer.Models;
 
       MemServer.start();
@@ -284,7 +284,7 @@ describe('MemServer.Model Relationships Interface', function() {
     });
 
     it('can register relationships embeds during runtime', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Activity, Photo, PhotoComment, User } = MemServer.Models;
 
       MemServer.start();
@@ -297,7 +297,7 @@ describe('MemServer.Model Relationships Interface', function() {
     });
 
     it('throws error when runtime $Model.embed() doesnt receive an object parameter', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Activity, User } = MemServer.Models;
 
       MemServer.start();
@@ -313,7 +313,7 @@ describe('MemServer.Model Relationships Interface', function() {
     });
 
     it('throws error when runtime $Model.embed(relationship) called with a Model that doesnt exist', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Activity, User } = MemServer.Models;
 
       MemServer.start();

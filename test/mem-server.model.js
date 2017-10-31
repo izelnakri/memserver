@@ -10,7 +10,7 @@ describe('MemServer.Model Interface', function() {
     fs.mkdirSync(`./memserver/models`);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
       import faker from 'faker';
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
         defaultAttributes: {
@@ -26,7 +26,7 @@ describe('MemServer.Model Interface', function() {
     `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo-comment.js`, `
       import moment from 'moment';
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
         defaultAttributes: {
@@ -41,7 +41,7 @@ describe('MemServer.Model Interface', function() {
       });
     `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/user.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({});
     `);
@@ -117,7 +117,7 @@ describe('MemServer.Model Interface', function() {
     it('sets modelNames correctly', function() {
       this.timeout(5000);
 
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       assert.equal(Photo.modelName, 'Photo');
@@ -130,7 +130,7 @@ describe('MemServer.Model Interface', function() {
     });
 
     it('sets primaryKeys correctly', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment, User } = MemServer.Models;
 
       assert.equal(Photo.primaryKey, null);
@@ -147,7 +147,7 @@ describe('MemServer.Model Interface', function() {
     it('reads the defaultAttributes correctly', function() {
       fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
         import faker from 'faker';
-        import Model from '${process.cwd()}/lib/mem-server/model';
+        import Model from '${process.cwd()}/lib/model';
 
         export default Model({
           defaultAttributes: {
@@ -163,7 +163,7 @@ describe('MemServer.Model Interface', function() {
       `);
       fs.writeFileSync(`${process.cwd()}/memserver/models/photo-comment.js`, `
         import moment from 'moment';
-        import Model from '${process.cwd()}/lib/mem-server/model';
+        import Model from '${process.cwd()}/lib/model';
 
         export default Model({
           defaultAttributes: {
@@ -180,7 +180,7 @@ describe('MemServer.Model Interface', function() {
 
       Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment, User } = MemServer.Models;
       const initialPhotoDefaultAttributes = Photo.defaultAttributes;
       const initialPhotoCommentDefaultAttributes = PhotoComment.defaultAttributes;
@@ -202,7 +202,7 @@ describe('MemServer.Model Interface', function() {
     });
 
     it('sets attributes correctly', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment, User } = MemServer.Models;
 
       assert.deepEqual(Photo.attributes, ['is_public', 'name']);
@@ -217,7 +217,7 @@ describe('MemServer.Model Interface', function() {
     });
 
     it('counts the models correctly with $Model.count()', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment, User } = MemServer.Models;
 
       assert.equal(Photo.count(), 0);
@@ -232,7 +232,7 @@ describe('MemServer.Model Interface', function() {
     it('can have custom queries for a Model', function() {
       Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start();

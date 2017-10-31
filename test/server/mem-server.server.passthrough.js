@@ -12,7 +12,7 @@ describe('MemServer.Server general functionality', function() {
     fs.mkdirSync(`./memserver`);
     fs.mkdirSync(`./memserver/models`);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
       });
@@ -59,7 +59,7 @@ describe('MemServer.Server general functionality', function() {
 
   beforeEach(function() {
     fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
-      import Response from '../lib/mem-server/response';
+      import Response from '../lib/response';
 
       export default function({ Photo }) {
         this.get('/photos', () => {
@@ -91,7 +91,7 @@ describe('MemServer.Server general functionality', function() {
   });
 
   it('throws an error when MemServer tried to intercept an undeclared route', function() {
-    const MemServer = require('../../index.js');
+    const MemServer = require('../../lib/index.js');
 
     MemServer.start();
     MemServer.Server.unhandledRequest = sinon.spy();
@@ -104,7 +104,7 @@ describe('MemServer.Server general functionality', function() {
   });
 
   it('this.passthrough(url) shortcut works', async function() {
-    const MemServer = require('../../index.js');
+    const MemServer = require('../../lib/index.js');
 
     MemServer.start();
 
@@ -117,7 +117,7 @@ describe('MemServer.Server general functionality', function() {
   });
 
   it('this.passthrough(url) shortcut works with wild cards', async function() {
-    const MemServer = require('../../index.js');
+    const MemServer = require('../../lib/index.js');
 
     MemServer.start();
 
@@ -133,7 +133,7 @@ describe('MemServer.Server general functionality', function() {
   describe('global passthrough feature', function() {
     beforeEach(function(done) {
       fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
-        import Response from '../lib/mem-server/response';
+        import Response from '../lib/response';
 
         export default function({ Photo }) {
           this.get('/photos', () => {
@@ -156,11 +156,11 @@ describe('MemServer.Server general functionality', function() {
     });
 
     it('can create global passthrough via this.passthrough()', async function() {
-      this.timeout(5000);
+      this.timeout(10000);
 
       Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();

@@ -4,7 +4,7 @@ const rimraf = require('rimraf');
 
 describe('MemServer fixture constraint feature', function() {
   beforeEach(function() {
-    const modelFileContent = `import Model from '${process.cwd()}/lib/mem-server/model';
+    const modelFileContent = `import Model from '${process.cwd()}/lib/model';
                               export default Model({});`;
 
     fs.mkdirSync(`./memserver`);
@@ -78,7 +78,7 @@ describe('MemServer fixture constraint feature', function() {
       }
     ];`);
 
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
     assert.deepEqual(MemServer.Server, {});
@@ -147,7 +147,7 @@ describe('MemServer fixture constraint feature', function() {
       }
     ];`);
 
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
     assert.deepEqual(MemServer.Server, {});
@@ -218,7 +218,7 @@ describe('MemServer fixture constraint feature', function() {
       }
     ];`);
 
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
     assert.deepEqual(MemServer.Server, {});
@@ -261,7 +261,7 @@ describe('MemServer fixture constraint feature', function() {
       }
     ];`);
 
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
 
     assert.throws(() => MemServer.start(), (err) => {
       return (err instanceof Error) &&
@@ -298,7 +298,7 @@ describe('MemServer fixture constraint feature', function() {
       }
     ];`);
 
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
 
     assert.throws(() => MemServer.start(), (err) => {
       return (err instanceof Error) &&

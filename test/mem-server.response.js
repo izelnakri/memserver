@@ -2,7 +2,7 @@ const assert = require('assert');
 const fs = require('fs');
 const rimraf = require('rimraf');
 
-const modelFileContent = `import Model from '${process.cwd()}/lib/mem-server/model';
+const modelFileContent = `import Model from '${process.cwd()}/lib/model';
                           export default Model({});`;
 
 describe('MemServer.Response Interface', function() {
@@ -67,8 +67,8 @@ describe('MemServer.Response Interface', function() {
   it('can be used outside the server file', function(done) {
     this.timeout(5000);
 
-    const MemServer = require('../index.js');
-    const Response = require('../lib/mem-server/response.js').default;
+    const MemServer = require('../lib/index.js');
+    const Response = require('../lib/response.js').default;
 
     MemServer.start();
 
@@ -94,8 +94,8 @@ describe('MemServer.Response Interface', function() {
   it('can be used inside the server file', function(done) {
     this.timeout(5000);
 
-    const MemServer = require('../index.js');
-    const Response = require('../lib/mem-server/response.js').default;
+    const MemServer = require('../lib/index.js');
+    const Response = require('../lib/response.js').default;
 
     MemServer.start();
 
@@ -113,8 +113,8 @@ describe('MemServer.Response Interface', function() {
   it('can overwrite an existing server route', function(done) {
     this.timeout(5000);
 
-    const MemServer = require('../index.js');
-    const Response = require('../lib/mem-server/response.js').default;
+    const MemServer = require('../lib/index.js');
+    const Response = require('../lib/response.js').default;
 
     MemServer.start();
 

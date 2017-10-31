@@ -8,7 +8,7 @@ describe('MemServer.Server shortcut functionality', function() {
     fs.mkdirSync(`./memserver`);
     fs.mkdirSync(`./memserver/models`);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
         defaultAttributes: {
@@ -20,7 +20,7 @@ describe('MemServer.Server shortcut functionality', function() {
       });
     `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo-comment.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
         defaultAttributes: {
@@ -97,7 +97,7 @@ describe('MemServer.Server shortcut functionality', function() {
 
   it('namespace configuration option could be passed in during MemServer.start()', async function() {
     fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
-      import Response from '../lib/mem-server/response';
+      import Response from '../lib/response';
 
       export default function({ Photo }) {
         this.get('/photos', () => {
@@ -114,7 +114,7 @@ describe('MemServer.Server shortcut functionality', function() {
 
     Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 
-    const MemServer = require('../../index.js');
+    const MemServer = require('../../lib/index.js');
     const { Photo } = MemServer.Models;
 
     MemServer.start({ namespace: 'api/v1' });
@@ -129,7 +129,7 @@ describe('MemServer.Server shortcut functionality', function() {
 
   it('server this.namespace() configuration can overwrite existing namespace config', async function() {
     fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
-      import Response from '../lib/mem-server/response';
+      import Response from '../lib/response';
 
       export default function({ Photo }) {
         this.namespace = 'api/';
@@ -148,7 +148,7 @@ describe('MemServer.Server shortcut functionality', function() {
 
     Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 
-    const MemServer = require('../../index.js');
+    const MemServer = require('../../lib/index.js');
     const { Photo } = MemServer.Models;
 
     MemServer.start({ namespace: 'api/v1' });
@@ -163,7 +163,7 @@ describe('MemServer.Server shortcut functionality', function() {
 
   it('urlPrefix configuration option could be passed in during MemServer.start()', async function() {
     fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
-      import Response from '../lib/mem-server/response';
+      import Response from '../lib/response';
 
       export default function({ Photo }) {
         this.namespace = 'api/';
@@ -181,7 +181,7 @@ describe('MemServer.Server shortcut functionality', function() {
 
     Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 
-    const MemServer = require('../../index.js');
+    const MemServer = require('../../lib/index.js');
     const { Photo } = MemServer.Models;
 
     MemServer.start({ urlPrefix: 'http://twitter.com' });
@@ -195,8 +195,10 @@ describe('MemServer.Server shortcut functionality', function() {
   });
 
   it('server this.urlPrefix() configuration can overwrite existing urlPrefix config', async function() {
+    this.timeout(5000);
+    
     fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
-      import Response from '../lib/mem-server/response';
+      import Response from '../lib/response';
 
       export default function({ Photo }) {
         this.urlPrefix = 'http://facebook.com'
@@ -215,7 +217,7 @@ describe('MemServer.Server shortcut functionality', function() {
 
     Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 
-    const MemServer = require('../../index.js');
+    const MemServer = require('../../lib/index.js');
     const { Photo } = MemServer.Models;
 
     MemServer.start({ urlPrefix: 'http://twitter.com' });
@@ -233,7 +235,7 @@ describe('MemServer.Server shortcut functionality', function() {
   //   this.timeout(5000);
   //
   //   fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
-  //     import Response from '../lib/mem-server/response';
+  //     import Response from '../lib/response';
   //
   //     export default function({ Photo }) {
   //       this.get('/photos', () => {
@@ -248,7 +250,7 @@ describe('MemServer.Server shortcut functionality', function() {
   //     }
   //   `);
   //
-  //   const MemServer = require('../../index.js');
+  //   const MemServer = require('../../lib/index.js');
   //   const { Photo } = MemServer.Models;
   //
   //   MemServer.start({ timing: 3000 });
@@ -266,7 +268,7 @@ describe('MemServer.Server shortcut functionality', function() {
   // });
 
   // it('server this.get(url, timing) configuration can overwrite existing timing config', function() {
-  //   const MemServer = require('../../index.js');
+  //   const MemServer = require('../../lib/index.js');
   //
   //   MemServer.start({ timing: 2000 });
   // });

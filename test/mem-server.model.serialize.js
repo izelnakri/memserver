@@ -2,7 +2,7 @@ const assert = require('assert');
 const fs = require('fs');
 const rimraf = require('rimraf');
 
-const modelFileContent = `import Model from '${process.cwd()}/lib/mem-server/model';
+const modelFileContent = `import Model from '${process.cwd()}/lib/model';
                           export default Model({});`;
 
 describe('MemServer.Model Serialize Interface', function() {
@@ -77,7 +77,7 @@ describe('MemServer.Model Serialize Interface', function() {
   it('can serialize a model', function() {
     this.timeout(5000);
 
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');;
     const { Photo, PhotoComment } = MemServer.Models;
 
     MemServer.start();
@@ -100,7 +100,7 @@ describe('MemServer.Model Serialize Interface', function() {
   });
 
   it('can serialize models', function() {
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');;
     const { Photo, PhotoComment } = MemServer.Models;
 
     MemServer.start();
@@ -145,7 +145,7 @@ describe('MemServer.Model Serialize Interface', function() {
   });
 
   it('can serialize empty record and record arrays', function() {
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');;
     const { Photo, PhotoComment } = MemServer.Models;
 
     MemServer.start();
@@ -168,7 +168,7 @@ describe('MemServer.Model Serialize Interface', function() {
   });
 
   it('can serialize embeded records recursively', function() {
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');;
     const { Photo, PhotoComment, User } = MemServer.Models;
 
     MemServer.start();
@@ -211,7 +211,7 @@ describe('MemServer.Model Serialize Interface', function() {
   });
 
   it('allows for custom serializer declarations', function() {
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');;
     const { User } = MemServer.Models;
 
     MemServer.start();

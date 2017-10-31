@@ -4,7 +4,7 @@ const rimraf = require('rimraf');
 
 describe('MemServer.Model Delete Interface', function() {
   before(function() {
-    const modelFileContent = `import Model from '${process.cwd()}/lib/mem-server/model';
+    const modelFileContent = `import Model from '${process.cwd()}/lib/model';
                               export default Model({});`;
 
     fs.mkdirSync(`./memserver`);
@@ -77,7 +77,7 @@ describe('MemServer.Model Delete Interface', function() {
     it('can delete existing items', function() {
       this.timeout(5000);
 
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start()
@@ -130,7 +130,7 @@ describe('MemServer.Model Delete Interface', function() {
     });
 
     it('throws when the $Model.delete(model) doesnt exist in the database', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       assert.throws(() => Photo.delete({ id: 1 }), (err) => {
@@ -156,7 +156,7 @@ describe('MemServer.Model Delete Interface', function() {
     });
 
     it('throws when $Model.delete() called without a parameter', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start()

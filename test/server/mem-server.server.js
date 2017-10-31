@@ -14,7 +14,7 @@ describe('MemServer.Server general functionality', function() {
     fs.mkdirSync(`./memserver`);
     fs.mkdirSync(`./memserver/models`);
     fs.writeFileSync(`${process.cwd()}/memserver/models/user.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
         findFromHeaderToken(headers) {
@@ -26,7 +26,7 @@ describe('MemServer.Server general functionality', function() {
       });
     `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
         defaultAttributes: {
@@ -38,7 +38,7 @@ describe('MemServer.Server general functionality', function() {
       });
     `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo-comment.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
         defaultAttributes: {
@@ -124,7 +124,7 @@ describe('MemServer.Server general functionality', function() {
   describe('server can process custom headers and responses', function() {
     before(function() {
       fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
-        import Response from '../lib/mem-server/response';
+        import Response from '../lib/response';
 
         export default function({ User, Photo }) {
           this.post('/photos', ({ headers }) => {
@@ -189,7 +189,7 @@ describe('MemServer.Server general functionality', function() {
     it('POST /resources work with custom headers and responses', async function() {
       this.timeout(5000);
 
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -214,7 +214,7 @@ describe('MemServer.Server general functionality', function() {
     });
 
     it('GET /resources works with custom headers and responses', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -235,7 +235,7 @@ describe('MemServer.Server general functionality', function() {
     });
 
     it('GET /resources/:id works with custom headers and responses', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -256,7 +256,7 @@ describe('MemServer.Server general functionality', function() {
     });
 
     it('PUT /resources/:id works with custom headers and responses', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -280,7 +280,7 @@ describe('MemServer.Server general functionality', function() {
     });
 
     it('DELETE /resources/:id works with custom headers and responses', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -308,7 +308,7 @@ describe('MemServer.Server general functionality', function() {
   describe('server can process custom queryParams and responses', function() {
     before(function(){
       fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
-        import Response from '../lib/mem-server/response';
+        import Response from '../lib/response';
 
         export default function({ User, Photo }) {
           this.post('/photos', ({ headers, params, queryParams }) => {
@@ -381,7 +381,7 @@ describe('MemServer.Server general functionality', function() {
     });
 
     it('POST /resources work with custom headers, queryParams and responses', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -412,7 +412,7 @@ describe('MemServer.Server general functionality', function() {
     });
 
     it('GET /resources works with custom headers, queryParams and responses', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -440,7 +440,7 @@ describe('MemServer.Server general functionality', function() {
     });
 
     it('GET /resources/:id works with custom headers, queryParams and responses', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -461,7 +461,7 @@ describe('MemServer.Server general functionality', function() {
     });
 
     it('PUT /resources/:id works with custom headers, queryParams and responses', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -484,7 +484,7 @@ describe('MemServer.Server general functionality', function() {
     });
 
     it('DELETE /resources/:id works with custom headers, queryParams and responses', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -507,7 +507,7 @@ describe('MemServer.Server general functionality', function() {
   describe('some edge cases', function() {
     before(function() {
       fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
-        import Response from '../lib/mem-server/response';
+        import Response from '../lib/response';
 
         export default function({ Photo }) {
           this.get('/photos', ({ queryParams }) => {
@@ -528,7 +528,7 @@ describe('MemServer.Server general functionality', function() {
     });
 
     it('works for coalasceFindRequests routes', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
       MemServer.start();
@@ -556,7 +556,7 @@ describe('MemServer.Server general functionality', function() {
     });
 
     it('works for external links', async function() {
-      const MemServer = require('../../index.js');
+      const MemServer = require('../../lib/index.js');
 
       MemServer.start();
 

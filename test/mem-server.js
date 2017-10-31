@@ -14,7 +14,7 @@ describe('MemServer', function() {
     it('should throw error if /memserver folder doesnt exist', function() {
       this.timeout(5000);
 
-      assert.throws(() => require('../index.js'), (err) => {
+      assert.throws(() => require('../lib/index.js'), (err) => {
         return (err instanceof Error) &&
           /\/memserver folder doesn't exist for this directory!/.test(err);
       });
@@ -25,7 +25,7 @@ describe('MemServer', function() {
 
       fs.mkdirSync(`./memserver`);
 
-      assert.throws(() => require('../index.js'), (err) => {
+      assert.throws(() => require('../lib/index.js'), (err) => {
         return (err instanceof Error) &&
           /\/memserver\/models folder doesn't exist for this directory!/.test(err);
       });
@@ -37,7 +37,7 @@ describe('MemServer', function() {
       fs.mkdirSync(`./memserver`);
       fs.mkdirSync(`./memserver/models`);
 
-      assert.throws(() => require('../index.js'), (err) => {
+      assert.throws(() => require('../lib/index.js'), (err) => {
         return (err instanceof Error) &&
           /\/memserver\/server.js doesn't exist for this directory!/.test(err);
       });
@@ -50,7 +50,7 @@ describe('MemServer', function() {
       fs.mkdirSync(`./memserver/models`);
       fs.writeFileSync(`${process.cwd()}/memserver/server.js`, 'export default function(Models) {}');
 
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
 
       assert.deepEqual(MemServer.DB, {});
       assert.deepEqual(MemServer.Server, {});
@@ -61,7 +61,7 @@ describe('MemServer', function() {
     it('exports a MemServer with right functions and empty DB and models', function() {
       this.timeout(5000);
 
-      const modelFileContent = `import Model from '${process.cwd()}/lib/mem-server/model';
+      const modelFileContent = `import Model from '${process.cwd()}/lib/model';
 
       export default Model({});`;
 
@@ -74,7 +74,7 @@ describe('MemServer', function() {
 
       Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const models = Object.keys(MemServer.Models);
 
       assert.deepEqual(MemServer.DB, {});

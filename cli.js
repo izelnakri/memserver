@@ -5,7 +5,7 @@ require('babel-register')({
 
 const fs = require('fs');
 const chalk = require('chalk');
-const { pluralize, dasherize, singularize } = require('i')(); // NOTE: move to ES6 imports
+const { pluralize, dasherize, singularize } = require('i')();
 
 const CLI = {
   default(commandHandler) {
@@ -25,15 +25,13 @@ CLI.command('new', generateInitialFolderStructure);
 CLI.command('g', generateModelFiles);
 CLI.command('generate', generateModelFiles);
 
-CLI.command('console', () => {
-  const MemServer = require('memserver');
-  const repl = require('repl');
-
-  console.log(chalk.cyan('[MemServer CLI]'), 'Starting MemServer node.js console - Remember to MemServer.init() ;)');
-  repl.start('> ');
-});
+CLI.command('c', openConsole)
+CLI.command('console', openConsole);
 
 CLI.command('browserify', () => {
+  let browserify = require('browserify');
+  browserify.require('memserver', { expose: 'MemServer' });
+  browserify.bundle(() => console.log('bundle complete'));
   // browserify command here with babel
 });
 
@@ -57,7 +55,7 @@ function generateInitialFolderStructure() {
 
   if (!fs.existsSync(`${memServerDirectory}/server.js`)) {
     fs.writeFileSync(`${memServerDirectory}/server.js`, `export default function(Models) {
-    }`);
+}`);
     console.log(chalk.cyan('[MemServer CLI] /memserver folder created'));
   }
 
@@ -103,6 +101,14 @@ export default Model({
 ];`);
     console.log(chalk.cyan(`[MemServer CLI] /memserver/fixtures/${fixtureFileName}.js created`));
   }
+}
+
+function openConsole() {
+  const MemServer = require('memserver');
+  const repl = require('repl');
+
+  console.log(chalk.cyan('[MemServer CLI]'), 'Starting MemServer node.js console - Remember to MemServer.init() ;)');
+  repl.start('> ');
 }
 
 function getMemServerDirectory() {

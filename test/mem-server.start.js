@@ -7,7 +7,7 @@ describe('MemServer start/stop functionality', function() {
   beforeEach(function() {
     this.timeout(5000);
 
-    const modelFileContent = `import Model from '${process.cwd()}/lib/mem-server/model';
+    const modelFileContent = `import Model from '${process.cwd()}/lib/model';
                               export default Model({});`;
 
     fs.mkdirSync(`./memserver`);
@@ -30,7 +30,7 @@ describe('MemServer start/stop functionality', function() {
   it('can be started without fixtures', function() {
     this.timeout(5000);
 
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
 
     assert.deepEqual(MemServer.Server, {});
 
@@ -95,7 +95,7 @@ describe('MemServer start/stop functionality', function() {
       }
     ];`);
 
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
     assert.deepEqual(MemServer.Server, {});
@@ -131,7 +131,7 @@ describe('MemServer start/stop functionality', function() {
   it('can be shut down', () => {
     this.timeout(5000);
 
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
 
     assert.deepEqual(MemServer.Server, {});
 
@@ -199,7 +199,7 @@ describe('MemServer start/stop functionality', function() {
       }
     ];`);
 
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
     assert.deepEqual(MemServer.Server, {});

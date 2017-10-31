@@ -3,7 +3,7 @@ const fs = require('fs');
 const rimraf = require('rimraf');
 const moment = require('moment');
 
-const modelFileContent = `import Model from '${process.cwd()}/lib/mem-server/model';
+const modelFileContent = `import Model from '${process.cwd()}/lib/model';
                           export default Model({});`;
 
 describe('MemServer.Model Insert Interface', function() {
@@ -66,7 +66,7 @@ describe('MemServer.Model Insert Interface', function() {
     Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
         defaultAttributes: {
@@ -78,7 +78,7 @@ describe('MemServer.Model Insert Interface', function() {
       });
     `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo-comment.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
         defaultAttributes: {
@@ -109,7 +109,7 @@ describe('MemServer.Model Insert Interface', function() {
       fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, modelFileContent);
       fs.writeFileSync(`${process.cwd()}/memserver/models/photo-comment.js`, modelFileContent);
 
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start();
@@ -173,7 +173,7 @@ describe('MemServer.Model Insert Interface', function() {
     });
 
     it('$Model.insert() will insert a model with defaultAttributes and auto-generated primaryKey', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start();
@@ -233,7 +233,7 @@ describe('MemServer.Model Insert Interface', function() {
     });
 
     it('$Model.insert(options) will insert a model with overriden attributes', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start();
@@ -306,7 +306,7 @@ describe('MemServer.Model Insert Interface', function() {
     });
 
     it('$Model.insert(options) will throw if overriden primaryKey already exists', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start();
@@ -322,7 +322,7 @@ describe('MemServer.Model Insert Interface', function() {
     });
 
     it('$Model.insert(options) will throw if overriden primaryKey is wrong type', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start();
@@ -341,7 +341,7 @@ describe('MemServer.Model Insert Interface', function() {
   it('can add new values to $Model.attributes when new attributes are discovered', function() {
     this.timeout(5000);
 
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
     MemServer.start();

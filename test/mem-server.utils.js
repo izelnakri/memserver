@@ -3,7 +3,7 @@ require('babel-register')({
 });
 
 const assert = require('assert');
-const { generateUUID, primaryKeyTypeSafetyCheck } = require('../lib/mem-server/utils.js');
+const { generateUUID, primaryKeyTypeSafetyCheck } = require('../lib/utils.js');
 
 describe('MemServer Utils Unit tests', function() {
   it('exports generateUUID correctly', function() {

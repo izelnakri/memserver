@@ -4,14 +4,14 @@ const rimraf = require('rimraf');
 
 describe('MemServer.Model Update Interface', function() {
   before(function() {
-    const modelFileContent = `import Model from '${process.cwd()}/lib/mem-server/model';
+    const modelFileContent = `import Model from '${process.cwd()}/lib/model';
                               export default Model({});`;
 
     fs.mkdirSync(`./memserver`);
     fs.mkdirSync(`./memserver/models`);
     fs.writeFileSync(`${process.cwd()}/memserver/models/user.js`, modelFileContent);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
         defaultAttributes: {
@@ -23,7 +23,7 @@ describe('MemServer.Model Update Interface', function() {
       });
     `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo-comment.js`, `
-      import Model from '${process.cwd()}/lib/mem-server/model';
+      import Model from '${process.cwd()}/lib/model';
 
       export default Model({
         defaultAttributes: {
@@ -99,7 +99,7 @@ describe('MemServer.Model Update Interface', function() {
     it('can update models', function() {
       this.timeout(5000);
 
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start()
@@ -120,7 +120,7 @@ describe('MemServer.Model Update Interface', function() {
     });
 
     it('throws error when updating a nonexistent model', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start()
@@ -136,7 +136,7 @@ describe('MemServer.Model Update Interface', function() {
     });
 
     it('throws error when a model get updated with an unknown $Model.attribute', function() {
-      const MemServer = require('../index.js');
+      const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start()

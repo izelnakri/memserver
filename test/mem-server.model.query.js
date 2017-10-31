@@ -6,7 +6,7 @@ process.setMaxListeners(0);
 
 describe('MemServer.Model Query Interface', function() {
   before(function() {
-    const modelFileContent = `import Model from '${process.cwd()}/lib/mem-server/model';
+    const modelFileContent = `import Model from '${process.cwd()}/lib/model';
                               export default Model({});`;
 
     fs.mkdirSync(`./memserver`);
@@ -78,7 +78,7 @@ describe('MemServer.Model Query Interface', function() {
   });
 
   it('find() throws without a number id or ids', function() {
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
     MemServer.start()
@@ -97,7 +97,7 @@ describe('MemServer.Model Query Interface', function() {
   });
 
   it('find(id) works for different models', function() {
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
     MemServer.start();
@@ -111,7 +111,7 @@ describe('MemServer.Model Query Interface', function() {
   });
 
   it('find(ids) works for multiple ids', function() {
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
     MemServer.start();
@@ -127,7 +127,7 @@ describe('MemServer.Model Query Interface', function() {
   });
 
   it('findBy() throws without params', function() {
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
     const { Photo } = MemServer.Models;
 
     MemServer.start();
@@ -140,7 +140,7 @@ describe('MemServer.Model Query Interface', function() {
 
   it('findBy(options) returns a single model for the options', function() {
     const firstPhoto = { id: 1, name: 'Ski trip', href: 'ski-trip.jpeg', is_public: false };
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
     MemServer.start();
@@ -159,7 +159,7 @@ describe('MemServer.Model Query Interface', function() {
   });
 
   it('findAll() without parameters returns all the models in the database', function() {
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
     MemServer.start();
@@ -213,7 +213,7 @@ describe('MemServer.Model Query Interface', function() {
   });
 
   it('findAll(options) returns right models in the database', function() {
-    const MemServer = require('../index.js');
+    const MemServer = require('../lib/index.js');
     const { Photo, PhotoComment } = MemServer.Models;
 
     MemServer.start();

@@ -9,7 +9,7 @@
     "bin": "node ./lib/mem-server/cli.js"
   },
   "bin": {
-    "memserver": "node ./lib/mem-server/cli.js"
+    "memserver": "lib/mem-server/cli.js"
   },
   "repository": {
     "type": "git",

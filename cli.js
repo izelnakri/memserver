@@ -5,7 +5,7 @@ require('babel-register')({
 
 const fs = require('fs');
 const chalk = require('chalk');
-const { pluralize, dasherize, singularize } = require('i')();
+const { pluralize, dasherize, singularize } = require('i')(); // NOTE: maybe move to ember-inflector
 
 const CLI = {
   default(commandHandler) {

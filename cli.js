@@ -4,44 +4,43 @@ require('babel-register')({
 });
 
 const fs = require('fs');
+const child_process = require('child_process');
 const chalk = require('chalk');
-const { pluralize, dasherize, singularize } = require('i')(); // NOTE: maybe move to ember-inflector
+const { dasherize } = require('ember-cli-string-utils');
+const { pluralize, singularize } = require('i')();
 
 const CLI = {
   default(commandHandler) {
     !process.argv[2] ? commandHandler() : null;
   },
   command(commandName, commandHandler) {
+    if (Array.isArray(commandName)) {
+      return commandName.includes(process.argv[2]) ? commandHandler() : null;
+    }
+
     commandName === process.argv[2] ? commandHandler() : null;
   }
 };
 
 CLI.default(printCommands);
 CLI.command('help', printCommands);
-
-CLI.command('init', generateInitialFolderStructure);
-CLI.command('new', generateInitialFolderStructure);
-
-CLI.command('g', generateModelFiles);
-CLI.command('generate', generateModelFiles);
-
-CLI.command('c', openConsole)
-CLI.command('console', openConsole);
-
-CLI.command('browserify', () => {
-  let browserify = require('browserify');
-  browserify.require('memserver', { expose: 'MemServer' });
-  browserify.bundle(() => console.log('bundle complete'));
-  // browserify command here with babel
+CLI.command(['init', 'new'], generateInitialFolderStructure);
+CLI.command(['generate', 'g'], generateModelFiles);
+CLI.command(['console', 'c'], openConsole);
+CLI.command(['watch', 's', 'serve', 'server'], () => {
+  buildMemServerDist();
+  fs.watch(`${process.cwd()}/memserver`, { recursive: true }, () => buildMemServerDist());
 });
+CLI.command(['build', 'rollup'], buildMemServerDist);
 
 function printCommands() {
   console.log(`${chalk.cyan('[MemServer CLI] Usage:')} memserver ${chalk.yellow('<command (Default: help)>')}
 
-memserver init | new                  # Sets up the initial memserver folder structure
-memserver generate model ${chalk.yellow('[ModelName]')}  # Generates the initial files for a MemServer Model ${chalk.cyan('[alias: "memserver g model"]')}
-memserver console                     # Starts a MemServer console in node.js ${chalk.cyan('[alias: "memserver c"]')}
-memserver browserify ${chalk.yellow('[outputFile]')}     # Builds an ES5 javascript bundle with all your memserver code
+memserver init | new                   # Sets up the initial memserver folder structure
+memserver generate model ${chalk.yellow('[ModelName]')}   # Generates the initial files for a MemServer Model ${chalk.cyan('[alias: "memserver g model"]')}
+memserver console                      # Starts a MemServer console in node.js ${chalk.cyan('[alias: "memserver c"]')}
+memserver serve | server ${chalk.yellow('[outputFile]')}  # Builds an ES5 javascript bundle with all your memserver code continuosly on watch ${chalk.cyan('[alias: "memserver s"]')}
+memserver build | rollup ${chalk.yellow('[outputFile]')}  # Builds an ES5 javascript bundle with all your memserver code
 `);
 }
 
@@ -109,6 +108,14 @@ function openConsole() {
 
   console.log(chalk.cyan('[MemServer CLI]'), 'Starting MemServer node.js console - Remember to MemServer.start() ;)');
   repl.start('> ');
+}
+
+function buildMemServerDist() {
+  const outputFile = process.argv[3] || 'memserver.dist.js';
+  const rollup = child_process.spawnSync('rollup', ['-c', '-o', outputFile]); // NOTE: check if this gets the right rollup.config.js file?
+  
+  console.log(rollup.stderr.toString());
+  console.log(chalk.cyan('[MemServer CLI]'), ` NEW BUILD: ${outputFile}`);
 }
 
 function getMemServerDirectory() {

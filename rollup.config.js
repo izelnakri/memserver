@@ -43,6 +43,8 @@ const modelFixtureTreeCode = '{' + modelFileNames.reduce((string, modelFileName)
    }`
 }, '') + `}`;
 
+// TODO: INVESTIGATE ROLLUP: inject targetMemServer, modelFixtureTree from NODE -> BROWSER without dynamic import problem
+
 export default {
   input: 'lib/mem-server.js',
   output: {

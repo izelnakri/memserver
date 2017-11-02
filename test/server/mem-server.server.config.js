@@ -203,8 +203,9 @@ describe('MemServer.Server shortcut functionality', function() {
       import Response from '../lib/response';
 
       export default function({ Photo }) {
-        this.urlPrefix = 'http://facebook.com'
+        this.urlPrefix = 'http://facebook.com/';
         this.namespace = 'api';
+
         this.get('/photos', () => {
           const photos = Photo.findAll();
 

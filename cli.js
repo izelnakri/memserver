@@ -96,7 +96,7 @@ function generateModelFiles() {
   const fixtureFileName = dasherize(pluralize(process.argv[4]));
 
   if (!fs.existsSync(`${memServerDirectory}/models/${modelFileName}.js`)) {
-    fs.writeFileSync(`${memServerDirectory}/models/${modelFileName}.js`, `import Model from 'memserver/model';
+    fs.writeFileSync(`${memServerDirectory}/models/${modelFileName}.js`, `import { Model } from 'memserver';
 export default Model({
 
 });`);

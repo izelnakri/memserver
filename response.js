@@ -1,5 +1,7 @@
-export default function(statusCode=200, data={}, headers={}) {
-  return [
-    statusCode, Object.assign({ 'Content-Type': 'application/json' }, headers), JSON.stringify(data)
-  ];
-}
+require('babel-register')({
+  presets: ['env']
+});
+
+const Response = require('./lib/response').default;
+
+module.exports = Response;

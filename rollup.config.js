@@ -11,8 +11,6 @@ import Inflector from 'i';
 import { classify, dasherize } from 'ember-cli-string-utils';
 import virtual from 'rollup-plugin-virtual';
 
-import JSToCode from './js-to-code';
-
 const { pluralize } = Inflector();
 
 const modelFileNames = fs.readdirSync(`${process.cwd()}/memserver/models`);
@@ -34,6 +32,7 @@ export default {
     virtual({
       '_memserver_models': generateInMemoryModelsImport(modelFileNames),
       '_memserver_fixtures': generateInMemoryFixturesImport(modelFileNames),
+      '_memserver_initializer': generateInitializerImport(),
       '_memserver': `
         import server from '${process.cwd()}/memserver/server';
         export default server;`
@@ -49,7 +48,7 @@ export default {
     globals(),
     builtins()
   ]
-}
+};
 
 function generateInMemoryFixturesImport(modelFileNames) {
   const imports = modelFileNames.reduce((codeText, modelFileName) => {
@@ -60,6 +59,7 @@ function generateInMemoryFixturesImport(modelFileNames) {
 
   return imports.concat(createObjectFromModels(modelFileNames));
 }
+
 function generateInMemoryModelsImport(modelFileNames) {
   const imports = modelFileNames.reduce((codeText, modelFileName) => {
     const modelName = classify(modelFileName.slice(0, -3));
@@ -79,5 +79,16 @@ function createObjectFromModels(modelFileNames) {
     }
 
     return [codeText, modelName].join(', ');
-  }, '') + ' };'
+  }, '') + ' };';
+}
+
+function generateInitializerImport() {
+  const initializerExists = fs.existsSync(`${process.cwd()}/memserver/initializer`);
+
+  if (initializerExists) {
+    return `import server from '${process.cwd()}/memserver/server';
+            export default server;`;
+  }
+
+  return 'export default function(Models) {};';
 }

@@ -55,8 +55,16 @@ function generateInitialFolderStructure() {
   if (!fs.existsSync(`${memServerDirectory}/server.js`)) {
     fs.writeFileSync(`${memServerDirectory}/server.js`, `export default function(Models) {
 }`);
-    console.log(chalk.cyan('[MemServer CLI] /memserver folder created'));
+    console.log(chalk.cyan('[MemServer CLI] /memserver/server.js created'));
   }
+
+  if (!fs.existsSync(`${memServerDirectory}/initializer.js`)) {
+    fs.writeFileSync(`${memServerDirectory}/initializer.js`, `export default function(Models) {
+}`);
+    console.log(chalk.cyan('[MemServer CLI] /memserver/initializer.js created'));
+
+  }
+
 
   createFixtureAndModelFoldersIfNeeded(memServerDirectory);
 }
@@ -77,7 +85,7 @@ function generateModelFiles() {
   const memServerDirectory = getMemServerDirectory();
 
   if (!process.argv[3] || !process.argv[4]) {
-    throw new Error(chalk.red('[MemServer CLI] Please put a modelName to the memserver generate. Example: $ memserver generate model user'))
+    throw new Error(chalk.red('[MemServer CLI] Please put a modelName to the memserver generate. Example: $ memserver generate model user'));
   } else if (!memServerDirectory) {
     throw new Error(chalk.red('[MemServer CLI] cannot find /memserver folder. Did you run $ memserver init ?'));
   }
@@ -113,7 +121,7 @@ function openConsole() {
 function buildMemServerDist() {
   const outputFile = process.argv[3] || 'memserver.dist.js';
   const rollup = child_process.spawnSync('rollup', ['-c', '-o', outputFile]); // NOTE: check if this gets the right rollup.config.js file?
-  
+
   console.log(rollup.stderr.toString());
   console.log(chalk.cyan('[MemServer CLI]'), ` NEW BUILD: ${outputFile}`);
 }

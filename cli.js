@@ -32,6 +32,9 @@ CLI.command(['watch', 's', 'serve', 'server'], () => {
   fs.watch(`${process.cwd()}/memserver`, { recursive: true }, () => buildMemServerDist());
 });
 CLI.command(['build', 'rollup'], buildMemServerDist);
+CLI.command(['version', 'v'], () => {
+  console.log(chalk.cyan('[MemServer CLI]'), require('./package.json').version);
+});
 
 function printCommands() {
   console.log(`${chalk.cyan('[MemServer CLI] Usage:')} memserver ${chalk.yellow('<command (Default: help)>')}
@@ -41,6 +44,7 @@ memserver generate model ${chalk.yellow('[ModelName]')}   # Generates the initia
 memserver console                      # Starts a MemServer console in node.js ${chalk.cyan('[alias: "memserver c"]')}
 memserver serve | server ${chalk.yellow('[outputFile]')}  # Builds an ES5 javascript bundle with all your memserver code continuosly on watch ${chalk.cyan('[alias: "memserver s"]')}
 memserver build | rollup ${chalk.yellow('[outputFile]')}  # Builds an ES5 javascript bundle with all your memserver code
+memserver version | v                   # Displays memserver version
 `);
 }
 
@@ -96,7 +100,7 @@ function generateModelFiles() {
   const fixtureFileName = dasherize(pluralize(process.argv[4]));
 
   if (!fs.existsSync(`${memServerDirectory}/models/${modelFileName}.js`)) {
-    fs.writeFileSync(`${memServerDirectory}/models/${modelFileName}.js`, `import { Model } from 'memserver';
+    fs.writeFileSync(`${memServerDirectory}/models/${modelFileName}.js`, `import Model from 'memserver/model';
 export default Model({
 
 });`);

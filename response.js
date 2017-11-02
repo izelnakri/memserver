@@ -1,7 +1,9 @@
-require('babel-register')({
-  presets: ['env']
-});
+'use strict';
 
-const Response = require('./lib/response').default;
+var response = function(statusCode=200, data={}, headers={}) {
+  return [
+    statusCode, Object.assign({ 'Content-Type': 'application/json' }, headers), JSON.stringify(data)
+  ];
+};
 
-module.exports = Response;
+module.exports = response;

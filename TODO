@@ -7,3 +7,4 @@
     }
   }
 - non-json request/responses? - just kidding... or do I?!?
+- rollup -i ./lib/response.js -o response.js -f cjs

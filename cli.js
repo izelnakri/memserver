@@ -1,7 +1,5 @@
 #! /usr/bin/env node
-require('babel-register')({
-  presets: ['env']
-});
+const MemServer = require('./lib/index.js');
 
 const fs = require('fs');
 const child_process = require('child_process');
@@ -115,7 +113,6 @@ export default Model({
 }
 
 function openConsole() {
-  const MemServer = require('./lib/index.js');
   const repl = require('repl');
 
   console.log(chalk.cyan('[MemServer CLI]'), 'Starting MemServer node.js console - Remember to MemServer.start() ;)');

@@ -120,7 +120,9 @@ function openConsole() {
 
 function buildMemServerDist() {
   const outputFile = process.argv[3] || 'memserver.dist.js';
-  const rollup = child_process.spawnSync('rollup', ['-c', '-o', outputFile]); // NOTE: check if this gets the right rollup.config.js file?
+  const rollup = child_process.spawnSync('rollup', [
+    '--config', `${require('path').resolve('.')}/rollup.config.js`, '-o', outputFile
+  ]);
 
   console.log(rollup.stderr.toString());
   console.log(chalk.cyan('[MemServer CLI]'), ` NEW BUILD: ${outputFile}`);

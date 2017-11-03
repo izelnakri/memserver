@@ -20,8 +20,11 @@ if (!fs.existsSync(targetMemServerPath)) {
   throw new Error('memserver/server.js doesnt exist! Please create a memserver/server.js to use MemServer');
 }
 
+const targetInput = process.env.BUILD === 'development' ? 'lib/browser.js' :
+  `${require.resolve('memserver')}/../browser.js`;
+
 export default {
-  input: 'lib/browser.js',
+  input: targetInput,
   output: {
     file: 'memserver.dist.js',
     format: 'iife'

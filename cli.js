@@ -40,7 +40,7 @@ memserver generate model ${chalk.yellow('[ModelName]')}   # Generates the initia
 memserver console                      # Starts a MemServer console in node.js ${chalk.cyan('[alias: "memserver c"]')}
 memserver serve | server ${chalk.yellow('[outputFile]')}  # Builds an ES5 javascript bundle with all your memserver code continuosly on watch ${chalk.cyan('[alias: "memserver s"]')}
 memserver build | rollup ${chalk.yellow('[outputFile]')}  # Builds an ES5 javascript bundle with all your memserver code
-memserver version | v                 # Displays memserver version
+memserver version | v                  # Displays memserver version
 `);
 }
 

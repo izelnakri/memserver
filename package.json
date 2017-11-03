@@ -1,6 +1,6 @@
 {
   "name": "memserver",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "description": "in-memory database/ORM and http mock server you can run in-browser and node environments. Built for large frontend teams, fast tests and rapid prototyping",
   "main": "lib/index.js",
   "license": "ISC",
@@ -47,5 +47,8 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-virtual": "^1.0.1",
     "sinon": "^4.0.1"
+  },
+  "@std/esm": {
+    "esm": "all"
   }
 }

@@ -111,7 +111,6 @@ export default Model({
 }
 
 function openConsole() {
-  require = require('@std/esm')(module);
   const MemServer = require('./lib/index.js');
   const repl = require('repl');
 

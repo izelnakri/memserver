@@ -97,6 +97,7 @@ function generateModelFiles() {
 
   if (!fs.existsSync(`${memServerDirectory}/models/${modelFileName}.js`)) {
     fs.writeFileSync(`${memServerDirectory}/models/${modelFileName}.js`, `import Model from 'memserver/model';
+    
 export default Model({
 
 });`);

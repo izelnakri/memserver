@@ -1,14 +1,18 @@
 {
   "name": "memserver",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "description": "in-memory database/ORM and http mock server you can run in-browser and node environments. Built for large frontend teams, fast tests and rapid prototyping",
   "main": "lib/index.js",
   "license": "ISC",
   "scripts": {
     "test": "sh run-tests.sh",
     "bin": "node cli.js",
-    "build-browser": "rollup -c --environment BUILD:development",
-    "prepublish": "rollup -i ./lib/model.js -o model.js -f cjs && rollup -i ./lib/response.js -o response.js -f cjs && rollup -i ./lib/mem-server.js -o ./lib/mem-server-cjs.js -f cjs"
+    "build:browser": "rollup -c --environment BUILD:development",
+    "build:model": "rollup -i ./lib/model.js -o model.js -f cjs",
+    "build:model-iife": "rollup -i ./lib/model.js -o model.js -f cjs",
+    "build:response": "rollup -i ./lib/response.js -o response.js -f cjs",
+    "build:memserver-cjs": "rollup -i ./lib/mem-server.js -o ./lib/mem-server-cjs.js -f cjs",
+    "prepublish": "npm run build:model && npm run build:response && npm run build:memserver-cjs"
   },
   "bin": {
     "memserver": "cli.js"

@@ -1,3 +1,5 @@
+- serializerExtraFields params
+
 - add initializer.js
 - memserver command shows options + loader + memserver browserify [dist] creates memserver.dist.js
 - derived schema attribute for $Model:

@@ -580,5 +580,4 @@ describe('MemServer.Server general functionality', function() {
       });
     });
   });
-
 });

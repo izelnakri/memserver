@@ -37,7 +37,7 @@ var model = function(options) {
     defaultAttributes: {},
     attributes: [],
     count() {
-      const models = targetNamespace.MemServer.DB[this.modelName] || [];
+      const models = Array.from(targetNamespace.MemServer.DB[this.modelName] || []);
 
       return models.length;
     },
@@ -45,7 +45,7 @@ var model = function(options) {
       if (!param) {
         throw new Error(chalk.red(`[MemServer] ${this.modelName}.find(id) cannot be called without a valid id`));
       } else if (Array.isArray(param)) {
-        const models = targetNamespace.MemServer.DB[this.modelName] || [];
+        const models = Array.from(targetNamespace.MemServer.DB[this.modelName] || []);
 
         return models.reduce((result, model) => {
           const foundModel = param.includes(model.id) ? model : null;
@@ -56,7 +56,7 @@ var model = function(options) {
         throw new Error(chalk.red(`[MemServer] ${this.modelName}.find(id) cannot be called without a valid id`));
       }
 
-      const models = targetNamespace.MemServer.DB[this.modelName] || [];
+      const models = Array.from(targetNamespace.MemServer.DB[this.modelName] || []);
 
       return models.find((model) => model.id === param);
     },
@@ -71,7 +71,7 @@ var model = function(options) {
       return models.find((model) => comparison(model, options, keys, 0));
     },
     findAll(options={}) {
-      const models = targetNamespace.MemServer.DB[this.modelName] || [];
+      const models = Array.from(targetNamespace.MemServer.DB[this.modelName] || []);
       const keys = Object.keys(options);
 
       if (keys.length === 0) {

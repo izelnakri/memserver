@@ -97,7 +97,7 @@ function generateModelFiles() {
 
   if (!fs.existsSync(`${memServerDirectory}/models/${modelFileName}.js`)) {
     fs.writeFileSync(`${memServerDirectory}/models/${modelFileName}.js`, `import Model from 'memserver/model';
-    
+
 export default Model({
 
 });`);
@@ -112,6 +112,10 @@ export default Model({
 }
 
 function openConsole() {
+  if (process.cwd().includes('memserver')) {
+    throw new Error(chalk.red('[MemServer CLI] You are in the memserver directory, go to the root of your project to start memserver console.'));
+  }
+  
   const MemServer = require('./lib/index.js');
   const repl = require('repl');
 
@@ -136,5 +140,7 @@ function getMemServerDirectory() {
     const targetIndex = cwd.lastIndexOf('memserver') + 9;
 
     return cwd.slice(0, targetIndex);
+  } else if (fs.readdirSync('.').includes('memserver')) {
+    return `${cwd}/memserver`;
   }
 }

@@ -33,13 +33,13 @@
     "jsdom": "^11.3.0",
     "pretender": "^1.6.0",
     "qs": "^6.5.1",
-    "route-recognizer": "^0.3.3",
     "rollup": "^0.50.0",
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.1.0",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-virtual": "^1.0.1"
+    "rollup-plugin-virtual": "^1.0.1",
+    "route-recognizer": "^0.3.3"
   },
   "devDependencies": {
     "cors": "^2.8.4",

@@ -84,9 +84,9 @@ var model = function(options) {
       const models = targetNamespace.MemServer.DB[this.modelName] || [];
 
       if (!this.primaryKey && models.length === 0) {
-        const recordsPrimaryKey = options.id || options.uuid;
+        const recordsPrimaryKey = options.uuid ? 'uuid' : 'id';
 
-        this.primaryKey = recordsPrimaryKey || 'id';
+        this.primaryKey = recordsPrimaryKey;
         this.attributes.push(this.primaryKey);
       }
 

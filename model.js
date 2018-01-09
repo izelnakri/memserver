@@ -83,8 +83,8 @@ var model = function(options) {
     insert(options) {
       const models = targetNamespace.MemServer.DB[this.modelName] || [];
 
-      if (!this.primaryKey && models.length === 0) {
-        const recordsPrimaryKey = options.uuid ? 'uuid' : 'id';
+      if (models.length === 0) {
+        const recordsPrimaryKey = this.primaryKey || (options.uuid ? 'uuid' : 'id');
 
         this.primaryKey = recordsPrimaryKey;
         this.attributes.push(this.primaryKey);

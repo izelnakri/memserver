@@ -579,5 +579,27 @@ describe('MemServer.Server general functionality', function() {
         assert.deepEqual(jqXHR.responseJSON, { result: 'external urls work!!' });
       });
     });
+
+    it('converts empty strings to null in request and formats query params', async function() {
+      const MemServer = require('../../lib/index.js');
+      const { Photo } = MemServer.Models;
+
+      MemServer.start();
+      window.$ = require('jquery');
+
+      MemServer.Server.post('/photos', ({ params, queryParams }) => {
+        assert.deepEqual(params, { name: null, title: 'Cool' });
+        assert.deepEqual(queryParams, { is_important: true, filter: 32 });
+
+        return { photo: Photo.serializer(Photo.insert(params)) };
+      });
+
+      await window.$.ajax({
+        type: 'POST', url: '/photos?is_important=true&filter=32', data: { name: '', title: 'Cool' }
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 201);
+        assert.equal(Photo.count(), 4);
+      });
+    });
   });
 });

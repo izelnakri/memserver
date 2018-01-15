@@ -214,25 +214,42 @@ var model = function(options) {
         targetNamespace.MemServer.Models[emberCliStringUtils.classify(singularize(relationshipName))];
       const hasManyRelationship = pluralize(relationshipName) === relationshipName;
 
-      if (!targetRelationshipModel) { // NOTE: test this
+      if (!targetRelationshipModel) {
         throw new Error(chalk.red(`[MemServer] ${relationshipName} relationship could not be found on ${this.modelName} model. Please put the ${relationshipName} Model object as the third parameter to ${this.modelName}.getRelationship function`));
       } else if (hasManyRelationship) {
-        const hasManyRecords = targetRelationshipModel.findAll({
+        if (parentObject.id) {
+          const hasManyIDRecords = targetRelationshipModel.findAll({
+            [`${emberCliStringUtils.underscore(this.modelName)}_id`]: parentObject.id
+          });
+
+          return hasManyIDRecords.length > 0 ? hasManyIDRecords : [];
+        } else if (parentObject.uuid) {
+          const hasManyUUIDRecords = targetRelationshipModel.findAll({
+            [`${emberCliStringUtils.underscore(this.modelName)}_uuid`]: parentObject.uuid
+          });
+
+          return hasManyUUIDRecords.length > 0 ? hasManyUUIDRecords : [];
+        }
+      }
+
+      const objectRef = parentObject[`${emberCliStringUtils.underscore(targetRelationshipModel.modelName)}_id`] ||
+        parentObject[`${emberCliStringUtils.underscore(targetRelationshipModel.modelName)}_uuid`];
+
+      if (objectRef && (typeof objectRef === 'number')) {
+        return targetRelationshipModel.find(objectRef) ;
+      } else if (objectRef) {
+        return targetRelationshipModel.findBy({ uuid: objectRef });
+      }
+
+      if (parentObject.id) {
+        return targetRelationshipModel.findBy({
           [`${emberCliStringUtils.underscore(this.modelName)}_id`]: parentObject.id
         });
-
-        return hasManyRecords.length > 0 ? hasManyRecords : [];
+      } else if (parentObject.uuid) {
+        return targetRelationshipModel.findBy({
+          [`${emberCliStringUtils.underscore(this.modelName)}_uuid`]: parentObject.uuid
+        });
       }
-
-      const objectsReference = parentObject[`${emberCliStringUtils.underscore(targetRelationshipModel.modelName)}_id`];
-
-      if (objectsReference) {
-        return targetRelationshipModel.find(objectsReference);
-      }
-
-      return targetRelationshipModel.findBy({ // NOTE: id or uuid lookup?
-        [`${emberCliStringUtils.underscore(this.modelName)}_id`]: parentObject.id
-      });
     }
   }, options);
 };

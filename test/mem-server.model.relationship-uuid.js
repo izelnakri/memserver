@@ -1,8 +1,9 @@
+// TODO: change ids to uuid
 const assert = require('assert');
 const fs = require('fs');
 const rimraf = require('rimraf');
 
-describe('MemServer.Model Relationships Interface', function() {
+describe('MemServer.Model UUID Relationships Interface', function() {
   before(function() {
     Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 
@@ -43,19 +44,19 @@ describe('MemServer.Model Relationships Interface', function() {
     fs.mkdirSync(`./memserver/fixtures`);
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photos.js`, `export default [
       {
-        id: 1,
+        uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a',
         name: 'Ski trip',
         href: 'ski-trip.jpeg',
         is_public: false
       },
       {
-        id: 2,
+        uuid: '2ae860da-ee55-4fd2-affb-da62e263980b',
         name: 'Family photo',
         href: 'family-photo.jpeg',
         is_public: true
       },
       {
-        id: 3,
+        uuid: '6f0c74bb-13e0-4609-b34d-568cd3cee6bc',
         name: 'Selfie',
         href: 'selfie.jpeg',
         is_public: false
@@ -65,25 +66,25 @@ describe('MemServer.Model Relationships Interface', function() {
       {
         uuid: '499ec646-493f-4eea-b92e-e383d94182f4',
         content: 'What a nice photo!',
-        photo_id: 1,
+        photo_uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a',
         user_id: 1
       },
       {
         uuid: '77653ad3-47e4-4ec2-b49f-57ea36a627e7',
         content: 'I agree',
-        photo_id: 1,
+        photo_uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a',
         user_id: 2
       },
       {
         uuid: 'd351963d-e725-4092-a37c-1ca1823b57d3',
         content: 'I was kidding',
-        photo_id: 1,
+        photo_uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a',
         user_id: 1
       },
       {
         uuid: '374c7f4a-85d6-429a-bf2a-0719525f5f29',
         content: 'Interesting indeed',
-        photo_id: 2,
+        photo_uuid: '2ae860da-ee55-4fd2-affb-da62e263980b',
         user_id: 1
       }
     ];`);
@@ -91,12 +92,12 @@ describe('MemServer.Model Relationships Interface', function() {
       {
         id: 1,
         user_id: 1,
-        photo_id: 1
+        photo_uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a'
       },
       {
         id: 2,
         user_id: 1,
-        photo_id: null
+        photo_uuid: null
       }
     ];`);
   });
@@ -119,22 +120,30 @@ describe('MemServer.Model Relationships Interface', function() {
     done();
   });
 
-  describe('$Model.getRelationship method', function() {
-    it('works for hasOne/belongsTo relationships both sides', function() {
+  describe('$Model.getRelationship method for uuid relationships', function() {
+    it('getRelationship() works for hasOne/belongsTo uuid relationships both sides', function() {
       const MemServer = require('../lib/index.js');
       const { Photo, Activity } = MemServer.Models;
 
       MemServer.start();
 
-      const activity = Photo.getRelationship(Photo.find(1), 'activity');
+      const activity = Photo.getRelationship(Photo.findBy({
+        uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a'
+      }), 'activity');
 
-      assert.deepEqual(activity, { id: 1, user_id: 1, photo_id: 1 });
-      assert.deepEqual(Photo.getRelationship(Photo.find(2), 'activity'), null);
-      assert.deepEqual(Activity.getRelationship(activity, 'photo'), Photo.find(1));
+      assert.deepEqual(activity, {
+        id: 1, user_id: 1, photo_uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a'
+      });
+      assert.deepEqual(Photo.getRelationship(Photo.findBy({
+        uuid: '2ae860da-ee55-4fd2-affb-da62e263980b'
+      }), 'activity'), null);
+      assert.deepEqual(Activity.getRelationship(activity, 'photo'), Photo.findBy({
+        uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a'
+      }));
       assert.deepEqual(Activity.getRelationship(Activity.find(2), 'photo'), null);
     });
 
-    it('works for hasMany/belongsTo relationships both sides', function() {
+    it('getRelationship() works for hasMany/belongsTo uuid relationships both sides', function() {
       const photoCommentCode = fs.readFileSync(`${process.cwd()}/memserver/models/photo-comment.js`);
       const commentFixtures = fs.readFileSync(`${process.cwd()}/memserver/fixtures/photo-comments.js`);
 
@@ -146,28 +155,34 @@ describe('MemServer.Model Relationships Interface', function() {
 
       MemServer.start();
 
-      const firstPhotoComments = Photo.getRelationship(Photo.find(1), 'comments');
-      const secondPhotoComments = Photo.getRelationship(Photo.find(2), 'comments');
-      const thirdPhotoComments = Photo.getRelationship(Photo.find(3), 'comments');
+      const firstPhotoComments = Photo.getRelationship(Photo.findBy({
+        uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a'
+      }), 'comments');
+      const secondPhotoComments = Photo.getRelationship(Photo.findBy({
+        uuid: '2ae860da-ee55-4fd2-affb-da62e263980b'
+      }), 'comments');
+      const thirdPhotoComments = Photo.getRelationship(Photo.findBy({
+        uuid: '6f0c74bb-13e0-4609-b34d-568cd3cee6bc'
+      }), 'comments');
 
       assert.deepEqual(firstPhotoComments, [
         {
-          uuid: '499ec646-493f-4eea-b92e-e383d94182f4', content: 'What a nice photo!', photo_id: 1,
-          user_id: 1
+          uuid: '499ec646-493f-4eea-b92e-e383d94182f4', content: 'What a nice photo!',
+          photo_uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a', user_id: 1
         },
         {
-          uuid: '77653ad3-47e4-4ec2-b49f-57ea36a627e7', content: 'I agree', photo_id: 1,
-          user_id: 2
+          uuid: '77653ad3-47e4-4ec2-b49f-57ea36a627e7', content: 'I agree',
+          photo_uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a', user_id: 2
         },
         {
-          uuid: 'd351963d-e725-4092-a37c-1ca1823b57d3', content: 'I was kidding', photo_id: 1,
-          user_id: 1
+          uuid: 'd351963d-e725-4092-a37c-1ca1823b57d3', content: 'I was kidding',
+          photo_uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a', user_id: 1
         }
       ]);
       assert.deepEqual(secondPhotoComments, [
         {
-          uuid: '374c7f4a-85d6-429a-bf2a-0719525f5f29', content: 'Interesting indeed', photo_id: 2,
-          user_id: 1
+          uuid: '374c7f4a-85d6-429a-bf2a-0719525f5f29', content: 'Interesting indeed',
+          photo_uuid: '2ae860da-ee55-4fd2-affb-da62e263980b', user_id: 1
         }
       ]);
       assert.deepEqual(thirdPhotoComments, []);
@@ -176,13 +191,13 @@ describe('MemServer.Model Relationships Interface', function() {
           /\[MemServer\] Comment\.getRelationship expects model input to be an object not an array/.test(err);
       });
       assert.deepEqual(Comment.getRelationship(firstPhotoComments[0], 'photo'), {
-        id: 1,
+        uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a',
         name: 'Ski trip',
         href: 'ski-trip.jpeg',
         is_public: false
       });
       assert.deepEqual(Comment.getRelationship(secondPhotoComments[0], 'photo'), {
-        id: 2,
+        uuid: '2ae860da-ee55-4fd2-affb-da62e263980b',
         name: 'Family photo',
         href: 'family-photo.jpeg',
         is_public: true
@@ -192,48 +207,62 @@ describe('MemServer.Model Relationships Interface', function() {
       fs.unlinkSync(`${process.cwd()}/memserver/fixtures/comments.js`);
     });
 
-    it('works for custom named hasOne/belongsTo and relationships both side', function() {
+    it('getRelationship() works for custom named hasOne/belongsTo uuid relationships both side', function() {
       const MemServer = require('../lib/index.js');
       const { Photo, Activity } = MemServer.Models;
 
       MemServer.start();
 
-      const activity = Photo.getRelationship(Photo.find(1), 'userActivity', Activity);
+      const activity = Photo.getRelationship(Photo.findBy({
+        uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a'
+      }), 'userActivity', Activity);
 
-      assert.deepEqual(activity, { id: 1, user_id: 1, photo_id: 1 });
-      assert.deepEqual(Photo.getRelationship(Photo.find(2), 'userActivity', Activity), null);
-      assert.deepEqual(Activity.getRelationship(activity, 'userPhoto', Photo), Photo.find(1));
+      assert.deepEqual(activity, {
+        id: 1, user_id: 1, photo_uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a'
+      });
+      assert.deepEqual(Photo.getRelationship(Photo.findBy({
+        uuid: '2ae860da-ee55-4fd2-affb-da62e263980b'
+      }), 'userActivity', Activity), null);
+      assert.deepEqual(Activity.getRelationship(activity, 'userPhoto', Photo), Photo.findBy({
+        uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a'
+      }));
       assert.deepEqual(Activity.getRelationship(Activity.find(2), 'userPhoto', Photo), null);
     });
 
-    it('works for custom named hasMany/belongsTo relationships both side', function() {
+    it('getRelationship() works for custom named hasMany/belongsTo uuid relationships both side', function() {
       const MemServer = require('../lib/index.js');
       const { Photo, PhotoComment } = MemServer.Models;
 
       MemServer.start();
 
-      const firstPhotoComments = Photo.getRelationship(Photo.find(1), 'comments', PhotoComment);
-      const secondPhotoComments = Photo.getRelationship(Photo.find(2), 'comments', PhotoComment);
-      const thirdPhotoComments = Photo.getRelationship(Photo.find(3), 'comments', PhotoComment);
+      const firstPhotoComments = Photo.getRelationship(Photo.findBy({
+        uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a'
+      }), 'comments', PhotoComment);
+      const secondPhotoComments = Photo.getRelationship(Photo.findBy({
+        uuid: '2ae860da-ee55-4fd2-affb-da62e263980b'
+      }), 'comments', PhotoComment);
+      const thirdPhotoComments = Photo.getRelationship(Photo.findBy({
+        uuid: '6f0c74bb-13e0-4609-b34d-568cd3cee6bc'
+      }), 'comments', PhotoComment);
 
       assert.deepEqual(firstPhotoComments, [
         {
-          uuid: '499ec646-493f-4eea-b92e-e383d94182f4', content: 'What a nice photo!', photo_id: 1,
-          user_id: 1
+          uuid: '499ec646-493f-4eea-b92e-e383d94182f4', content: 'What a nice photo!',
+          photo_uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a', user_id: 1
         },
         {
-          uuid: '77653ad3-47e4-4ec2-b49f-57ea36a627e7', content: 'I agree', photo_id: 1,
-          user_id: 2
+          uuid: '77653ad3-47e4-4ec2-b49f-57ea36a627e7', content: 'I agree',
+          photo_uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a', user_id: 2
         },
         {
-          uuid: 'd351963d-e725-4092-a37c-1ca1823b57d3', content: 'I was kidding', photo_id: 1,
-          user_id: 1
+          uuid: 'd351963d-e725-4092-a37c-1ca1823b57d3', content: 'I was kidding',
+          photo_uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a', user_id: 1
         }
       ]);
       assert.deepEqual(secondPhotoComments, [
         {
-          uuid: '374c7f4a-85d6-429a-bf2a-0719525f5f29', content: 'Interesting indeed', photo_id: 2,
-          user_id: 1
+          uuid: '374c7f4a-85d6-429a-bf2a-0719525f5f29', content: 'Interesting indeed',
+          photo_uuid: '2ae860da-ee55-4fd2-affb-da62e263980b', user_id: 1
         }
       ]);
       assert.deepEqual(thirdPhotoComments, []);
@@ -242,85 +271,36 @@ describe('MemServer.Model Relationships Interface', function() {
           /\[MemServer\] PhotoComment\.getRelationship expects model input to be an object not an array/.test(err);
       });
       assert.deepEqual(PhotoComment.getRelationship(firstPhotoComments[0], 'photo'), {
-        id: 1,
+        uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a',
         name: 'Ski trip',
         href: 'ski-trip.jpeg',
         is_public: false
       });
       assert.deepEqual(PhotoComment.getRelationship(secondPhotoComments[0], 'photo'), {
-        id: 2,
+        uuid: '2ae860da-ee55-4fd2-affb-da62e263980b',
         name: 'Family photo',
         href: 'family-photo.jpeg',
         is_public: true
       });
     });
 
-    it('throws an error when relationship reference is invalid', function() {
+    it('throws an error when uuid relationship reference is invalid', function() {
       const MemServer = require('../lib/index.js');
-      const { Photo, PhotoComment } = MemServer.Models;
+      const { Photo } = MemServer.Models;
 
       MemServer.start();
 
-      assert.throws(() => Photo.getRelationship(Photo.find(1), 'comments'), (err) => {
+      assert.throws(() => Photo.getRelationship(Photo.findBy({
+        uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a'
+      }), 'comments'), (err) => {
         return (err instanceof Error) &&
           /\[MemServer\] comments relationship could not be found on Photo model\. Please put the comments Model object as the third parameter to Photo\.getRelationship function/.test(err);
       });
-      assert.throws(() => Photo.getRelationship(Photo.find(2), 'userActivity'), (err) => {
+      assert.throws(() => Photo.getRelationship(Photo.findBy({
+        uuid: '2ae860da-ee55-4fd2-affb-da62e263980b'
+      }), 'userActivity'), (err) => {
         return (err instanceof Error) &&
         /\[MemServer\] userActivity relationship could not be found on Photo model\. Please put the userActivity Model object as the third parameter to Photo\.getRelationship function/.test(err);
-      });
-    });
-  });
-
-  describe('$Model relationship embedding', function() {
-    it('can register relationship embeds before runtime', function() {
-      const MemServer = require('../lib/index.js');
-      const { Photo, PhotoComment, User } = MemServer.Models;
-
-      MemServer.start();
-
-      assert.deepEqual(Photo.embedReferences, { comments: PhotoComment });
-      assert.deepEqual(PhotoComment.embedReferences, { author: User });
-    });
-
-    it('can register relationships embeds during runtime', function() {
-      const MemServer = require('../lib/index.js');
-      const { Activity, Photo, PhotoComment, User } = MemServer.Models;
-
-      MemServer.start();
-
-      Photo.embed({ userActivity: Activity });
-      User.embed({ activities: Activity });
-
-      assert.deepEqual(Photo.embedReferences, { comments: PhotoComment, userActivity: Activity });
-      assert.deepEqual(User.embedReferences, { activities: Activity });
-    });
-
-    it('throws error when runtime $Model.embed() doesnt receive an object parameter', function() {
-      const MemServer = require('../lib/index.js');
-      const { Activity, User } = MemServer.Models;
-
-      MemServer.start();
-
-      assert.throws(() => User.embed(), (err) => {
-        return (err instanceof Error) &&
-        /\[MemServer\] User\.embed\(relationshipObject\) requires an object as a parameter: { relationshipKey: \$RelationshipModel }/.test(err);
-      });
-      assert.throws(() => User.embed(Activity), (err) => {
-        return (err instanceof Error) &&
-        /\[MemServer\] User\.embed\(relationshipObject\) requires an object as a parameter: { relationshipKey: \$RelationshipModel }/.test(err);
-      });
-    });
-
-    it('throws error when runtime $Model.embed(relationship) called with a Model that doesnt exist', function() {
-      const MemServer = require('../lib/index.js');
-      const { Activity, User } = MemServer.Models;
-
-      MemServer.start();
-
-      assert.throws(() => User.embed({ activities: undefined }), (err) => {
-        return (err instanceof Error) &&
-          /\[MemServer\] User\.embed\(\) fails: activities Model reference is not a valid\. Please put a valid \$ModelName to User\.embed\(\)/.test(err);
       });
     });
   });

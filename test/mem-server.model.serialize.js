@@ -206,7 +206,11 @@ describe('MemServer.Model Serialize Interface', function() {
       return Object.assign({}, comment, { author: User.find(comment.user_id) });
     }));
     assert.deepEqual(Photo.serializer(targetPhotos), targetPhotos.map((photo) => {
-      return Object.assign({}, PhotoComment.serializer(photo));
+      return Object.assign({}, photo, {
+        comments: PhotoComment.findAll({ photo_id: photo.id }).map((comment) => {
+          return Object.assign({}, comment, { author: User.find(comment.user_id) });
+        })
+      });
     }))
   });
 

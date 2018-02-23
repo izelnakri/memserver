@@ -196,13 +196,13 @@ var model = function(options) {
         }
 
         return result;
-      }, object);
+      }, Object.assign({}, object));
 
       return Object.keys(this.embedReferences).reduce((result, embedKey) => {
         const embedModel = this.embedReferences[embedKey];
         const embeddedRecords = this.getRelationship(object, embedKey, embedModel);
 
-        return Object.assign(result, { [embedKey]: embedModel.serializer(embeddedRecords) });
+        return Object.assign({}, result, { [embedKey]: embedModel.serializer(embeddedRecords) });
       }, objectWithAllAttributes);
     },
     getRelationship(parentObject, relationshipName, relationshipModel) {

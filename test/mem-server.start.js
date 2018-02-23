@@ -149,7 +149,7 @@ describe('MemServer start/stop functionality', function() {
     assert.ok(MemServer.Server.shutdown.calledOnce, 'MemServer.shutdown() calls shutdown on Pretender instance');
   });
 
-  it('can be shut down and started again with restarted state', () => {
+  it('can be shut down and started again with restarted INITIAL STATE, NO MUTATION', () => {
     fs.mkdirSync(`./memserver/fixtures`);
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photos.js`, `export default [
       {
@@ -226,10 +226,60 @@ describe('MemServer start/stop functionality', function() {
     assert.equal(Photo.findAll().length, 6);
     assert.equal(PhotoComment.findAll().length, 5);
 
+    Photo.update({ id: 1, name: 'Mutated photo name' });
+    Photo.update({ id: 2, name: 'Another mutated photo name' });
+    PhotoComment.update({
+      uuid: '499ec646-493f-4eea-b92e-e383d94182f4', content: 'Mutated photo comment'
+    });
+
     MemServer.shutdown();
     MemServer.start();
 
-    assert.deepEqual(Photo.findAll(), initialPhotos);
-    assert.deepEqual(PhotoComment.findAll(), initialPhotoComments);
+    assert.deepEqual(Photo.findAll(), [
+      {
+        id: 1,
+        name: 'Ski trip',
+        href: 'ski-trip.jpeg',
+        is_public: false
+      },
+      {
+        id: 2,
+        name: 'Family photo',
+        href: 'family-photo.jpeg',
+        is_public: true
+      },
+      {
+        id: 3,
+        name: 'Selfie',
+        href: 'selfie.jpeg',
+        is_public: false
+      }
+    ]);
+    assert.deepEqual(PhotoComment.findAll(), [
+      {
+        uuid: '499ec646-493f-4eea-b92e-e383d94182f4',
+        content: 'What a nice photo!',
+        photo_id: 1,
+        user_id: 1
+      },
+      {
+        uuid: '77653ad3-47e4-4ec2-b49f-57ea36a627e7',
+        content: 'I agree',
+        photo_id: 1,
+        user_id: 2
+      },
+      {
+        uuid: 'd351963d-e725-4092-a37c-1ca1823b57d3',
+        content: 'I was kidding',
+        photo_id: 1,
+        user_id: 1
+      },
+      {
+        uuid: '374c7f4a-85d6-429a-bf2a-0719525f5f29',
+        content: 'Interesting indeed',
+        photo_id: 2,
+        user_id: 1
+      }
+    ]);
   });
 });

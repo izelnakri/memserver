@@ -132,8 +132,7 @@ function generateFixtures(modelName, memServerDirectory) {
     const fileAbsolutePath = `${memServerDirectory}${fileRelativePath}`;
 
     if (fs.existsSync(fileAbsolutePath)) {
-      const fixtureData = fs.readFileSync(fileAbsolutePath).toString();
-      const previousModels = eval(fixtureData.slice(15, fixtureData.length - 1)); // NOTE: Good use-case for evil eval!:
+      const previousModels = require(fileAbsolutePath)['default'];
 
       if (JSON.stringify(previousModels.sort(sortFunction)) === JSON.stringify(sortedState)) {
         return;

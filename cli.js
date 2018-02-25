@@ -1,4 +1,8 @@
 #! /usr/bin/env node
+require('babel-register')({
+  presets: ['env']
+});
+
 const fs = require('fs');
 const util = require('util');
 const child_process = require('child_process');

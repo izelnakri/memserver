@@ -81,10 +81,10 @@ memserver version | v                   # Displays memserver version`;
 
   it('memserver version and memserver v works', function(done) {
     shell(`node ${process.cwd()}/cli.js v`, (error, stdout) => {
-      assert.equal(stdout, '[MemServer CLI] 1.1.1\n');
+      assert.equal(stdout, '[MemServer CLI] 1.1.2\n');
 
       shell(`node ${process.cwd()}/cli.js version`, (error, stdout) => {
-        assert.equal(stdout, '[MemServer CLI] 1.1.1\n');
+        assert.equal(stdout, '[MemServer CLI] 1.1.2\n');
 
         done();
       });

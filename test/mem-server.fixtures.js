@@ -7,8 +7,8 @@ describe('MemServer fixture constraint feature', function() {
     const modelFileContent = `import Model from '${process.cwd()}/lib/model';
                               export default Model({});`;
 
-    fs.mkdirSync(`./memserver`);
-    fs.mkdirSync(`./memserver/models`);
+    fs.mkdirSync('./memserver');
+    fs.mkdirSync('./memserver/models');
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo.js`, modelFileContent);
     fs.writeFileSync(`${process.cwd()}/memserver/models/user.js`, modelFileContent);
     fs.writeFileSync(`${process.cwd()}/memserver/models/photo-comment.js`, modelFileContent);
@@ -89,7 +89,7 @@ describe('MemServer fixture constraint feature', function() {
 
     assert.throws(() => MemServer.start(), (err) => {
       return (err instanceof Error) &&
-        /\[MemServer\] DATABASE ERROR\: At least one of your PhotoComment fixtures missing a primary key\. Please make sure all your PhotoComment fixtures have either id or uuid primaryKey/.test(err);
+        /\[MemServer\] DATABASE ERROR: At least one of your PhotoComment fixtures missing a primary key\. Please make sure all your PhotoComment fixtures have either id or uuid primaryKey/.test(err);
     });
 
     assert.deepEqual(MemServer.Server, {});
@@ -99,7 +99,7 @@ describe('MemServer fixture constraint feature', function() {
   });
 
   it('should throw error if any of the id fixtures have an incorrect type', function() {
-    fs.mkdirSync(`./memserver/fixtures`);
+    fs.mkdirSync('./memserver/fixtures');
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photos.js`, `export default [
       {
         id: 1,
@@ -160,7 +160,7 @@ describe('MemServer fixture constraint feature', function() {
 
     assert.throws(() => MemServer.start(), (err) => {
       return (err instanceof Error) &&
-        /\[MemServer\] Photo model primaryKey type is 'id'\. Instead you've tried to enter id\: 2 with string type/.test(err);
+        /\[MemServer\] Photo model primaryKey type is 'id'\. Instead you've tried to enter id: 2 with string type/.test(err);
     });
 
     assert.deepEqual(MemServer.Server, {});
@@ -172,7 +172,7 @@ describe('MemServer fixture constraint feature', function() {
   it('should throw error if any of the uuid fixtures have an incorrect type', function() {
     this.timeout(5000);
 
-    fs.mkdirSync(`./memserver/fixtures`);
+    fs.mkdirSync('./memserver/fixtures');
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photos.js`, `export default [
       {
         id: 1,
@@ -241,7 +241,7 @@ describe('MemServer fixture constraint feature', function() {
   });
 
   it('should throw error if there are duplicate id fixtures', function() {
-    fs.mkdirSync(`./memserver/fixtures`);
+    fs.mkdirSync('./memserver/fixtures');
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photos.js`, `export default [
       {
         id: 1,
@@ -273,7 +273,7 @@ describe('MemServer fixture constraint feature', function() {
   });
 
   it('should throw error if there are duplicate uuid fixtures', function() {
-    fs.mkdirSync(`./memserver/fixtures`);
+    fs.mkdirSync('./memserver/fixtures');
     fs.writeFileSync(`${process.cwd()}/memserver/fixtures/photo-comments.js`, `export default [
       {
         uuid: '499ec646-493f-4eea-b92e-e383d94182f4',

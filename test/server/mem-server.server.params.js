@@ -198,6 +198,8 @@ describe('MemServer.Server Parameters and Query Parameters', function() {
     });
 
     it('POST /resources work with custom headers, queryParams and responses', async function() {
+      this.timeout(10000);
+
       const MemServer = require('../../lib/index.js');
       const { Photo } = MemServer.Models;
 
@@ -291,7 +293,6 @@ describe('MemServer.Server Parameters and Query Parameters', function() {
         type: 'PUT', url: '/photos/1', headers: AJAX_AUTHORIZATION_HEADERS,
         data: JSON.stringify({ photo: { id: 1, name: 'Life' } })
       }).catch((jqXHR) => {
-        console.log(jqXHR);
         assert.equal(jqXHR.status, 500);
         assert.deepEqual(jqXHR.responseJSON, { error: 'Unexpected error occured' });
       });
@@ -329,10 +330,35 @@ describe('MemServer.Server Parameters and Query Parameters', function() {
 
   describe('some edge cases', function() {
     before(function() {
+      fs.writeFileSync(`${process.cwd()}/memserver/models/ethereum-account.js`, `
+        import Model from '${process.cwd()}/lib/model';
+
+        export default Model({
+        });
+      `);
+      fs.writeFileSync(`${process.cwd()}/memserver/fixtures/ethereum-accounts.js`, `export default [
+        {
+          id: 1,
+          address: '0x7be8315acfef37816c9ad4dc5e82195f2a52934c5d0c74883f9978675e26d600'
+        }
+      ];`);
+
       fs.writeFileSync(`${process.cwd()}/memserver/server.js`, `
         import Response from '../lib/response';
 
-        export default function({ Photo, PhotoComment }) {
+        export default function({ EthereumAccount, Photo, PhotoComment }) {
+          this.get('/ethereum-accounts', ({ queryParams }) => {
+            const ethereumAccounts = EthereumAccount.findAll({ address: queryParams.address });
+
+            return { ethereum_accounts: EthereumAccount.serializer(ethereumAccounts) };
+          });
+
+          this.get('/ethereum-accounts/:address', ({ params }) => {
+            const ethereumAccount = EthereumAccount.findBy({ address: params.address });
+
+            return { ethereum_account: EthereumAccount.serializer(ethereumAccount) };
+          });
+
           this.get('/photos', ({ queryParams }) => {
             const photos = Photo.find(queryParams.ids || []);
 
@@ -441,6 +467,51 @@ describe('MemServer.Server Parameters and Query Parameters', function() {
         assert.equal(jqXHR.status, 200);
         assert.deepEqual(data, { photo_comments: PhotoComment.serializer(targetComments) });
       });
+    });
+
+    it('casts ethereum addresses correctly as string request.params', async function() {
+      this.timeout(10000);
+
+      const MemServer = require('../../lib/index.js');
+      const { EthereumAccount } = MemServer.Models;
+
+      MemServer.start();
+      window.$ = require('jquery');
+
+      const targetAccount = EthereumAccount.findBy({
+        address: '0x7be8315acfef37816c9ad4dc5e82195f2a52934c5d0c74883f9978675e26d600'
+      });
+
+      await window.$.ajax({
+        type: 'GET',
+        url: '/ethereum-accounts/0x7be8315acfef37816c9ad4dc5e82195f2a52934c5d0c74883f9978675e26d600'
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 200);
+        assert.deepEqual(data, { ethereum_account: EthereumAccount.serializer(targetAccount) });
+      });
+    });
+
+    it('casts ethereum addresses correctly as string request.queryParams', async function() {
+      this.timeout(10000);
+
+      const MemServer = require('../../lib/index.js');
+      const { EthereumAccount } = MemServer.Models;
+
+      MemServer.start();
+      window.$ = require('jquery');
+
+      const targetAccounts = EthereumAccount.findAll({
+        address: '0x7be8315acfef37816c9ad4dc5e82195f2a52934c5d0c74883f9978675e26d600'
+      });
+
+      await window.$.ajax({
+        type: 'GET',
+        url: '/ethereum-accounts?address=0x7be8315acfef37816c9ad4dc5e82195f2a52934c5d0c74883f9978675e26d600'
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 200);
+        assert.deepEqual(data, { ethereum_accounts: EthereumAccount.serializer(targetAccounts) });
+      });
+
     });
   });
 });

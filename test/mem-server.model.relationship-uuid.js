@@ -34,6 +34,11 @@ describe('MemServer.Model UUID Relationships Interface', function() {
 
       export default Model({});
     `);
+    fs.writeFileSync(`${process.cwd()}/memserver/models/email.js`, `
+      import Model from '${process.cwd()}/lib/model';
+
+      export default Model({});
+    `);
     fs.writeFileSync(`${process.cwd()}/memserver/models/activity.js`, `
       import Model from '${process.cwd()}/lib/model';
 
@@ -100,6 +105,25 @@ describe('MemServer.Model UUID Relationships Interface', function() {
         photo_uuid: null
       }
     ];`);
+    fs.writeFileSync(`${process.cwd()}/memserver/fixtures/users.js`, `export default [
+      {
+        id: 1,
+        authentication_token: '1RQFPDXxNBvhGwZAEOj8ztGFItejDusXJw_F1FAg5-GknxhqrcfH9h4p9NGCiCVG',
+        password_digest: 'tL4rJzy3GrjSQ7K0ZMNqKsgMthsikbWfIEPTi/HJXD3lme7q6HT57RpuCKJOcAC9DFb3lXtEONmkB3fO0q3zWA==',
+        primary_email_uuid: '951d3321-9e66-4099-a4a5-cc1e4795d4zz'
+      }
+    ];`);
+    fs.writeFileSync(`${process.cwd()}/memserver/fixtures/emails.js`, `export default [
+      {
+        uuid: '951d3321-9e66-4099-a4a5-cc1e4795d4zz',
+        address: 'contact@izelnakri.com',
+        is_public: false,
+        confirmed_at: '2018-02-25T23:00:00.000Z',
+        confirmation_token: '951d3321-9e66-4099-a4a5-cc1e4795d4ss',
+        confirmation_token_sent_at: '2018-02-25T22:16:01.133Z',
+        person_id: 1
+      }
+    ];`);
   });
 
   beforeEach(function(done) {
@@ -141,6 +165,7 @@ describe('MemServer.Model UUID Relationships Interface', function() {
         uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a'
       }));
       assert.deepEqual(Activity.getRelationship(Activity.find(2), 'photo'), null);
+
     });
 
     it('getRelationship() works for hasMany/belongsTo uuid relationships both sides', function() {
@@ -209,7 +234,7 @@ describe('MemServer.Model UUID Relationships Interface', function() {
 
     it('getRelationship() works for custom named hasOne/belongsTo uuid relationships both side', function() {
       const MemServer = require('../lib/index.js');
-      const { Photo, Activity } = MemServer.Models;
+      const { Photo, Activity, User, Email } = MemServer.Models;
 
       MemServer.start();
 
@@ -220,13 +245,22 @@ describe('MemServer.Model UUID Relationships Interface', function() {
       assert.deepEqual(activity, {
         id: 1, user_id: 1, photo_uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a'
       });
+      assert.deepEqual(User.getRelationship(User.find(1), 'primaryEmail', Email), {
+        uuid: '951d3321-9e66-4099-a4a5-cc1e4795d4zz',
+        address: 'contact@izelnakri.com',
+        is_public: false,
+        confirmed_at: '2018-02-25T23:00:00.000Z',
+        confirmation_token: '951d3321-9e66-4099-a4a5-cc1e4795d4ss',
+        confirmation_token_sent_at: '2018-02-25T22:16:01.133Z',
+        person_id: 1
+      });
       assert.deepEqual(Photo.getRelationship(Photo.findBy({
         uuid: '2ae860da-ee55-4fd2-affb-da62e263980b'
       }), 'userActivity', Activity), null);
-      assert.deepEqual(Activity.getRelationship(activity, 'userPhoto', Photo), Photo.findBy({
+      assert.deepEqual(Activity.getRelationship(activity, 'photo', Photo), Photo.findBy({
         uuid: '65075a0c-3f4c-47af-9995-d4a01747ff7a'
       }));
-      assert.deepEqual(Activity.getRelationship(Activity.find(2), 'userPhoto', Photo), null);
+      assert.deepEqual(Activity.getRelationship(Activity.find(2), 'photo', Photo), null);
     });
 
     it('getRelationship() works for custom named hasMany/belongsTo uuid relationships both side', function() {

@@ -232,8 +232,8 @@ var model = function(options) {
         }
       }
 
-      const objectRef = parentObject[`${emberCliStringUtils.underscore(targetRelationshipModel.modelName)}_id`] ||
-        parentObject[`${emberCliStringUtils.underscore(targetRelationshipModel.modelName)}_uuid`];
+      const objectRef = parentObject[`${emberCliStringUtils.underscore(relationshipName)}_id`] ||
+        parentObject[`${emberCliStringUtils.underscore(relationshipName)}_uuid`];
 
       if (objectRef && (typeof objectRef === 'number')) {
         return targetRelationshipModel.find(objectRef) ;

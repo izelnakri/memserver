@@ -1,9 +1,17 @@
 {
   "name": "memserver",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "in-memory database/ORM and http mock server you can run in-browser and node environments. Built for large frontend teams, fast tests and rapid prototyping",
+  "author": "Izel Nakri",
   "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/izelnakri/memserver.git"
+  },
   "license": "ISC",
+  "bin": {
+    "memserver": "cli.js"
+  },
   "scripts": {
     "test": "sh run-tests.sh",
     "bin": "node cli.js",
@@ -14,20 +22,13 @@
     "build:memserver-cjs": "rollup -i ./lib/mem-server.js -o ./lib/mem-server-cjs.js -f cjs",
     "prepublish": "npm run build:model && npm run build:response && npm run build:memserver-cjs"
   },
-  "bin": {
-    "memserver": "cli.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/izelnakri/memserver.git"
-  },
-  "author": "",
   "dependencies": {
     "@std/esm": "^0.12.5",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "chalk": "^2.3.0",
     "ember-cli-string-utils": "^1.1.0",
+    "esm": "^3.0.26",
     "fake-xml-http-request": "^1.6.0",
     "i": "^0.3.6",
     "jsdom": "^11.3.0",

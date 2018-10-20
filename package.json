@@ -13,7 +13,7 @@
     "memserver": "cli.js"
   },
   "scripts": {
-    "test": "sh run-tests.sh",
+    "test": "node_modules/.bin/ava --verbose",
     "bin": "node cli.js",
     "build:browser": "rollup -c --environment BUILD:development",
     "build:model": "rollup -i ./lib/model.js -o model.js -f cjs",
@@ -23,12 +23,11 @@
     "prepublish": "npm run build:model && npm run build:response && npm run build:memserver-cjs"
   },
   "dependencies": {
-    "@std/esm": "^0.12.5",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "chalk": "^2.3.0",
     "ember-cli-string-utils": "^1.1.0",
-    "esm": "^3.0.26",
+    "esm": "^3.0.84",
     "fake-xml-http-request": "^1.6.0",
     "i": "^0.3.6",
     "jsdom": "^11.3.0",
@@ -43,9 +42,11 @@
     "route-recognizer": "^0.3.3"
   },
   "devDependencies": {
+    "ava": "1.0.0-rc.1",
     "cors": "^2.8.4",
     "express": "^4.16.2",
     "faker": "^4.1.0",
+    "fs-extra": "^7.0.0",
     "jquery": "^3.2.1",
     "mkdirp": "^0.5.1",
     "mocha": "^4.0.1",
@@ -54,7 +55,11 @@
     "rimraf": "^2.6.2",
     "sinon": "^4.0.1"
   },
-  "@std/esm": {
-    "esm": "all"
+  "ava": {
+    "require": [
+      "esm"
+    ],
+    "concurrency": 1,
+    "failFast": true
   }
 }

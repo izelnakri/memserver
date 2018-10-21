@@ -230,7 +230,7 @@ test('MemServer fixtures should throw error if any of the uuid fixtures have an 
 
   const error = t.throws(() => MemServer.start(), Error);
 
-  t.true(/\[MemServer\] PhotoComment model primaryKey type is 'uuid'. Instead you've tried to enter uuid: 12 with number type/.test(error.message))
+  t.true(/\[MemServer\] PhotoComment model primaryKey type is 'uuid'. Instead you've tried to enter uuid: 12 with number type/.test(error.message));
 
   t.deepEqual(MemServer.Server, {});
   t.deepEqual(MemServer.DB, {});

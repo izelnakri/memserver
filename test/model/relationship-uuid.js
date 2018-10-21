@@ -137,7 +137,7 @@ test.afterEach(() => {
   Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 });
 
-test.after.always(async() => {
+test.after.always(async () => {
   if (await fs.exists(`${CWD}/memserver`)) {
     await fs.remove(`${CWD}/memserver`);
   }

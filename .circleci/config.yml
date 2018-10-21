@@ -1,0 +1,37 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: docker:dind
+    working_directory: /code
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build application Docker image
+          command: |
+            docker build -t memserver .
+      - deploy:
+          name: Push application Docker image
+          command: |
+            echo $HUB_KEY | docker login -u $HUB_USERNAME --password-stdin
+            docker tag memserver "${HUB_USERNAME}/memserver:${CIRCLE_BRANCH}"
+            docker push "${HUB_USERNAME}/memserver:${CIRCLE_BRANCH}"
+  test:
+    docker:
+      - image: docker:dind
+    working_directory: ~/code
+    steps:
+      - setup_remote_docker
+      - run: docker pull ${HUB_USERNAME}/memserver:${CIRCLE_BRANCH}
+      - run: docker run -t -d --name="memserver" ${HUB_USERNAME}/memserver:${CIRCLE_BRANCH} /bin/bash
+      - run: docker exec -it memserver npm test
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build

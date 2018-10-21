@@ -160,7 +160,7 @@ test.serial('$Model.delete(model) throws when the model primaryKey doesnt exist 
   t.true(/\[MemServer\] Could not find PhotoComment with uuid 374c7f4a-85d6-429a-bf2a-0719525f5111 to delete\. PhotoComment\.delete\(\{ uuid: '374c7f4a-85d6-429a-bf2a-0719525f5111' \}\) failed/.test(fourthError.message));
 });
 
-test('#Model.delete() throws when called without a parameter', (t) => {
+test('$Model.delete() throws when called without a parameter', (t) => {
   t.plan(4);
 
   const MemServer = require('../../lib/index.js');

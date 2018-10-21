@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 
 const CWD = process.cwd();
 
-test.afterEach.always(async (t) => {
+test.afterEach.always(async () => {
   if (await fs.exists(`${CWD}/memserver`)) {
     await fs.remove(`${CWD}/memserver`);
   }

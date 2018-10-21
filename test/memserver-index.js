@@ -24,8 +24,8 @@ test.serial('MemServer require() should throw error if /memserver/models folder 
 });
 
 test.serial('MemServer require() should throw error if /memserver/server.js doesnt exist', async (t) => {
-  await fs.mkdir(`./memserver`);
-  await fs.mkdir(`./memserver/models`);
+  await fs.mkdir(`${CWD}/memserver`);
+  await fs.mkdir(`${CWD}/memserver/models`);
 
   const error = t.throws(() => require('../lib/index.js'), Error);
 
@@ -35,8 +35,8 @@ test.serial('MemServer require() should throw error if /memserver/server.js does
 test.serial('MemServer require() exports a MemServer with right functions and empty DB when there is no model', async (t) => {
   t.plan(4);
 
-  await fs.mkdir(`./memserver`);
-  await fs.mkdir(`./memserver/models`);
+  await fs.mkdir(`${CWD}/memserver`);
+  await fs.mkdir(`${CWD}/memserver/models`);
   await fs.writeFile(`${CWD}/memserver/server.js`, 'export default function(Models) {}');
 
   const MemServer = require('../lib/index.js');
@@ -50,7 +50,7 @@ test.serial('MemServer require() exports a MemServer with right functions and em
 test.serial('MemServer require() exports a MemServer with right functions and empty DB and models', async (t) => {
   t.plan(10);
 
-  const modelFileContent = `import Model from '${process.cwd()}/lib/model';
+  const modelFileContent = `import Model from '${CWD}/lib/model';
 
   export default Model({});`;
 

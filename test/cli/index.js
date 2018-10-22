@@ -5,7 +5,7 @@ import child_process from 'child_process';
 const CWD = process.cwd();
 const shell = child_process.exec;
 
-test.afterEach(async () => {
+test.afterEach.always(async () => {
   if (await fs.exists(`${CWD}/memserver`)) {
     await fs.remove(`${CWD}/memserver`);
   }

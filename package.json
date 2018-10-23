@@ -17,7 +17,6 @@
     "bin": "node cli.js",
     "build:browser": "rollup -c --environment BUILD:development",
     "build:model": "rollup -i ./lib/model.js -o model.js -f cjs",
-    "build:model-iife": "rollup -i ./lib/model.js -o model.js -f cjs",
     "build:response": "rollup -i ./lib/response.js -o response.js -f cjs",
     "build:memserver-cjs": "rollup -i ./lib/mem-server.js -o ./lib/mem-server-cjs.js -f cjs",
     "prepublish": "npm run build:model && npm run build:response && npm run build:memserver-cjs"

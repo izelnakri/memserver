@@ -11,10 +11,11 @@ import Inflector from 'i';
 import { classify, dasherize } from 'ember-cli-string-utils';
 import virtual from 'rollup-plugin-virtual';
 
+const CWD = process.cwd();
 const { pluralize } = Inflector();
 
-const modelFileNames = fs.readdirSync(`${process.cwd()}/memserver/models`);
-const targetMemServerPath = `${process.cwd()}/memserver/server.js`;
+const modelFileNames = fs.readdirSync(`${CWD}/memserver/models`);
+const targetMemServerPath = `${CWD}/memserver/server.js`;
 
 if (!fs.existsSync(targetMemServerPath)) {
   throw new Error('memserver/server.js doesnt exist! Please create a memserver/server.js to use MemServer');
@@ -26,7 +27,7 @@ const targetInput = IS_DEVELOPMENT ? 'lib/browser.js' : `${require.resolve('mems
 export default {
   input: targetInput,
   output: {
-    file: IS_DEVELOPMENT ? 'dist/memserver.dist.js' : `${process.cwd()}/dist/memserver.dist.js`,
+    file: IS_DEVELOPMENT ? 'dist/memserver.dist.js' : `${CWD}/dist/memserver.dist.js`,
     format: 'iife'
   },
   name: 'MEMSERVER',
@@ -37,7 +38,7 @@ export default {
       '_memserver_fixtures': generateInMemoryFixturesImport(modelFileNames),
       '_memserver_initializer': generateInitializerImport(),
       '_memserver': `
-        import server from '${process.cwd()}/memserver/server';
+        import server from '${CWD}/memserver/server';
         export default server;`
     }),
     resolve({ jsnext: true }),
@@ -59,7 +60,7 @@ function generateInMemoryFixturesImport(modelFileNames) {
   const imports = modelFileNames.reduce((codeText, modelFileName) => {
     const modelName = classify(modelFileName.slice(0, -3));
 
-    return codeText + `import ${modelName} from '${process.cwd()}/memserver/fixtures/${dasherize(pluralize(modelName))}';`;
+    return codeText + `import ${modelName} from '${CWD}/memserver/fixtures/${dasherize(pluralize(modelName))}';`;
   }, '');
 
   return imports.concat(createObjectFromModels(modelFileNames));
@@ -69,7 +70,7 @@ function generateInMemoryModelsImport(modelFileNames) {
   const imports = modelFileNames.reduce((codeText, modelFileName) => {
     const modelName = classify(modelFileName.slice(0, -3));
 
-    return codeText + `import ${modelName} from '${process.cwd()}/memserver/models/${modelFileName}';`;
+    return codeText + `import ${modelName} from '${CWD}/memserver/models/${modelFileName}';`;
   }, '');
 
   return imports.concat(createObjectFromModels(modelFileNames));
@@ -88,10 +89,10 @@ function createObjectFromModels(modelFileNames) {
 }
 
 function generateInitializerImport() {
-  const initializerExists = fs.existsSync(`${process.cwd()}/memserver/initializer`);
+  const initializerExists = fs.existsSync(`${CWD}/memserver/initializer`);
 
   if (initializerExists) {
-    return `import server from '${process.cwd()}/memserver/server';
+    return `import server from '${CWD}/memserver/server';
             export default server;`;
   }
 

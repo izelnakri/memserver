@@ -2,8 +2,8 @@
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
+var chalk = _interopDefault(require('ansi-colors'));
 var util = _interopDefault(require('util'));
-var chalk = _interopDefault(require('chalk'));
 var Inflector = _interopDefault(require('i'));
 var emberCliStringUtils = require('ember-cli-string-utils');
 
@@ -30,7 +30,7 @@ function primaryKeyTypeSafetyCheck(targetPrimaryKeyType, primaryKey, modelName) 
 const { singularize, pluralize } = Inflector();
 const targetNamespace = typeof global === 'object' ? global : window;
 
-var model = function(options) {
+function model(options) {
   return Object.assign({}, {
     modelName: null,
     primaryKey: null,
@@ -254,7 +254,7 @@ var model = function(options) {
       }
     }
   }, options);
-};
+}
 
 function incrementId(Model) {
   const ids = targetNamespace.MemServer.DB[Model.modelName];

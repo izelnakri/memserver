@@ -37,7 +37,8 @@ test.serial('MemServer can be started without fixtures', (t) => {
   t.deepEqual(Object.keys(MemServer.Server), [
     'hosts', 'handlers', 'handledRequests', 'passthroughRequests', 'unhandledRequests',
     'requestReferences', 'forcePassthrough', 'disableUnhandled', '_nativeXMLHttpRequest',
-    'running', 'ctx', 'handledRequest', 'passthroughRequest', 'unhandledRequest', 'passthrough'
+    'running', 'ctx', '_fetchProps', '_nativefetch', '_nativeHeaders', '_nativeRequest',
+    '_nativeResponse', 'handledRequest', 'passthroughRequest', 'unhandledRequest', 'passthrough'
   ]);
 });
 
@@ -108,7 +109,8 @@ test.serial('MemServer can be started with fixtures', async (t) => {
   t.deepEqual(Object.keys(MemServer.Server), [
     'hosts', 'handlers', 'handledRequests', 'passthroughRequests', 'unhandledRequests',
     'requestReferences', 'forcePassthrough', 'disableUnhandled', '_nativeXMLHttpRequest',
-    'running', 'ctx', 'handledRequest', 'passthroughRequest', 'unhandledRequest', 'passthrough'
+    'running', 'ctx', '_fetchProps', '_nativefetch', '_nativeHeaders', '_nativeRequest',
+    '_nativeResponse', 'handledRequest', 'passthroughRequest', 'unhandledRequest', 'passthrough'
   ]);
   t.deepEqual(MemServer.DB, {
     Photo: Photo.findAll(), PhotoComment: PhotoComment.findAll(), User: []
@@ -137,7 +139,8 @@ test('MemServer can be shut down', (t) => {
   t.deepEqual(Object.keys(MemServer.Server), [
     'hosts', 'handlers', 'handledRequests', 'passthroughRequests', 'unhandledRequests',
     'requestReferences', 'forcePassthrough', 'disableUnhandled', '_nativeXMLHttpRequest',
-    'running', 'ctx', 'handledRequest', 'passthroughRequest', 'unhandledRequest', 'passthrough'
+    'running', 'ctx', '_fetchProps', '_nativefetch', '_nativeHeaders', '_nativeRequest',
+    '_nativeResponse', 'handledRequest', 'passthroughRequest', 'unhandledRequest', 'passthrough'
   ]);
 
   MemServer.Server.shutdown = sinon.spy();
@@ -209,7 +212,8 @@ test.serial('MemServer can be shut down and started again with restarted INITIAL
   t.deepEqual(Object.keys(MemServer.Server), [
     'hosts', 'handlers', 'handledRequests', 'passthroughRequests', 'unhandledRequests',
     'requestReferences', 'forcePassthrough', 'disableUnhandled', '_nativeXMLHttpRequest',
-    'running', 'ctx', 'handledRequest', 'passthroughRequest', 'unhandledRequest', 'passthrough'
+    'running', 'ctx', '_fetchProps', '_nativefetch', '_nativeHeaders', '_nativeRequest',
+    '_nativeResponse', 'handledRequest', 'passthroughRequest', 'unhandledRequest', 'passthrough'
   ]);
 
   const initialPhotos = Photo.findAll();

@@ -14,7 +14,7 @@ test.afterEach.always(async () => {
 test.serial.cb('$ memserver | and $ memserver helper | and $ memserver h | without arguments shows help screen', (t) => {
   t.plan(3);
 
-  const expectedOutput = `[MemServer CLI] Usage: memserver <command (Default: help)>
+  const expectedOutput = `[MemServer CLI v1.1.8] Usage: memserver <command (Default: help)>
 
 memserver init | new                    # Sets up the initial memserver folder structure
 memserver generate model [ModelName]    # Generates the initial files for a MemServer Model [alias: "memserver g model"]
@@ -23,7 +23,9 @@ memserver generate fixtures [ModelName] # Outputs your initial MemServer state f
 memserver console                       # Starts a MemServer console in node.js [alias: "memserver c"]
 memserver serve | server [outputFile]   # Builds an ES5 javascript bundle with all your memserver code continuosly on watch [alias: "memserver s"]
 memserver build | rollup [outputFile]   # Builds an ES5 javascript bundle with all your memserver code
-memserver version | v                   # Displays memserver version`;
+memserver version | v                   # Displays memserver version
+
+`;
 
   shell(`node ${CWD}/cli.js`, (error, stdout) => {
     t.true(stdout.includes(expectedOutput));

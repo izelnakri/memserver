@@ -10,14 +10,13 @@ test.before(async () => {
   await fs.mkdir(`${CWD}/memserver/models`);
   await Promise.all([
     fs.writeFile(`${CWD}/memserver/models/photo.js`, `
-      import faker from 'faker';
       import Model from '${CWD}/lib/model';
 
       export default Model({
         defaultAttributes: {
           is_public: true,
           name() {
-            return faker.name.title();
+            return 'Imported photo';
           }
         },
         publicPhotos() {
@@ -26,13 +25,12 @@ test.before(async () => {
       });
     `),
     fs.writeFile(`${CWD}/memserver/models/photo-comment.js`, `
-      import moment from 'moment';
       import Model from '${CWD}/lib/model';
 
       export default Model({
         defaultAttributes: {
           inserted_at() {
-            return moment().toJSON();
+            return new Date().toJSON();
           },
           is_important: true
         },
@@ -150,14 +148,13 @@ test.serial('$Model.defaultAttributes gets set correctly', async (t) => {
 
   await Promise.all([
     fs.writeFile(`${CWD}/memserver/models/photo.js`, `
-      import faker from 'faker';
       import Model from '${CWD}/lib/model';
 
       export default Model({
         defaultAttributes: {
           is_public: true,
           name() {
-            return faker.name.title();
+            return 'Imported photo';
           }
         },
         publicPhotos() {
@@ -166,13 +163,12 @@ test.serial('$Model.defaultAttributes gets set correctly', async (t) => {
       });
     `),
     fs.writeFile(`${CWD}/memserver/models/photo-comment.js`, `
-      import moment from 'moment';
       import Model from '${CWD}/lib/model';
 
       export default Model({
         defaultAttributes: {
           inserted_at() {
-            return moment().toJSON();
+            return new Date().toJSON();
           },
           is_important: true
         },
@@ -192,7 +188,7 @@ test.serial('$Model.defaultAttributes gets set correctly', async (t) => {
 
   t.deepEqual(Object.keys(initialPhotoDefaultAttributes), ['is_public', 'name']);
   t.is(initialPhotoDefaultAttributes.is_public, true);
-  t.true(initialPhotoDefaultAttributes.name.toString().includes('name.title();'));
+  t.true(initialPhotoDefaultAttributes.name.toString().includes('Imported photo'));
 
   t.deepEqual(Object.keys(initialPhotoCommentDefaultAttributes), ['inserted_at', 'is_important']);
   t.true(initialPhotoCommentDefaultAttributes.inserted_at.toString().includes('.toJSON();'));

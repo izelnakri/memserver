@@ -14,7 +14,7 @@ test.afterEach.always(async () => {
 test.serial.cb('$ memserver | and $ memserver helper | and $ memserver h | without arguments shows help screen', (t) => {
   t.plan(3);
 
-  const expectedOutput = `[MemServer CLI v1.1.8] Usage: memserver <command (Default: help)>
+  const expectedOutput = `[MemServer CLI v1.2.0] Usage: memserver <command (Default: help)>
 
 memserver init | new                    # Sets up the initial memserver folder structure
 memserver generate model [ModelName]    # Generates the initial files for a MemServer Model [alias: "memserver g model"]

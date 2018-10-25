@@ -1,14 +1,19 @@
 #! /usr/bin/env node
-require('babel-register')({
-  presets: ['env']
+require = require('esm')(module);
+require('@babel/register')({
+  presets: ['@babel/preset-env']
 });
 
 const fs = require('fs');
 const util = require('util');
 const child_process = require('child_process');
-const chalk = require('chalk');
+const chalk = require('ansi-colors');
 const { classify, dasherize, underscore } = require('ember-cli-string-utils');
 const { pluralize, singularize } = require('i')();
+
+if (process.env.NODE_ENV === 'test') {
+  chalk.enabled = false;
+}
 
 const CLI = {
   default(commandHandler) {
@@ -76,7 +81,10 @@ CLI.command(['version', 'v'], () => {
 });
 
 function printCommands() {
-  console.log(`${chalk.cyan('[MemServer CLI] Usage:')} memserver ${chalk.yellow('<command (Default: help)>')}
+  const config = require('./package.json');
+  const highlight = (text) => chalk.bold.cyan(text);
+
+  console.log(`${highlight('[MemServer CLI v' + config.version + '] Usage:')} memserver ${chalk.yellow('<command (Default: help)>')}
 
 memserver init | new                    # Sets up the initial memserver folder structure
 memserver generate model ${chalk.yellow('[ModelName]')}    # Generates the initial files for a MemServer Model ${chalk.cyan('[alias: "memserver g model"]')}

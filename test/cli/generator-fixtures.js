@@ -26,10 +26,10 @@ test.serial.cb('$ memserver g fixtures | without memserver directory raises erro
     t.true(!folderExistence);
 
     shell(`node ${CWD}/cli.js generate fixtures`, (error, stdout) => {
-      t.is(stdout, '[MemServer CLI] cannot find /memserver folder. Did you run $ memserver init ?\n');
+      t.true(stdout.includes('[MemServer CLI] cannot find /memserver folder. Did you run $ memserver init ?'));
 
       shell(`node ${CWD}/cli.js g fixtures`, (error, stdout) => {
-        t.is(stdout, '[MemServer CLI] cannot find /memserver folder. Did you run $ memserver init ?\n');
+        t.true(stdout.includes('[MemServer CLI] cannot find /memserver folder. Did you run $ memserver init ?'));
 
         t.end();
       });
@@ -43,11 +43,11 @@ test.serial.cb('$ memserver g fixtures [modelName] | without memserver directory
   fs.exists(`${CWD}/memserver`).then((folderExistence) => {
     t.true(!folderExistence);
 
-    shell(`node ${process.cwd()}/cli.js generate fixtures user`, (error, stdout) => {
-      t.is(stdout, '[MemServer CLI] cannot find /memserver folder. Did you run $ memserver init ?\n');
+    shell(`node ${CWD}/cli.js generate fixtures user`, (error, stdout) => {
+      t.true(stdout.includes('[MemServer CLI] cannot find /memserver folder. Did you run $ memserver init ?'));
 
-      shell(`node ${process.cwd()}/cli.js g fixtures`, (error, stdout) => {
-        t.is(stdout, '[MemServer CLI] cannot find /memserver folder. Did you run $ memserver init ?\n');
+      shell(`node ${CWD}/cli.js g fixtures`, (error, stdout) => {
+        t.true(stdout.includes('[MemServer CLI] cannot find /memserver folder. Did you run $ memserver init ?'));
 
         t.end();
       });
@@ -59,7 +59,7 @@ test.serial.cb('$ memserver g fixtures | works for the entire state', (t) => {
   t.plan(9);
 
   generateMemServerState().then(() => {
-    shell(`node ${CWD}/cli.js g fixtures`, async (error, stdout) => {
+    shell(`node ${process.cwd()}/cli.js g fixtures`, async (error, stdout) => {
       t.true(stdout.includes('[MemServer] data written to /fixtures/users.js'));
       t.true(stdout.includes('[MemServer] data written to /fixtures/likes.js'));
       t.true(stdout.includes('[MemServer] data written to /fixtures/photos.js'));

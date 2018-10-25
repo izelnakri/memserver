@@ -1,6 +1,6 @@
 {
   "name": "memserver",
-  "version": "1.1.7",
+  "version": "1.2.0",
   "description": "in-memory database/ORM and http mock server you can run in-browser and node environments. Built for large frontend teams, fast tests and rapid prototyping",
   "author": "Izel Nakri",
   "main": "lib/index.js",
@@ -22,36 +22,32 @@
     "prepublish": "npm run build:model && npm run build:response && npm run build:memserver-cjs"
   },
   "dependencies": {
-    "babel-preset-env": "^1.6.1",
-    "babel-register": "^6.26.0",
-    "chalk": "^2.3.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "ansi-colors": "3.2.1",
     "ember-cli-string-utils": "^1.1.0",
     "esm": "^3.0.84",
-    "fake-xml-http-request": "^1.6.0",
+    "fake-xml-http-request": "^2.0.0",
     "i": "^0.3.6",
-    "jsdom": "^11.3.0",
-    "pretender": "^1.6.0",
-    "qs": "^6.5.1",
-    "rollup": "^0.50.0",
-    "rollup-plugin-commonjs": "^8.2.6",
+    "jsdom": "^12.2.0",
+    "pretender": "^2.1.1",
+    "qs": "^6.5.2",
+    "rollup": "^0.66.6",
+    "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-builtins": "^2.1.2",
-    "rollup-plugin-node-globals": "^1.1.0",
-    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-node-globals": "^1.4.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-virtual": "^1.0.1",
-    "route-recognizer": "^0.3.3"
+    "route-recognizer": "^0.3.4"
   },
   "devDependencies": {
     "ava": "1.0.0-rc.1",
     "cors": "^2.8.4",
-    "express": "^4.16.2",
-    "faker": "^4.1.0",
+    "express": "^4.16.4",
     "fs-extra": "^7.0.0",
-    "jquery": "^3.2.1",
-    "mkdirp": "^0.5.1",
-    "moment": "^2.19.1",
+    "jquery": "^3.3.1",
     "pryjs": "^1.0.3",
-    "rimraf": "^2.6.2",
-    "sinon": "^4.0.1"
+    "sinon": "^7.0.1"
   },
   "ava": {
     "require": [

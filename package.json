@@ -1,6 +1,6 @@
 {
   "name": "memserver",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "in-memory database/ORM and http mock server you can run in-browser and node environments. Built for large frontend teams, fast tests and rapid prototyping",
   "author": "Izel Nakri",
   "main": "lib/index.js",
@@ -22,6 +22,7 @@
     "prepublish": "npm run build:model && npm run build:response && npm run build:memserver-cjs"
   },
   "dependencies": {
+    "@babel/core": "7.1.2",
     "@babel/preset-env": "^7.1.0",
     "@babel/register": "^7.0.0",
     "ansi-colors": "3.2.1",

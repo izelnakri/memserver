@@ -4,6 +4,7 @@ import child_process from 'child_process';
 
 const CWD = process.cwd();
 const shell = child_process.exec;
+const version = require('../../package.json').version;
 
 test.afterEach.always(async () => {
   if (await fs.exists(`${CWD}/memserver`)) {
@@ -14,7 +15,7 @@ test.afterEach.always(async () => {
 test.serial.cb('$ memserver | and $ memserver helper | and $ memserver h | without arguments shows help screen', (t) => {
   t.plan(3);
 
-  const expectedOutput = `[MemServer CLI v1.2.0] Usage: memserver <command (Default: help)>
+  const expectedOutput = `[MemServer CLI v${version}] Usage: memserver <command (Default: help)>
 
 memserver init | new                    # Sets up the initial memserver folder structure
 memserver generate model [ModelName]    # Generates the initial files for a MemServer Model [alias: "memserver g model"]

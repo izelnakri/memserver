@@ -1,0 +1,5 @@
+.circleci
+.git
+test
+test-helpers
+tmp

@@ -2,8 +2,8 @@
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var chalk = _interopDefault(require('ansi-colors'));
 var util = _interopDefault(require('util'));
+var chalk = _interopDefault(require('ansi-colors'));
 var Inflector = _interopDefault(require('i'));
 var emberCliStringUtils = require('ember-cli-string-utils');
 
@@ -259,7 +259,7 @@ function model(options) {
 function incrementId(Model) {
   const ids = targetNamespace.MemServer.DB[Model.modelName];
 
-  if (ids.length === 0) {
+  if (!ids || ids.length === 0) {
     return 1;
   }
 

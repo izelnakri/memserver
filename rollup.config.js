@@ -28,7 +28,8 @@ export default {
   input: targetInput,
   output: {
     file: IS_DEVELOPMENT ? 'dist/memserver.dist.js' : `${CWD}/dist/memserver.dist.js`,
-    format: 'iife'
+    format: 'iife',
+    name: 'MemServer'
   },
   name: 'MEMSERVER',
   footer: 'window.MemServer = MEMSERVER;',

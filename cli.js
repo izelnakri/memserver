@@ -8,7 +8,7 @@ const fs = require('fs');
 const util = require('util');
 const child_process = require('child_process');
 const chalk = require('ansi-colors');
-const { classify, dasherize, underscore } = require('ember-cli-string-utils');
+const { classify, dasherize, underscore } = require('@ember/string');
 const { pluralize, singularize } = require('i')();
 
 if (process.env.NODE_ENV === 'test') {

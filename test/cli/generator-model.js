@@ -116,8 +116,8 @@ function initializeMemServer() {
 
     const memServerDirectory = `${CWD}/memserver`;
 
+    await fs.mkdir(memServerDirectory);
     await Promise.all([
-      fs.mkdir(memServerDirectory),
       fs.writeFile(`${memServerDirectory}/server.js`, `export default function(Models) {
     }`),
       fs.writeFile(`${memServerDirectory}/initializer.js`, `export default function(Models) {

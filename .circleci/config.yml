@@ -25,7 +25,7 @@ jobs:
       - setup_remote_docker
       - run: docker pull ${HUB_USERNAME}/memserver:${CIRCLE_BRANCH}
       - run: docker run -t -d --name="memserver" ${HUB_USERNAME}/memserver:${CIRCLE_BRANCH} /bin/bash
-      - run: docker exec -it memserver npm test
+      - run: docker exec -it -e NODE_OPTIONS=--experimental-modules memserver npm test
 
 workflows:
   version: 2

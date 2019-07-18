@@ -5,7 +5,7 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var util = _interopDefault(require('util'));
 var chalk = _interopDefault(require('ansi-colors'));
 var Inflector = _interopDefault(require('i'));
-var emberCliStringUtils = require('ember-cli-string-utils');
+var emberCliStringUtils = _interopDefault(require('ember-cli-string-utils'));
 
 function generateUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -27,6 +27,7 @@ function primaryKeyTypeSafetyCheck(targetPrimaryKeyType, primaryKey, modelName) 
   return targetPrimaryKeyType;
 }
 
+const { classify, underscore } = emberCliStringUtils;
 const { singularize, pluralize } = Inflector();
 const targetNamespace = typeof global === 'object' ? global : window;
 
@@ -211,7 +212,7 @@ function model(options) {
       }
 
       const targetRelationshipModel = relationshipModel ||
-        targetNamespace.MemServer.Models[emberCliStringUtils.classify(singularize(relationshipName))];
+        targetNamespace.MemServer.Models[classify(singularize(relationshipName))];
       const hasManyRelationship = pluralize(relationshipName) === relationshipName;
 
       if (!targetRelationshipModel) {
@@ -219,23 +220,23 @@ function model(options) {
       } else if (hasManyRelationship) {
         if (parentObject.id) {
           const hasManyIDRecords = targetRelationshipModel.findAll({
-            [`${emberCliStringUtils.underscore(this.modelName)}_id`]: parentObject.id
+            [`${underscore(this.modelName)}_id`]: parentObject.id
           });
 
           return hasManyIDRecords.length > 0 ? hasManyIDRecords : [];
         } else if (parentObject.uuid) {
           const hasManyUUIDRecords = targetRelationshipModel.findAll({
-            [`${emberCliStringUtils.underscore(this.modelName)}_uuid`]: parentObject.uuid
+            [`${underscore(this.modelName)}_uuid`]: parentObject.uuid
           });
 
           return hasManyUUIDRecords.length > 0 ? hasManyUUIDRecords : [];
         }
       }
 
-      const objectRef = parentObject[`${emberCliStringUtils.underscore(relationshipName)}_id`] ||
-        parentObject[`${emberCliStringUtils.underscore(relationshipName)}_uuid`] ||
-        parentObject[`${emberCliStringUtils.underscore(targetRelationshipModel.modelName)}_id`] ||
-        parentObject[`${emberCliStringUtils.underscore(targetRelationshipModel.modelName)}_uuid`];
+      const objectRef = parentObject[`${underscore(relationshipName)}_id`] ||
+        parentObject[`${underscore(relationshipName)}_uuid`] ||
+        parentObject[`${underscore(targetRelationshipModel.modelName)}_id`] ||
+        parentObject[`${underscore(targetRelationshipModel.modelName)}_uuid`];
 
       if (objectRef && (typeof objectRef === 'number')) {
         return targetRelationshipModel.find(objectRef) ;
@@ -245,11 +246,11 @@ function model(options) {
 
       if (parentObject.id) {
         return targetRelationshipModel.findBy({
-          [`${emberCliStringUtils.underscore(this.modelName)}_id`]: parentObject.id
+          [`${underscore(this.modelName)}_id`]: parentObject.id
         });
       } else if (parentObject.uuid) {
         return targetRelationshipModel.findBy({
-          [`${emberCliStringUtils.underscore(this.modelName)}_uuid`]: parentObject.uuid
+          [`${underscore(this.modelName)}_uuid`]: parentObject.uuid
         });
       }
     }

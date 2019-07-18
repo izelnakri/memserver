@@ -25,10 +25,10 @@ test.serial.cb('$ memserver g fixtures | without memserver directory raises erro
   fs.exists(`${CWD}/memserver`).then((folderExistence) => {
     t.true(!folderExistence);
 
-    shell(`node ${CWD}/cli.js generate fixtures`, (error, stdout) => {
+    shell(`node --experimental-modules ${CWD}/cli.js generate fixtures`, (error, stdout) => {
       t.true(stdout.includes('[MemServer CLI] cannot find /memserver folder. Did you run $ memserver init ?'));
 
-      shell(`node ${CWD}/cli.js g fixtures`, (error, stdout) => {
+      shell(`node --experimental-modules ${CWD}/cli.js g fixtures`, (error, stdout) => {
         t.true(stdout.includes('[MemServer CLI] cannot find /memserver folder. Did you run $ memserver init ?'));
 
         t.end();
@@ -43,10 +43,10 @@ test.serial.cb('$ memserver g fixtures [modelName] | without memserver directory
   fs.exists(`${CWD}/memserver`).then((folderExistence) => {
     t.true(!folderExistence);
 
-    shell(`node ${CWD}/cli.js generate fixtures user`, (error, stdout) => {
+    shell(`node --experimental-modules ${CWD}/cli.js generate fixtures user`, (error, stdout) => {
       t.true(stdout.includes('[MemServer CLI] cannot find /memserver folder. Did you run $ memserver init ?'));
 
-      shell(`node ${CWD}/cli.js g fixtures`, (error, stdout) => {
+      shell(`node --experimental-modules ${CWD}/cli.js g fixtures`, (error, stdout) => {
         t.true(stdout.includes('[MemServer CLI] cannot find /memserver folder. Did you run $ memserver init ?'));
 
         t.end();
@@ -59,7 +59,7 @@ test.serial.cb('$ memserver g fixtures | works for the entire state', (t) => {
   t.plan(9);
 
   generateMemServerState().then(() => {
-    shell(`node ${process.cwd()}/cli.js g fixtures`, async (error, stdout) => {
+    shell(`node --experimental-modules ${process.cwd()}/cli.js g fixtures`, async (error, stdout) => {
       t.true(stdout.includes('[MemServer] data written to /fixtures/users.js'));
       t.true(stdout.includes('[MemServer] data written to /fixtures/likes.js'));
       t.true(stdout.includes('[MemServer] data written to /fixtures/photos.js'));
@@ -127,7 +127,7 @@ test.serial.cb('$ memserver generate fixtures [modelName] works', (t) => {
   t.plan(12);
 
   generateMemServerState().then(() => {
-    shell(`node ${CWD}/cli.js generate fixtures users`, async (error, stdout) => {
+    shell(`node --experimental-modules ${CWD}/cli.js generate fixtures users`, async (error, stdout) => {
       t.true(stdout.includes('[MemServer] data written to /fixtures/users.js'));
 
       const fixturesPath = `${CWD}/memserver/fixtures`;
@@ -192,7 +192,7 @@ test.serial.cb('$ memserver generate fixtures [modelName] works', (t) => {
       ]);
       t.true(!await fs.exists(`${fixturesPath}/likes.js`));
 
-      shell(`node ${process.cwd()}/cli.js generate fixtures photos`, async (error, stdout) => {
+      shell(`node --experimental-modules ${process.cwd()}/cli.js generate fixtures photos`, async (error, stdout) => {
         t.true(stdout.includes('[MemServer] data written to /fixtures/photos.js'));
 
         t.deepEqual(await fs.readdir(fixturesPath), [
@@ -263,7 +263,7 @@ test.serial.cb('$ memserver g fixtures [modelName] works', (t) => {
   t.plan(12);
 
   generateMemServerState().then(() => {
-    shell(`node ${CWD}/cli.js g fixtures users`, async (error, stdout) => {
+    shell(`node --experimental-modules ${CWD}/cli.js g fixtures users`, async (error, stdout) => {
       t.true(stdout.includes('[MemServer] data written to /fixtures/users.js'));
 
       const fixturesPath = `${CWD}/memserver/fixtures`;
@@ -328,7 +328,7 @@ test.serial.cb('$ memserver g fixtures [modelName] works', (t) => {
       ]);
       t.true(!await fs.exists(`${fixturesPath}/likes.js`));
 
-      shell(`node ${CWD}/cli.js g fixtures photos`, async (error, stdout) => {
+      shell(`node --experimental-modules ${CWD}/cli.js g fixtures photos`, async (error, stdout) => {
         t.true(stdout.includes('[MemServer] data written to /fixtures/photos.js'));
 
         t.deepEqual(await fs.readdir(fixturesPath), [

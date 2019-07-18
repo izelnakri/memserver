@@ -1,20 +1,24 @@
 {
   "name": "memserver",
   "version": "1.2.7",
+  "type": "module",
   "description": "in-memory database/ORM and http mock server you can run in-browser and node environments. Built for large frontend teams, fast tests and rapid prototyping",
   "author": "Izel Nakri",
+  "license": "MIT",
   "main": "lib/index.js",
+  "engines": {
+    "node": ">=12.4.0"
+  },
+  "bin": {
+    "memserver": "cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/izelnakri/memserver.git"
   },
-  "license": "ISC",
-  "bin": {
-    "memserver": "cli.js"
-  },
   "scripts": {
     "test": "node_modules/.bin/ava --verbose",
-    "bin": "node cli.js",
+    "bin": "node --experimental-modules --experimental-repl-await cli.js",
     "build:browser": "rollup -c --environment BUILD:development",
     "build:model": "rollup -i ./lib/model.js -o model.js -f cjs",
     "build:response": "rollup -i ./lib/response.js -o response.js -f cjs",
@@ -22,12 +26,8 @@
     "prepublish": "npm run build:model && npm run build:response && npm run build:memserver-cjs"
   },
   "dependencies": {
-    "@babel/core": "7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "@babel/register": "^7.4.4",
     "ansi-colors": "3.2.4",
     "ember-cli-string-utils": "^1.1.0",
-    "esm": "^3.2.22",
     "fake-xml-http-request": "^2.0.0",
     "i": "^0.3.6",
     "jsdom": "^11.12.0",
@@ -47,14 +47,18 @@
     "express": "^4.17.0",
     "fs-extra": "^8.0.1",
     "jquery": "^3.4.1",
-    "mber": "^0.8.1",
+    "mber": "^0.8.6",
     "sinon": "^7.3.2"
   },
   "ava": {
     "require": [
-      "esm"
+      "esm",
+      "./disable-colors"
     ],
     "concurrency": 1,
     "failFast": true
+  },
+  "volta": {
+    "node": "12.4.0"
   }
 }

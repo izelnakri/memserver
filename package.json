@@ -1,6 +1,6 @@
 {
   "name": "memserver",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "in-memory database/ORM and http mock server you can run in-browser and node environments. Built for large frontend teams, fast tests and rapid prototyping",
   "author": "Izel Nakri",
   "main": "lib/index.js",

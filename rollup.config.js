@@ -6,7 +6,7 @@ import fs from 'fs';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import globals from 'rollup-plugin-node-globals';
-import builtins from 'rollup-plugin-node-builtins';
+import builtins from '@joseph184/rollup-plugin-node-builtins';
 import Inflector from 'i';
 import { classify, dasherize } from 'ember-cli-string-utils';
 import virtual from 'rollup-plugin-virtual';

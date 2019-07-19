@@ -3,11 +3,9 @@
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var util = _interopDefault(require('util'));
-var chalk$1 = _interopDefault(require('ansi-colors'));
+var chalk = _interopDefault(require('ansi-colors'));
 var Inflector = _interopDefault(require('i'));
 var emberCliStringUtils = require('ember-cli-string-utils');
-
-const chalk = require('ansi-colors');
 
 function generateUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -45,7 +43,7 @@ function model(options) {
     },
     find(param) {
       if (!param) {
-        throw new Error(chalk$1.red(`[MemServer] ${this.modelName}.find(id) cannot be called without a valid id`));
+        throw new Error(chalk.red(`[MemServer] ${this.modelName}.find(id) cannot be called without a valid id`));
       } else if (Array.isArray(param)) {
         const models = Array.from(targetNamespace.MemServer.DB[this.modelName] || []);
 
@@ -55,7 +53,7 @@ function model(options) {
           return foundModel ? result.concat([foundModel]) : result;
         }, []);
       } else if (typeof param !== 'number') {
-        throw new Error(chalk$1.red(`[MemServer] ${this.modelName}.find(id) cannot be called without a valid id`));
+        throw new Error(chalk.red(`[MemServer] ${this.modelName}.find(id) cannot be called without a valid id`));
       }
 
       const models = Array.from(targetNamespace.MemServer.DB[this.modelName] || []);
@@ -64,7 +62,7 @@ function model(options) {
     },
     findBy(options) {
       if (!options) {
-        throw new Error(chalk$1.red(`[MemServer] ${this.modelName}.findBy(id) cannot be called without a parameter`));
+        throw new Error(chalk.red(`[MemServer] ${this.modelName}.findBy(id) cannot be called without a parameter`));
       }
 
       const keys = Object.keys(options);
@@ -112,7 +110,7 @@ function model(options) {
       const existingRecord = target.id ? this.find(target.id) : this.findBy({ uuid: target.uuid });
 
       if (existingRecord) {
-        throw new Error(chalk$1.red(`[MemServer] ${this.modelName} ${this.primaryKey} ${target[this.primaryKey]} already exists in the database! ${this.modelName}.insert(${util.inspect(options)}) fails`));
+        throw new Error(chalk.red(`[MemServer] ${this.modelName} ${this.primaryKey} ${target[this.primaryKey]} already exists in the database! ${this.modelName}.insert(${util.inspect(options)}) fails`));
       }
 
       Object.keys(target)
@@ -125,20 +123,20 @@ function model(options) {
     },
     update(record) {
       if (!record || (!record.id && !record.uuid)) {
-        throw new Error(chalk$1.red(`[MemServer] ${this.modelName}.update(record) requires id or uuid primary key to update a record`));
+        throw new Error(chalk.red(`[MemServer] ${this.modelName}.update(record) requires id or uuid primary key to update a record`));
       }
 
       const targetRecord = record.id ? this.find(record.id) : this.findBy({ uuid: record.uuid });
 
       if (!targetRecord) {
-        throw new Error(chalk$1.red(`[MemServer] ${this.modelName}.update(record) failed because ${this.modelName} with ${this.primaryKey}: ${record[this.primaryKey]} does not exist`));
+        throw new Error(chalk.red(`[MemServer] ${this.modelName}.update(record) failed because ${this.modelName} with ${this.primaryKey}: ${record[this.primaryKey]} does not exist`));
       }
 
       const recordsUnknownAttribute = Object.keys(record)
         .find((attribute) => !this.attributes.includes(attribute));
 
       if (recordsUnknownAttribute) {
-        throw new Error(chalk$1.red(`[MemServer] ${this.modelName}.update ${this.primaryKey}: ${record[this.primaryKey]} fails, ${this.modelName} model does not have ${recordsUnknownAttribute} attribute to update`));
+        throw new Error(chalk.red(`[MemServer] ${this.modelName}.update ${this.primaryKey}: ${record[this.primaryKey]} fails, ${this.modelName} model does not have ${recordsUnknownAttribute} attribute to update`));
       }
 
       return Object.assign(targetRecord, record);
@@ -147,15 +145,15 @@ function model(options) {
       const models = targetNamespace.MemServer.DB[this.modelName] || [];
 
       if (models.length === 0) {
-        throw new Error(chalk$1.red(`[MemServer] ${this.modelName} has no records in the database to delete. ${this.modelName}.delete(${util.inspect(record)}) failed`));
+        throw new Error(chalk.red(`[MemServer] ${this.modelName} has no records in the database to delete. ${this.modelName}.delete(${util.inspect(record)}) failed`));
       } else if (!record) {
-        throw new Error(chalk$1.red(`[MemServer] ${this.modelName}.delete(model) model object parameter required to delete a model`));
+        throw new Error(chalk.red(`[MemServer] ${this.modelName}.delete(model) model object parameter required to delete a model`));
       }
 
       const targetRecord = record.id ? this.find(record.id) : this.findBy({ uuid: record.uuid });
 
       if (!targetRecord) {
-        throw new Error(chalk$1.red(`[MemServer] Could not find ${this.modelName} with ${this.primaryKey} ${record[this.primaryKey]} to delete. ${this.modelName}.delete(${util.inspect(record)}) failed`));
+        throw new Error(chalk.red(`[MemServer] Could not find ${this.modelName} with ${this.primaryKey} ${record[this.primaryKey]} to delete. ${this.modelName}.delete(${util.inspect(record)}) failed`));
       }
 
       const targetIndex = models.indexOf(targetRecord);
@@ -166,13 +164,13 @@ function model(options) {
     },
     embed(relationship) { // EXAMPLE: { comments: Comment }
       if (typeof relationship !== 'object' || relationship.modelName) {
-        throw new Error(chalk$1.red(`[MemServer] ${this.modelName}.embed(relationshipObject) requires an object as a parameter: { relationshipKey: $RelationshipModel }`));
+        throw new Error(chalk.red(`[MemServer] ${this.modelName}.embed(relationshipObject) requires an object as a parameter: { relationshipKey: $RelationshipModel }`));
       }
 
       const key = Object.keys(relationship)[0];
 
       if (!relationship[key]) {
-        throw new Error(chalk$1.red(`[MemServer] ${this.modelName}.embed() fails: ${key} Model reference is not a valid. Please put a valid $ModelName to ${this.modelName}.embed()`));
+        throw new Error(chalk.red(`[MemServer] ${this.modelName}.embed() fails: ${key} Model reference is not a valid. Please put a valid $ModelName to ${this.modelName}.embed()`));
       }
 
       return Object.assign(this.embedReferences, relationship);
@@ -189,7 +187,7 @@ function model(options) {
     },
     serialize(object) { // NOTE: add links object ?
       if (Array.isArray(object)) {
-        throw new Error(chalk$1.red(`[MemServer] ${this.modelName}.serialize(object) expects an object not an array. Use ${this.modelName}.serializer(data) for serializing array of records`));
+        throw new Error(chalk.red(`[MemServer] ${this.modelName}.serialize(object) expects an object not an array. Use ${this.modelName}.serializer(data) for serializing array of records`));
       }
 
       const objectWithAllAttributes = this.attributes.reduce((result, attribute) => {
@@ -209,7 +207,7 @@ function model(options) {
     },
     getRelationship(parentObject, relationshipName, relationshipModel) {
       if (Array.isArray(parentObject)) {
-        throw new Error(chalk$1.red(`[MemServer] ${this.modelName}.getRelationship expects model input to be an object not an array`));
+        throw new Error(chalk.red(`[MemServer] ${this.modelName}.getRelationship expects model input to be an object not an array`));
       }
 
       const targetRelationshipModel = relationshipModel ||
@@ -217,7 +215,7 @@ function model(options) {
       const hasManyRelationship = pluralize(relationshipName) === relationshipName;
 
       if (!targetRelationshipModel) {
-        throw new Error(chalk$1.red(`[MemServer] ${relationshipName} relationship could not be found on ${this.modelName} model. Please put the ${relationshipName} Model object as the third parameter to ${this.modelName}.getRelationship function`));
+        throw new Error(chalk.red(`[MemServer] ${relationshipName} relationship could not be found on ${this.modelName} model. Please put the ${relationshipName} Model object as the third parameter to ${this.modelName}.getRelationship function`));
       } else if (hasManyRelationship) {
         if (parentObject.id) {
           const hasManyIDRecords = targetRelationshipModel.findAll({

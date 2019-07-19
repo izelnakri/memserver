@@ -99,6 +99,7 @@ test.serial('MemServer with JSDOM could be used with ember fastboot for server s
     shouldRender: true,
     sandboxGlobals: {
       global: global,
+      self: global.self,
       window: global.window,
       document: global.document,
       location: global.window.location,

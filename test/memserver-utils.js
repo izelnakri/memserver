@@ -1,5 +1,5 @@
 import test from 'ava';
-import { generateUUID, primaryKeyTypeSafetyCheck } from '../lib/utils';
+import { generateUUID, primaryKeyTypeSafetyCheck } from '../lib/utils.js';
 
 test('memserver/lib/utils exports generateUUID correctly', (t) => {
   t.plan(21);

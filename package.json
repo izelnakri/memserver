@@ -1,6 +1,6 @@
 {
   "name": "memserver",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "in-memory database/ORM and http mock server you can run in-browser and node environments. Built for large frontend teams, fast tests and rapid prototyping",
   "author": "Izel Nakri",
   "main": "lib/index.js",
@@ -27,7 +27,7 @@
     "@babel/register": "^7.5.5",
     "ansi-colors": "4.1.1",
     "ember-cli-string-utils": "^1.1.0",
-    "esm": "^3.2.22",
+    "esm": "^3.2.25",
     "fake-xml-http-request": "^2.0.0",
     "i": "^0.3.6",
     "jsdom": "^15.1.0",
@@ -56,5 +56,8 @@
     ],
     "concurrency": 1,
     "failFast": true
+  },
+  "volta": {
+    "node": "12.4.0"
   }
 }

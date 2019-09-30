@@ -22,19 +22,19 @@
     "prepublish": "npm run build:model && npm run build:response && npm run build:memserver-cjs"
   },
   "dependencies": {
-    "@babel/core": "7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/register": "^7.5.5",
+    "@babel/core": "7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/register": "^7.6.2",
     "ansi-colors": "4.1.1",
     "ember-cli-string-utils": "^1.1.0",
     "esm": "^3.2.25",
-    "fake-xml-http-request": "^2.0.0",
+    "fake-xml-http-request": "^2.0.1",
     "i": "^0.3.6",
     "jsdom": "^11.12.0",
     "pretender": "^3.0.2",
-    "qs": "^6.7.0",
-    "rollup": "1.17.0",
-    "rollup-plugin-commonjs": "^10.0.1",
+    "qs": "^6.9.0",
+    "rollup": "1.22.0",
+    "rollup-plugin-commonjs": "^10.1.0",
     "@joseph184/rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-node-resolve": "^5.2.0",
@@ -47,8 +47,8 @@
     "express": "^4.17.1",
     "fs-extra": "^8.1.0",
     "jquery": "^3.4.1",
-    "mber": "^0.8.7",
-    "sinon": "^7.3.2"
+    "mber": "^0.8.13",
+    "sinon": "^7.5.0"
   },
   "ava": {
     "require": [

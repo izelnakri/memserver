@@ -22,7 +22,7 @@
     "prepublish": "npm run build:model && npm run build:response && npm run build:memserver-cjs"
   },
   "dependencies": {
-    "@babel/core": "7.6.2",
+    "@babel/core": "7.7.7",
     "@babel/preset-env": "^7.6.2",
     "@babel/register": "^7.6.2",
     "ansi-colors": "4.1.1",

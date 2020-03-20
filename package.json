@@ -27,7 +27,7 @@
   "dependencies": {
     "ansi-colors": "4.1.1",
     "fake-xml-http-request": "^2.1.1",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^9.0.0",
     "inflected": "^2.0.4",
     "jsdom": "^16.2.1",
     "pretender": "^3.3.1",

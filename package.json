@@ -39,7 +39,7 @@
     "@ava/typescript": "^1.1.1",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.9",
-    "ember-source": "3.17.0",
+    "ember-source": "3.17.3",
     "@babel/plugin-transform-modules-commonjs": "^7.9.0",
     "@babel/preset-typescript": "^7.9.0",
     "@rollup/plugin-commonjs": "^11.0.2",

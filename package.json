@@ -48,7 +48,7 @@
     "@types/jquery": "^3.3.33",
     "@types/node": "^13.9.2",
     "tsconfig-paths": "^3.9.0",
-    "ava": "3.5.0",
+    "ava": "3.6.0",
     "cors": "^2.8.5",
     "ember-cli-fastboot": "2.2.1",
     "express": "^4.17.1",

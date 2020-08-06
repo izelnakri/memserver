@@ -54,7 +54,7 @@
     "express": "^4.17.1",
     "fastboot": "^3.0.1",
     "jquery": "^3.4.1",
-    "mber": "^0.12.5",
+    "mber": "^0.13.2",
     "sinon": "^9.0.1",
     "@ember/string": "file:@ember/string",
     "@ember/error": "file:@ember/error",

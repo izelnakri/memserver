@@ -45,7 +45,7 @@
     "@ember/error": "file:@ember/error",
     "@ember/polyfills": "file:@ember/polyfills",
     "@ember/string": "file:@ember/string",
-    "@rollup/plugin-commonjs": "^16.0.0",
+    "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@types/jquery": "^3.5.4",
     "auto-changelog": "^2.2.1",

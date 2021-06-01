@@ -1,5 +1,5 @@
-import inspect from "object-inspect";
 import kleur from "kleur";
+import inspect from "object-inspect";
 import { underscore } from "@emberx/string";
 import { pluralize, singularize } from "inflected";
 import { insertFixturesWithTypechecks, primaryKeyTypeSafetyCheck, generateUUID } from "./utils";
@@ -47,6 +47,7 @@ export default class MemServerModel {
   }
 
   static set defaultAttributes(value: object) {
+    debugger;
     Object.keys(value).forEach((key) => {
       if (!this.attributes.includes(key)) {
         this.attributes.push(key);
@@ -77,7 +78,7 @@ export default class MemServerModel {
   static resetDatabase(fixtures?: Array<InternalModel>): Array<InternalModel> {
     this.DB.length = 0;
     this.attributes.length = 0;
-    this.defaultAttributes = this.defaultAttributes;
+    Object.keys(this.defaultAttributes || {}).forEach((key) => this.attributes.push(key));
 
     if (fixtures) {
       insertFixturesWithTypechecks(this, fixtures);
@@ -311,7 +312,11 @@ export default class MemServerModel {
       return Object.assign({}, result, { [embedKey]: embedModel.serializer(embeddedRecords) });
     }, objectWithAllAttributes);
   }
-  static getRelationship(parentObject, relationshipName: string, relationshipModel: InternalModel) {
+  static getRelationship(
+    parentObject,
+    relationshipName: string,
+    relationshipModel?: InternalModel
+  ) {
     if (Array.isArray(parentObject)) {
       throw new Error(
         kleur.red(
@@ -321,6 +326,7 @@ export default class MemServerModel {
     }
 
     const targetRelationshipModel = relationshipModel || this.embedReferences[relationshipName];
+    console.log("relationshipName is", relationshipName);
     const hasManyRelationship = pluralize(relationshipName) === relationshipName;
 
     if (!targetRelationshipModel) {
@@ -367,6 +373,14 @@ export default class MemServerModel {
       });
     }
   }
+}
+
+export function resetMemory(DefaultBaseModel) {
+  DefaultBaseModel._DB = {};
+  DefaultBaseModel._modelDefinitions = {};
+  DefaultBaseModel._attributes = {};
+  DefaultBaseModel._defaultAttributes = {};
+  DefaultBaseModel._embedReferences = {};
 }
 
 function incrementId(DB, Model) {

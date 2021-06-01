@@ -1,0 +1,13 @@
+{
+  "name": "@memserver/cli",
+  "version": "0.0.1",
+  "description": "",
+  "author": "Izel Nakri",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@emberx/string": "^0.0.11",
+    "kleur": "4.1.4",
+    "inflected": "^2.1.0"
+  }
+}

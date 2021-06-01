@@ -1,0 +1,13 @@
+{
+  "name": "@memserver/model",
+  "version": "0.0.1",
+  "description": "",
+  "author": "Izel Nakri",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "kleur": "4.1.4",
+    "inflected": "^2.1.0",
+    "object-inspect": "^1.10.3"
+  }
+}

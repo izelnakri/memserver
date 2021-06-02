@@ -1,8 +1,10 @@
+import Pretender from "pretender";
 import kleur from "kleur";
 import { singularize } from "inflected";
 import { classify } from "@emberx/string";
 import Model from "@memserver/model";
 
+window.Pretender = Pretender;
 // HACK START: Pretender Request Parameter Type Casting Hack: Because types are important.
 window.Pretender.prototype._handlerFor = function (verb, url, request) {
   var registry = this.hosts.forURL(url)[verb];
@@ -203,6 +205,7 @@ function getDefaultRouteHandler(verb, path, serverContext, defaultResourceDefini
     serverContext.Models[resourceClassName];
 
   if (!ResourceModel) {
+    serverContext.shutdown();
     throw new Error(
       kleur.red(
         `[Memserver] ${verb} ${path} route handler cannot be generated automatically: ${classify(
@@ -240,3 +243,5 @@ function getDefaultRouteHandler(verb, path, serverContext, defaultResourceDefini
     };
   }
 }
+
+export default Pretender;

@@ -12,8 +12,7 @@ import kleur from "kleur";
 import FakeXMLHttpRequest from "fake-xml-http-request";
 import TargetModel from "@memserver/model";
 import RouteRecognizer from "route-recognizer";
-import "pretender"; // NOTE: check this
-import "./pretender-hacks"; // NOTE: check this
+import Pretender from "./pretender-hacks"; // NOTE: check this
 
 const DEFAULT_PASSTHROUGHS = [
   "http://localhost:0/chromecheckurl",
@@ -100,7 +99,7 @@ function startPretender(routes, options, Models) {
   // HACK: Pretender this.passthrough for better UX
   // TODO: this doesnt passthrough full http:// https://
   pretender.passthrough = function (url) {
-    const parent = window.Pretender.prototype;
+    const parent = Pretender.prototype;
     const verbs = ["get", "post", "put", "delete"];
 
     if (!url) {

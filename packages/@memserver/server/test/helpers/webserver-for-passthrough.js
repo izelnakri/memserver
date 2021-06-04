@@ -1,5 +1,8 @@
+import setupDom from './setup-dom.js';
 import express from 'express';
 import cors from 'cors';
+
+await setupDom();
 
 const app = express();
 
@@ -16,4 +19,3 @@ app.get("/movies/too-big-to-fail", (req, res) => {
 await app.listen(4000);
 
 console.log('# Passthrough web server listening on port 4000');
-

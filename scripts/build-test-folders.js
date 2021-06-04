@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
-import { exec } from 'child_process';
 import { promisify } from 'util';
-import recursiveLookup from 'recursive-lookup';
+import { exec } from 'child_process';
+import recursiveLookup from './util/recursive-lookup.js';
 
 const shell = promisify(exec);
 
@@ -20,18 +20,15 @@ await targetPackages.reduce(async (lastCompile, packageName) => {
 
 // TODO: maybe do not use --bundle due to cross reference:
 async function buildPackage(packageName) {
-
   let targetFolder = `${process.cwd()}/packages/${packageName}`;
 
-  await fs.rm(`${targetFolder}/dist`, { recursive: true, force: true });
-  await fs.mkdir(`${targetFolder}/dist`, { recursive: true });
+  await fs.rm(`${targetFolder}/tmp`, { recursive: true, force: true });
+  await fs.mkdir(`${targetFolder}/tmp`, { recursive: true });
 
-  // TODO: cannot use tsc for tests
   try {
-    // await shell(`node_modules/.bin/esbuild $(find 'packages/${packageName}/src' -type f)  --outdir="./packages/${packageName}/dist"`);
-    await shell(`node_modules/.bin/tsc $(find 'packages/${packageName}/src' -type f ) --outDir packages/${packageName}/dist --module es2015 --target ES2018 --moduleResolution node --allowSyntheticDefaultImports true --experimentalDecorators true -d --allowJs`);
+    await shell(`node_modules/.bin/esbuild $(find 'packages/${packageName}/test' -type f -name \*.ts)  --outdir="./tmp/${packageName}" --platform=node --format=esm`);
 
-    let fileAbsolutePaths = await recursiveLookup(`packages/${packageName}/dist`, (path) => path.endsWith('.js'));
+    let fileAbsolutePaths = await recursiveLookup(`tmp/${packageName}`, (path) => path.endsWith('.js'));
     await Promise.all(fileAbsolutePaths.map((fileAbsolutePath) => {
       return shell(`node_modules/.bin/babel ${fileAbsolutePath} --plugins babel-plugin-module-extension-resolver -o ${fileAbsolutePath}`);
     }));
@@ -39,4 +36,3 @@ async function buildPackage(packageName) {
     console.error(error);
   }
 }
-

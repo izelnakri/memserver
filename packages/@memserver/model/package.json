@@ -1,5 +1,6 @@
 {
   "name": "@memserver/model",
+  "type": "module",
   "version": "0.0.1",
   "description": "",
   "author": "Izel Nakri",

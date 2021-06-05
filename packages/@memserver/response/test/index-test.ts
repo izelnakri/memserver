@@ -70,46 +70,50 @@ module("@memserver/response tests", function (hooks) {
       }
     });
 
-    await $.ajax({
-      type: "GET",
-      url: "/users/1",
-    }).then((data, textStatus, jqXHR) => {
-      assert.equal(jqXHR.status, 200);
-      assert.deepEqual(data, { user: { id: 1, first_name: "Izel", last_name: "Nakri" } });
-    });
+    try {
+      await $.ajax({
+        type: "GET",
+        url: "/users/1",
+      }).then((data, textStatus, jqXHR) => {
+        assert.equal(jqXHR.status, 200);
+        assert.deepEqual(data, { user: { id: 1, first_name: "Izel", last_name: "Nakri" } });
+      });
+    } catch (error) {
+      console.log(error);
+    }
   });
 
-  // test("Response can be used inside the server file", async function (assert) {
-  //   assert.expect(2);
+  test("Response can be used inside the server file", async function (assert) {
+    assert.expect(2);
 
-  //   let { Photo, Server } = prepare();
+    let { Photo, Server } = prepare();
 
-  //   this.Server = Server;
+    this.Server = Server;
 
-  //   PHOTO_FIXTURES.forEach((photo) => Photo.insert(photo));
+    PHOTO_FIXTURES.forEach((photo) => Photo.insert(photo));
 
-  //   await $.getJSON("/photos", (data, textStatus, jqXHR) => {
-  //     assert.equal(jqXHR.status, 202);
-  //     assert.deepEqual(data, { photos: Photo.serializer(Photo.findAll()) });
-  //   });
-  // });
+    await $.getJSON("/photos", (data, textStatus, jqXHR) => {
+      assert.equal(jqXHR.status, 202);
+      assert.deepEqual(data, { photos: Photo.serializer(Photo.findAll()) });
+    }).catch((error) => console.log(error));
+  });
 
-  // test("Response can be used when overwriting an existing server route", async function (assert) {
-  //   assert.expect(2);
+  test("Response can be used when overwriting an existing server route", async function (assert) {
+    assert.expect(2);
 
-  //   let { Photo, Server } = prepare();
+    let { Photo, Server } = prepare();
 
-  //   this.Server = Server;
+    this.Server = Server;
 
-  //   PHOTO_FIXTURES.forEach((photo) => Photo.insert(photo));
+    PHOTO_FIXTURES.forEach((photo) => Photo.insert(photo));
 
-  //   this.Server.get("/photos", () => Response(500, { error: "Internal Server Error" }));
+    this.Server.get("/photos", () => Response(500, { error: "Internal Server Error" }));
 
-  //   try {
-  //     await $.getJSON("/photos");
-  //   } catch (jqXHR) {
-  //     assert.equal(jqXHR.status, 500);
-  //     assert.deepEqual(jqXHR.responseJSON, { error: "Internal Server Error" });
-  //   }
-  // });
+    try {
+      await $.getJSON("/photos");
+    } catch (jqXHR) {
+      assert.equal(jqXHR.status, 500);
+      assert.deepEqual(jqXHR.responseJSON, { error: "Internal Server Error" });
+    }
+  });
 });

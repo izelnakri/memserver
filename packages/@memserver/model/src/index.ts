@@ -326,7 +326,6 @@ export default class MemServerModel {
     }
 
     const targetRelationshipModel = relationshipModel || this.embedReferences[relationshipName];
-    console.log("relationshipName is", relationshipName);
     const hasManyRelationship = pluralize(relationshipName) === relationshipName;
 
     if (!targetRelationshipModel) {

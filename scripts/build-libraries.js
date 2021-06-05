@@ -28,8 +28,11 @@ async function buildPackage(packageName) {
 
   // TODO: cannot use tsc for tests
   try {
-    // await shell(`node_modules/.bin/esbuild $(find 'packages/${packageName}/src' -type f)  --outdir="./packages/${packageName}/dist"`);
-    await shell(`node_modules/.bin/tsc $(find 'packages/${packageName}/src' -type f ) --outDir packages/${packageName}/dist --module es2015 --target ES2018 --moduleResolution node --allowSyntheticDefaultImports true --experimentalDecorators true -d --allowJs`);
+    if (process.env.ENVIRONMENT === 'development') {
+      await shell(`node_modules/.bin/esbuild $(find 'packages/${packageName}/src' -type f)  --outdir="./packages/${packageName}/dist"`);
+    } else {
+      await shell(`node_modules/.bin/tsc $(find 'packages/${packageName}/src' -type f ) --outDir packages/${packageName}/dist --module es2015 --target ES2018 --moduleResolution node --allowSyntheticDefaultImports true --experimentalDecorators true -d --allowJs`);
+    }
 
     let fileAbsolutePaths = await recursiveLookup(`packages/${packageName}/dist`, (path) => path.endsWith('.js'));
     await Promise.all(fileAbsolutePaths.map((fileAbsolutePath) => {

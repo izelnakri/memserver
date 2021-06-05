@@ -1,8 +1,10 @@
-import setupDom from './setup-dom.js';
 import express from 'express';
 import cors from 'cors';
 
-await setupDom();
+if (!globalThis.window) {
+  let setupDom = await import('./setup-dom.js');
+  setupDom.default();
+}
 
 const app = express();
 

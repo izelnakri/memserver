@@ -4,7 +4,7 @@ import Memserver from "@memserver/server";
 import Response from "@memserver/response";
 import { module, test } from "qunitx";
 import setupForTests from "./helpers/setup-for-tests";
-import sinon from "sinon/pkg/sinon-esm.js";
+import sinon from "sinon/pkg/sinon.js";
 
 module("@memserver/server | passthrough tests", function (hooks) {
   setupForTests(hooks);

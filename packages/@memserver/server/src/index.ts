@@ -1,18 +1,17 @@
+// @ts-nocheck
+
 declare global {
   interface Window {
-    Pretender: any;
-    RouteRecognizer: any;
-    FakeXMLHttpRequest: any;
     MemserverModel: any;
     MemServer: any;
   }
 }
 
 import kleur from "kleur";
-import FakeXMLHttpRequest from "fake-xml-http-request";
 import TargetModel from "@memserver/model";
-import RouteRecognizer from "route-recognizer";
-import Pretender from "./pretender-hacks"; // NOTE: check this
+import "./set-pretender-context";
+import Pretender from "pretender/dist/pretender.js";
+import hackPretender from "./pretender-hacks"; // NOTE: check this
 
 const DEFAULT_PASSTHROUGHS = [
   "http://localhost:0/chromecheckurl",
@@ -39,6 +38,7 @@ class Memserver {
   Models = {};
 
   constructor(options: MemserverOptions = { logging: true }) {
+    hackPretender(Pretender as any);
     const initializer = options.initializer || async function () {};
     const routes = options.routes || function () {};
     const logging = options.hasOwnProperty("logging") ? options.logging : true;
@@ -58,13 +58,11 @@ class Memserver {
 export default Memserver;
 
 function startPretender(routes, options, Models) {
-  window.FakeXMLHttpRequest = FakeXMLHttpRequest;
-  window.RouteRecognizer = RouteRecognizer;
-  window.Pretender.prototype.namespace = options.namespace;
-  window.Pretender.prototype.urlPrefix = options.urlPrefix;
-  window.Pretender.prototype.timing = options.timing;
+  Pretender.prototype.namespace = options.namespace;
+  Pretender.prototype.urlPrefix = options.urlPrefix;
+  Pretender.prototype.timing = options.timing;
 
-  let pretender = new window.Pretender(
+  let pretender = new Pretender(
     function () {
       const Memserver = kleur.cyan("[Memserver]");
 

@@ -23,7 +23,6 @@ async function buildPackage(packageName) {
   let targetFolder = `${process.cwd()}/packages/${packageName}`;
 
   await fs.rm(`${targetFolder}/tmp`, { recursive: true, force: true });
-  await fs.mkdir(`${targetFolder}/tmp`, { recursive: true });
 
   try {
     await shell(`node_modules/.bin/esbuild $(find 'packages/${packageName}/test' -type f -name \*.ts)  --outdir="./tmp/${packageName}" --platform=node --format=esm`);

@@ -11,8 +11,6 @@ export default async function() {
   global.window = dom.window;
   global.document = window.document;
   global.self = global; // NOTE: super important for pretender
-  self.FakeXMLHttpRequest = FakeXMLHttpRequest; // pretender reference
   self.XMLHttpRequest = dom.window.XMLHttpRequest; // pretender reference
-  self.RouteRecognizer = RouteRecognizer; // pretender reference
   global.location = global.window.location; // removes href of undefined on jquery
 }

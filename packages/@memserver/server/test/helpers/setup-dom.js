@@ -1,21 +1,18 @@
+import FakeXMLHttpRequest from "fake-xml-http-request";
+import RouteRecognizer from "route-recognizer";
 import pkg from 'jsdom';
 
 export default async function() {
   const { JSDOM } = pkg;
-
   const dom = new JSDOM("<p>Hello</p>", {
-    url: "http://localhost",
-    runScripts: 'dangerously',
-    resources: 'usable',
+    url: "http://localhost"
   });
 
   global.window = dom.window;
   global.document = window.document;
-  global.self = window.self;
-  global.location = dom.window.location;
-  global.XMLHttpRequest = window.XMLHttpRequest;
-  // let instance = new window.XMLHttpRequest();
-
-  // console.log("WITH CRED:");
-  // console.log(instance.withCredentials);
+  global.self = global; // NOTE: super important for pretender
+  self.FakeXMLHttpRequest = FakeXMLHttpRequest; // pretender reference
+  self.XMLHttpRequest = dom.window.XMLHttpRequest; // pretender reference
+  self.RouteRecognizer = RouteRecognizer; // pretender reference
+  global.location = global.window.location; // removes href of undefined on jquery
 }

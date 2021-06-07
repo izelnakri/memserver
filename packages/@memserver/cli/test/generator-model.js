@@ -1,3 +1,4 @@
+// TODO: this can move to new tests
 import util from "util";
 import test from "ava";
 import fs from "fs/promises";
@@ -72,7 +73,7 @@ test.serial("$ memserver g [modelName] | works", async (t) => {
 
   const [emailModelExists, emailFixturesBuffer] = await Promise.all([
     pathExists(`${CWD}/memserver/models/email.ts`),
-    pathExists(`${CWD}/memserver/fixtures/emails.ts`)
+    pathExists(`${CWD}/memserver/fixtures/emails.ts`),
   ]);
 
   t.true(!emailModelExists);
@@ -84,7 +85,7 @@ test.serial("$ memserver g [modelName] | works", async (t) => {
 
   const [emailModelBuffer, userFixturesBuffer] = await Promise.all([
     fs.readFile(`${CWD}/memserver/models/email.ts`),
-    fs.readFile(`${CWD}/memserver/fixtures/emails.ts`)
+    fs.readFile(`${CWD}/memserver/fixtures/emails.ts`),
   ]);
 
   t.is(
@@ -106,7 +107,7 @@ test.serial("$ memserver generate [modelName] | works", async (t) => {
   await initializeMemServer();
   const [emailModelExists, emailFixturesBuffer] = await Promise.all([
     pathExists(`${CWD}/memserver/models/user.ts`),
-    pathExists(`${CWD}/memserver/fixtures/users.ts`)
+    pathExists(`${CWD}/memserver/fixtures/users.ts`),
   ]);
 
   t.true(!emailModelExists);
@@ -118,7 +119,7 @@ test.serial("$ memserver generate [modelName] | works", async (t) => {
 
   const [emailModelBuffer, userFixturesBuffer] = await Promise.all([
     fs.readFile(`${CWD}/memserver/models/email.ts`),
-    fs.readFile(`${CWD}/memserver/fixtures/emails.ts`)
+    fs.readFile(`${CWD}/memserver/fixtures/emails.ts`),
   ]);
 
   t.is(
@@ -153,7 +154,7 @@ function initializeMemServer() {
       }`
       ),
       fs.mkdir(`${memServerDirectory}/fixtures`),
-      fs.mkdir(`${memServerDirectory}/models`)
+      fs.mkdir(`${memServerDirectory}/models`),
     ]);
 
     resolve(null);

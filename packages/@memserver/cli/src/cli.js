@@ -1,10 +1,15 @@
-#!/usr/bin/env -S TS_NODE_LOG_ERROR=true ts-node-script
+#!/usr/bin/env node
 import fs from "fs/promises";
 import path from "path";
 import util from "util";
 import child_process from "child_process";
 import kleur from "kleur";
 import { classify, dasherize, underscore, pluralize, singularize } from "inflected";
+import startMemserver from "./index.js";
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 if (process.env.NODE_ENV === "test") {
   kleur.enabled = false;
@@ -98,7 +103,6 @@ CLI.command(["generate", "g"], async () => {
 
   return printCommands();
 });
-CLI.command(["console", "c"], async () => await openConsole());
 CLI.command(["version", "v"], async () => {
   console.log(
     kleur.cyan("[Memserver CLI]"),
@@ -108,7 +112,8 @@ CLI.command(["version", "v"], async () => {
 
 async function printCommands() {
   const config = JSON.parse((await fs.readFile(`${__dirname}/../package.json`)).toString());
-  const highlight = (text) => kleur.bold.cyan(text);
+  // @ts-ignore
+  const highlight = (text) => kleur.bold().cyan(text);
 
   console.log(`${highlight(
     "[Memserver CLI v" + config.version + "] Usage:"
@@ -124,9 +129,7 @@ memserver generate fixtures             # Outputs your initial MemServer state a
 memserver generate fixtures ${kleur.yellow(
     "[ModelName]"
   )} # Outputs your initial MemServer state for certain model as pure javascript fixture
-memserver console                       # Starts a MemServer console in node.js ${kleur.cyan(
-    '[alias: "memserver c"]'
-  )}`);
+`);
 }
 
 async function generateModel(modelName, memServerDirectory) {
@@ -140,8 +143,8 @@ async function generateModel(modelName, memServerDirectory) {
 
   await createFixtureAndModelFoldersIfNeeded(memServerDirectory);
 
-  const modelFileName = dasherize(singularize(modelName));
-  const fixtureFileName = dasherize(pluralize(modelName));
+  let modelFileName = dasherize(singularize(modelName));
+  let fixtureFileName = dasherize(pluralize(modelName));
 
   try {
     await fs.access(`${memServerDirectory}/models/${modelFileName}.ts`);
@@ -150,7 +153,7 @@ async function generateModel(modelName, memServerDirectory) {
 
     await fs.writeFile(
       `${memServerDirectory}/models/${modelFileName}.ts`,
-      `import Model from 'memserver/model';
+      `import Model from '@memserver/model';
 
 export default class ${classModelName} extends Model {
   constructor() {
@@ -173,41 +176,47 @@ export default class ${classModelName} extends Model {
   }
 }
 
-// TODO: this has to change MemServer.start() will change
 async function generateFixtures(modelName, memServerDirectory) {
-  const Model = (await import("./model")).default;
-  const startMemserver = (await import("./index")).default;
-  const Server = await startMemserver();
-  const ModelDefinitions = await getModelDefinitions(memServerDirectory);
+  const modelFiles = (await fs.readdir(`${memServerDirectory}/models`));
+  const IS_TYPESCRIPT = modelFiles.some((modelFile) => modelFile.endsWith(".ts"));
+  const memserverImportDirectory = IS_TYPESCRIPT
+    ? await buildTmpDirectory(memServerDirectory)
+    : memServerDirectory;
 
+  const Server = await startMemserver(memserverImportDirectory);
+  const ModelDefinitions = await importModelDefinitions(memserverImportDirectory, modelFiles, IS_TYPESCRIPT);
   const targetModels = modelName
     ? [classify(singularize(modelName))]
     : Object.keys(ModelDefinitions);
 
   await Promise.all(
     targetModels.map(async (Model) => {
-      const sortedState = ModelDefinitions[Model].findAll().sort(sortFunction);
-      const arrayOfRecords = util.inspect(sortedState, {
+      let sortedState = ModelDefinitions[Model].findAll().sort(sortFunction);
+      let arrayOfRecords = util.inspect(sortedState, {
         depth: null,
         maxArrayLength: null,
       });
-      const targetFileName = pluralize(dasherize(underscore(Model)));
-      const fileRelativePath = `/fixtures/${targetFileName}.ts`;
-      const fileAbsolutePath = `${memServerDirectory}${fileRelativePath}`;
+      let targetFileName = pluralize(dasherize(underscore(Model)));
+      let fixtureToImport = `/fixtures/${targetFileName}`;
+      let expectedFixtureRelativePath = `/${fixtureToImport}` + (IS_TYPESCRIPT ? ".ts" : ".js");
+      let expectedFixtureFullPath = `${memServerDirectory}/${expectedFixtureRelativePath}`;
 
       try {
-        await fs.access(fileAbsolutePath);
+        await fs.access(expectedFixtureFullPath);
 
-        const previousModels = (await import(fileAbsolutePath)).default;
+        let fixtureImportPath = IS_TYPESCRIPT
+          ? `${memserverImportDirectory}/${expectedFixtureRelativePath}`
+          : `${memServerDirectory}/${expectedFixtureRelativePath}`;
+        const previousModels = (await import(fixtureImportPath)).default;
 
         if (JSON.stringify(previousModels.sort(sortFunction)) === JSON.stringify(sortedState)) {
           return;
         }
       } catch (error) {
       } finally {
-        await fs.writeFile(fileAbsolutePath, `export default ${arrayOfRecords};`);
+        await fs.writeFile(expectedFixtureFullPath, `export default ${arrayOfRecords};`);
 
-        console.log(kleur.yellow(`[MemServer] data written to ${fileRelativePath}`));
+        console.log(kleur.yellow(`[MemServer] data written to ${expectedFixtureRelativePath}`));
       }
     })
   );
@@ -235,23 +244,6 @@ async function createFixtureAndModelFoldersIfNeeded(memServerDirectory) {
   }
 }
 
-async function openConsole() {
-  if (process.cwd().includes("memserver")) {
-    throw new Error(
-      kleur.red(
-        "[Memserver CLI] You are in the memserver directory, go to the root of your project to start memserver console."
-      )
-    );
-  }
-  const MemServer = await (await import("./index")).default();
-  const repl = (await import("repl")).default;
-  console.log(
-    kleur.cyan("[Memserver CLI]"),
-    "Started MemServer node.js console - check window.Memserver, window.MemServer and import/use your models ;)"
-  );
-  repl.start("> ");
-}
-
 async function getMemServerDirectory() {
   const cwd = process.cwd();
   const folders = cwd.split("/");
@@ -274,18 +266,26 @@ function sortFunction(a, b) {
   return 0;
 }
 
-async function getModelDefinitions(memServerDirectory) {
-  const models = await fs.readdir(`${memServerDirectory}/models`);
-
+async function importModelDefinitions(esmDirectory, modelFiles, isTypescript) {
   const modelDefinitions = await Promise.all(
-    models.map(async (modelPath) => {
-      return (await import(`${memServerDirectory}/models/${modelPath}`)).default;
+    modelFiles.map(async (modelPath) => {
+      return (await import(`${esmDirectory}/models/${formatExtension(modelPath, isTypescript)}`)).default; // TODO: also make it change if its typescript
     })
   );
 
   return modelDefinitions.reduce((result, modelDefinition) => {
     return Object.assign(result, { [modelDefinition.name]: modelDefinition });
   }, {});
+}
+
+function formatExtension(modelPath, isTypescript) {
+  if (isTypescript) {
+    let paths = modelPath.split('/');
+
+    return paths.slice(0, paths.length - 1).concat([paths[paths.length - 1].replace('.ts', '.js')]);
+  }
+
+  return modelPath;
 }
 
 async function recursiveCopy(sourcePath, targetPath) {

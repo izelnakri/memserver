@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 declare global {
   interface Window {
     MemserverModel: any;
@@ -34,6 +32,9 @@ interface Memserver {
   shutdown: () => any;
 }
 
+// NOTE: Test for
+// globalizeModules: true,
+// globalizeModels: true,
 class Memserver {
   Models = {};
 

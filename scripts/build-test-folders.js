@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import { promisify } from 'util';
 import { exec } from 'child_process';
-import recursiveLookup from './util/recursive-lookup.js';
+import recursiveLookup from 'recursive-lookup';
 
 const shell = promisify(exec);
 

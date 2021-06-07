@@ -1,13 +1,23 @@
 {
   "name": "@memserver/cli",
+  "type": "module",
   "version": "0.0.1",
   "description": "",
   "author": "Izel Nakri",
-  "main": "dist/index.js",
   "license": "MIT",
+  "bin": {
+    "memserver": "src/cli.js"
+  },
+  "main": "src/index.js",
+  "files": [
+    "src/*",
+    "memserver-boilerplate/*"
+  ],
   "dependencies": {
-    "@emberx/string": "^0.0.11",
+    "@memserver/server": "0.0.1",
     "kleur": "4.1.4",
-    "inflected": "^2.1.0"
+    "inflected": "^2.1.0",
+    "esbuild": "0.12.6",
+    "recursive-lookup": "1.0.0"
   }
 }

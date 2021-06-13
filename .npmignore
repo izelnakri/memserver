@@ -1,9 +1,0 @@
-.git
-.dockerignore
-README.md
-TODO
-scripts
-examples
-node_modules
-Dockerfile
-dist/test

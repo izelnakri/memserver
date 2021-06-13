@@ -1,3 +1,3 @@
-import "./generator-fixtures-test";
-import "./generator-model-test";
-import "./index-test";
+import "./commands/help-test.js";
+import "./commands/init-test.js";
+import "./commands/generate-test.js";

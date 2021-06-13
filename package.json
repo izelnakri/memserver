@@ -29,12 +29,13 @@
     "prepack": "npm run build",
     "release": "release-it",
     "release:beta": "release-it --preRelease=beta",
-    "test": "npm run test:browser && npm run test:node",
+    "test": "npm run test:browser && npm run test:node && npm run test:cli",
     "test:ci": "npm run test:browser:ci && npm run test:node:ci",
     "test:browser": "ENVIRONMENT=development npm run test:browser:ci",
     "test:browser:ci": "npm run build && node_modules/.bin/qunitx test/index.ts --browser --debug --failFast --before=packages/@memserver/server/test/helpers/webserver-for-passthrough.js",
     "test:node": "ENVIRONMENT=development npm run test:node:ci",
     "test:node:ci": "npm run build:tests && qunitx tmp/@memserver/model/index.js tmp/@memserver/response/index.js tmp/@memserver/server/index.js --before=packages/@memserver/server/test/helpers/webserver-for-passthrough.js",
+    "test:cli": "node_modules/.bin/qunitx packages/@memserver/cli/test/index.js",
     "typecheck": "tsc --project tsconfig.json --noEmit --skipLibCheck"
   },
   "dependencies": {
@@ -93,6 +94,9 @@
   "babel": {
     "presets": [
       "@babel/preset-typescript"
+    ],
+    "plugins": [
+      "babel-plugin-module-extension-resolver"
     ]
   },
   "prettier": {

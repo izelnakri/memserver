@@ -17,6 +17,7 @@ export interface InternalModelShape {
 
 export type InternalModel = RequireOnlyOne<InternalModelShape, "id" | "uuid">;
 
+// TODO: remove static setters and maybe getters
 export default class MemServerModel {
   static _DB = {};
   static _modelDefinitions = {};

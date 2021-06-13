@@ -17,8 +17,8 @@
   ],
   "scripts": {
     "bin": "src/cli.ts",
-    "build": "npm run libs:build",
-    "build:tests": "rm -rf tmp && npm run libs:build && node scripts/build-test-folders.js",
+    "build": "npm run libs:build && npm run build:tests",
+    "build:tests": "rm -rf tmp && node scripts/build-test-folders.js",
     "changelog:unreleased": "node_modules/.bin/auto-changelog --stdout --commit-limit false --package --unreleased-only --hide-credit",
     "changelog:preview": "node_modules/.bin/auto-changelog --stdout --commit-limit false -u --hide-credit",
     "changelog:update": "node_modules/.bin/auto-changelog --commit-limit false --package --hide-credit",
@@ -29,12 +29,12 @@
     "prepack": "npm run build",
     "release": "release-it",
     "release:beta": "release-it --preRelease=beta",
-    "test": "node_modules/.bin/ava --verbose",
-    "test:ci": "node_modules/.bin/qunitx test/index.ts --browser --debug --failFast",
+    "test": "npm run test:browser && npm run test:node",
+    "test:ci": "npm run test:browser:ci && npm run test:node:ci",
     "test:browser": "ENVIRONMENT=development npm run test:browser:ci",
     "test:browser:ci": "npm run build && node_modules/.bin/qunitx test/index.ts --browser --debug --failFast --before=packages/@memserver/server/test/helpers/webserver-for-passthrough.js",
-    "test:node": "ENVIRONMENT=development npm run build:tests && qunitx tmp/@memserver/model/index.js tmp/@memserver/response/index.js tmp/@memserver/server/index.js --before=packages/@memserver/server/test/helpers/webserver-for-passthrough.js",
-    "test:node:ci": "npm run test:node:ci",
+    "test:node": "ENVIRONMENT=development npm run test:node:ci",
+    "test:node:ci": "npm run build:tests && qunitx tmp/@memserver/model/index.js tmp/@memserver/response/index.js tmp/@memserver/server/index.js --before=packages/@memserver/server/test/helpers/webserver-for-passthrough.js",
     "typecheck": "tsc --project tsconfig.json --noEmit --skipLibCheck"
   },
   "dependencies": {

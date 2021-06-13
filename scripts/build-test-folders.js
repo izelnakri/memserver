@@ -25,13 +25,25 @@ async function buildPackage(packageName) {
   await fs.rm(`${targetFolder}/tmp`, { recursive: true, force: true });
 
   try {
-    await shell(`node_modules/.bin/esbuild $(find 'packages/${packageName}/test' -type f -name \*.ts)  --outdir="./tmp/${packageName}" --platform=node --format=esm`);
+    let fileAbsolutePaths = await recursiveLookup(`packages/${packageName}/test`, (path) => path.endsWith('.ts'));
 
-    let fileAbsolutePaths = await recursiveLookup(`tmp/${packageName}`, (path) => path.endsWith('.js'));
     await Promise.all(fileAbsolutePaths.map((fileAbsolutePath) => {
-      return shell(`node_modules/.bin/babel ${fileAbsolutePath} --plugins babel-plugin-module-extension-resolver -o ${fileAbsolutePath}`);
+      let targetPath = fileAbsolutePath
+        .replace(`packages/${packageName}/test`, `tmp/${packageName}`)
+      targetPath = targetPath.slice(0, targetPath.length - 3) + '.js';
+
+      return shell(`node_modules/.bin/babel ${fileAbsolutePath} --presets @babel/preset-typescript --plugins babel-plugin-module-extension-resolver -o ${targetPath}`);
     }));
+
   } catch (error) {
     console.error(error);
   }
 }
+
+// NOTE: with esbuild I had to do this:
+// await shell(`node_modules/.bin/esbuild $(find 'packages/${packageName}/test' -type f -name \*.ts)  --outdir="./tmp/${packageName}" --platform=node --format=esm`);
+// let fileAbsolutePaths = await recursiveLookup(`tmp/${packageName}`, (path) => path.endsWith('.js'));
+// await Promise.all(fileAbsolutePaths.map((fileAbsolutePath) => {
+//   return shell(`node_modules/.bin/babel ${fileAbsolutePath} --plugins babel-plugin-module-extension-resolver -o ${fileAbsolutePath}`);
+// }));
+

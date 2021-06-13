@@ -1,7 +1,12 @@
-FROM node:15.3.0
+FROM node:16.3.0
 
-RUN apt-get update && \
-  apt-get install -y vim chromium
+RUN apt-get update \
+    && apt-get install -y wget gnupg \
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /code/
 
@@ -15,6 +20,6 @@ ADD packages /code/packages
 ADD scripts /code/scripts
 ADD test /code/test
 
-RUN npm run libs:build && npm install
+RUN npm install && npm run libs:build
 
 ENTRYPOINT "/bin/bash"

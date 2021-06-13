@@ -39,7 +39,7 @@ async function buildPackage(packageName) {
       await Promise.all(fileAbsolutePaths.map((fileAbsolutePath) => {
         let targetPath = fileAbsolutePath
           .replace(`packages/${packageName}/src`, `packages/${packageName}/dist`)
-        targetPath = targetPath.slice(0, targetPath.length - 2) + '.js';
+        targetPath = targetPath.slice(0, targetPath.length - 3) + '.js';
 
         return shell(`node_modules/.bin/babel ${fileAbsolutePath} --presets @babel/preset-typescript --plugins babel-plugin-module-extension-resolver -o ${targetPath}`);
       }));

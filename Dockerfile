@@ -1,5 +1,8 @@
 FROM node:15.3.0
 
+RUN apt-get update && \
+  apt-get install -y vim chromium
+
 WORKDIR /code/
 
 ADD tsconfig.json /code/tsconfig.json

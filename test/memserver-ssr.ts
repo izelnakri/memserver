@@ -94,7 +94,7 @@ test.afterEach.always(async () => {
   // NOTE: maybe remove require cache if needed
   Object.keys(require.cache).forEach((key) => delete require.cache[key]);
 
-  await fs.rmdir(`${CWD}/memserver`, { recursive: true });
+  await fs.rm(`${CWD}/memserver`, { recursive: true, recursive: true });
 });
 
 test.serial(

@@ -141,7 +141,7 @@ export default class Email extends Model {
 
 function initializeMemServer() {
   return new Promise(async (resolve) => {
-    await fs.rmdir(`${CWD}/memserver`, { recursive: true });
+    await fs.rm(`${CWD}/memserver`, { recursive: true, force: true });
 
     const memServerDirectory = `${CWD}/memserver`;
 

@@ -104,7 +104,7 @@
     "arrowParens": "always"
   },
   "volta": {
-    "node": "15.3.0"
+    "node": "16.3.0"
   },
   "release-it": {
     "git": {

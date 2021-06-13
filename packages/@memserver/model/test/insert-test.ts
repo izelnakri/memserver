@@ -269,7 +269,7 @@ module("@memserver/model | $Model.insert()", function (hooks) {
     PhotoComment.insert({ updated_at: new Date("2017-01-10").toJSON(), like_count: 22 });
     PhotoComment.insert({ reply_id: 1 });
 
-    assert.deepEqual(Photo.attributes, [
+    assert.deepEqual(Array.from(Photo.attributes), [
       "is_public",
       "name",
       "id",
@@ -278,7 +278,7 @@ module("@memserver/model | $Model.insert()", function (hooks) {
       "description",
       "location",
     ]);
-    assert.deepEqual(PhotoComment.attributes, [
+    assert.deepEqual(Array.from(PhotoComment.attributes), [
       "inserted_at",
       "is_important",
       "uuid",

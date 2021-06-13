@@ -35,9 +35,9 @@ export default class MemServerModel {
 
     return this._DB[this.name];
   }
-  static get attributes(): Array<string> {
+  static get attributes(): Set<string> {
     if (!this._attributes[this.name]) {
-      this._attributes[this.name] = [];
+      this._attributes[this.name] = new Set();
       this._modelDefinitions[this.name] = this;
 
       return this._attributes[this.name];
@@ -47,10 +47,9 @@ export default class MemServerModel {
   }
 
   static set defaultAttributes(value: object) {
-    debugger;
     Object.keys(value).forEach((key) => {
-      if (!this.attributes.includes(key)) {
-        this.attributes.push(key);
+      if (!this.attributes.has(key)) {
+        this.attributes.add(key);
       }
     });
 
@@ -77,8 +76,8 @@ export default class MemServerModel {
 
   static resetDatabase(fixtures?: Array<InternalModel>): Array<InternalModel> {
     this.DB.length = 0;
-    this.attributes.length = 0;
-    Object.keys(this.defaultAttributes || {}).forEach((key) => this.attributes.push(key));
+    this.attributes.clear();
+    Object.keys(this.defaultAttributes).forEach((key) => this.attributes.add(key));
 
     if (fixtures) {
       insertFixturesWithTypechecks(this, fixtures);
@@ -135,7 +134,8 @@ export default class MemServerModel {
 
     if (this.DB.length === 0) {
       this.primaryKey = this.primaryKey || (options.uuid ? "uuid" : "id");
-      this.attributes.push(this.primaryKey);
+      this.attributes.add(this.primaryKey);
+      Object.keys(this.defaultAttributes).forEach((attribute) => this.attributes.add(attribute));
     }
 
     if (!options.hasOwnProperty(this.primaryKey)) {
@@ -145,7 +145,7 @@ export default class MemServerModel {
 
     primaryKeyTypeSafetyCheck(this.primaryKey, options[this.primaryKey], this.name);
 
-    const target = this.attributes.reduce((result, attribute) => {
+    const target = Array.from(this.attributes).reduce((result, attribute) => {
       if (typeof result[attribute] === "function") {
         result[attribute] = result[attribute].apply(result);
       } else if (!result.hasOwnProperty(attribute)) {
@@ -167,8 +167,8 @@ export default class MemServerModel {
     }
 
     Object.keys(target)
-      .filter((attribute) => !this.attributes.includes(attribute))
-      .forEach((attribute) => this.attributes.push(attribute));
+      .filter((attribute) => !this.attributes.has(attribute))
+      .forEach((attribute) => this.attributes.add(attribute));
 
     this.DB.push(target as InternalModel);
 
@@ -196,7 +196,7 @@ export default class MemServerModel {
     }
 
     const recordsUnknownAttribute = Object.keys(record).find(
-      (attribute) => !this.attributes.includes(attribute)
+      (attribute) => !this.attributes.has(attribute)
     );
 
     if (recordsUnknownAttribute) {
@@ -297,7 +297,7 @@ export default class MemServerModel {
       );
     }
 
-    const objectWithAllAttributes = this.attributes.reduce((result, attribute) => {
+    const objectWithAllAttributes = Array.from(this.attributes).reduce((result, attribute) => {
       if (result[attribute] === undefined) {
         result[attribute] = null;
       }

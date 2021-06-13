@@ -135,15 +135,15 @@ module("@memserver/model | Public API", function (hooks) {
 
     [Photo, PhotoComment, User].forEach((model) => model.resetDatabase());
 
-    assert.deepEqual(Photo.attributes, ["is_public", "name"]);
-    assert.deepEqual(PhotoComment.attributes, ["inserted_at", "is_important"]);
-    assert.deepEqual(User.attributes, []);
+    assert.deepEqual(Array.from(Photo.attributes), ["is_public", "name"]);
+    assert.deepEqual(Array.from(PhotoComment.attributes), ["inserted_at", "is_important"]);
+    assert.deepEqual(Array.from(User.attributes), []);
 
     PHOTO_FIXTURES.forEach((photo) => Photo.insert(photo));
     PHOTO_COMMENT_FIXTURES.forEach((photoComment) => PhotoComment.insert(photoComment));
 
-    assert.deepEqual(Photo.attributes, ["is_public", "name", "id", "href"]);
-    assert.deepEqual(PhotoComment.attributes, [
+    assert.deepEqual(Array.from(Photo.attributes), ["is_public", "name", "id", "href"]);
+    assert.deepEqual(Array.from(PhotoComment.attributes), [
       "inserted_at",
       "is_important",
       "uuid",
@@ -151,7 +151,7 @@ module("@memserver/model | Public API", function (hooks) {
       "photo_id",
       "user_id",
     ]);
-    assert.deepEqual(User.attributes, []);
+    assert.deepEqual(Array.from(User.attributes), []);
   });
 
   test("$Model.count counts the models correctly", async function (assert) {
